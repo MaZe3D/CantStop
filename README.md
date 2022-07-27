@@ -14,20 +14,18 @@ constexpr uint32_t WINDOW_HEIGHT = 800;
 // NO #define CONSTANTS! use the type system!
 
 // struct and class names are capital and in CamelCase
-class MyCoolClass
-{
+class MyCoolClass {
 public: // start with explicit "public:" (except if there is nothing public), indentation like here
-→   MyCoolClass()
-→   {
+→   MyCoolClass() {
 →   →   // ...
 →   }
 
 →   // functions and methods: small first letter, CamelCase
-→   void doDomethingCool()
-→   {
+→   void doDomethingCool() {
 →   →   // ...
 →   }
 
+// empty line before access specifier (except first one)
 protected: // "protected:" after "public:" (if there is something protected)
 →   uint8_t m_protectedInteger; // leading "m_" for protected AND private member variables
 
@@ -36,27 +34,23 @@ private: // "private:" after "protected:" (if there is something private)
 
 };
 
-enum class CoolEnum
-{
+enum class CoolEnum {
 →   VALUE_1, // enum values are constants (capital snake_case)!
 →   VALUE_2,
 →   VALUE_3
 };
 
 // pointer (*) and reference (&) symbols on the left side (not uint8_t *abc)
-void coolFunction(const uint8_t* abc, uint32_t& def, int64_t* const ghi)
-{
+void coolFunction(const uint8_t* abc, uint32_t& def, int64_t* const ghi) {
 →   // ...
 }
 
 // function names small and in CamelCase
-void anotherCoolFunction()
-{
+void anotherCoolFunction() {
 →   // ...
 }
 
-int main()
-{ // bracket on next line
+int main() { // bracket on same line
 →   std::cout << "Hello World" << std::endl;
 →   return 0;
 } // no empty line(s) at the end!
