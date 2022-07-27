@@ -28,14 +28,12 @@ void Game::init(char* title, int xpos, int ypos, int width, int height, bool ful
         {
             std::cout << "Window created" << std::endl;
             m_renderer = SDL_CreateRenderer(m_window, -1, 0);
-            if(m_renderer)
-            {
+            if(m_renderer) {
                 std::cout << "Renderer created" << std::endl;
                 SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
                 m_gameState = GameState::MENU;
             }
-            else
-            {
+            else {
                 std::cout << "Renderer failed to create!" << std::endl;
                 m_gameState = GameState::EXIT;
             }
