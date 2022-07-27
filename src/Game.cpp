@@ -2,10 +2,8 @@
 
 void Game::eventHandler() {
     SDL_Event event;
-    while (SDL_PollEvent(&event))
-    {
-        switch (event.type)
-        {
+    while (SDL_PollEvent(&event)){
+        switch (event.type) {
         case SDL_QUIT:
             m_gameState = GameState::EXIT;
             break;
@@ -23,8 +21,7 @@ void Game::init(char* title, int xpos, int ypos, int width, int height, bool ful
     int flags = 0;
     if(fullscreen)
         flags = SDL_WINDOW_FULLSCREEN;
-    if(SDL_Init(SDL_INIT_EVERYTHING) == 0)
-    {
+    if(SDL_Init(SDL_INIT_EVERYTHING) == 0) {
         std::cout << "Subsystems initialized" << std::endl;
         m_window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
         if(m_window)
@@ -43,8 +40,7 @@ void Game::init(char* title, int xpos, int ypos, int width, int height, bool ful
                 m_gameState = GameState::EXIT;
             }
         }
-        else
-        {
+        else {
             std::cout << "Window failed to create!" << std::endl;
             m_gameState = GameState::EXIT;
         }
