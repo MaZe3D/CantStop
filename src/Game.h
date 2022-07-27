@@ -4,26 +4,26 @@
 #include <string>
 
 enum class GameState {
-    MENU,
-    PLAY,
-    EXIT
+	MENU,
+	PLAY,
+	EXIT
 };
 
 class Game{
 public:
-    Game(char* title, int xpos, int ypos, int width, int height, bool fullscreen);
-    ~Game();
+	Game(char* title, int xpos, int ypos, int width, int height, bool fullscreen);
+	~Game();
 
-    void run();
+	void run();
 
 private:
-    SDL_Window* m_window;
-    SDL_Renderer* m_renderer;
+	SDL_Window* m_window;
+	SDL_Renderer* m_renderer;
 
-    GameState m_gameState = GameState::MENU;
+	GameState m_gameState = GameState::MENU;
 
-    void eventHandler();
-    void render();
+	void eventHandler();
+	void render();
 
-    void init(char* title, int xpos, int ypos, int width, int height, bool fullscreen);
+	void init(char* title, int xpos, int ypos, int width, int height, bool fullscreen);
 };
