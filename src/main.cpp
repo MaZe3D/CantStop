@@ -11,17 +11,15 @@
 #include <memory>
 #include "Game.h"
 
-int main(int argc, char** argv) 
-{
-	Game game = Game();
+int main(int argc, char** argv) {
+	Game game = Game("Cant Stop", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
 	game.run();
 	return 0;
 }
 
 #endif
 
-TEST_CASE("sanity check") 
-{
+TEST_CASE("sanity check") {
 	REQUIRE(1 < 2);
 	CHECK('a' != 'b');
 	WARN('a'+1 == 'b');
