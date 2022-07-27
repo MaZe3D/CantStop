@@ -5,7 +5,8 @@
 # make run                  -> like "make"                  but (tries to) run the result
 # make run_variant          -> like "make variant"          but (tries to) run the result
 # make run_variant_platform -> like "make variant_platform" but (tries to) run the result
-# make all -> builds every possible variant_platform combination
+# make platform -> builds every possible variant_platform combination (for given platform)
+# make all      -> builds every possible variant_platform combination
 
 
 
@@ -148,11 +149,19 @@ run_$1_$2: $1_$2
 	$(BIN_DIRECTORY)/$2/$1$$(BINARY_FILE_EXTENSION_$2)
 endef
 
-
-
 $(foreach target_platform,$(TARGET_PLATFORMS), \
 	$(foreach build_variant,$(BUILD_VARIANTS), \
 		$(eval $(call create_build_variant_rules,$(build_variant),$(target_platform)))))
+
+
+
+# $1: target platform
+define create_whole_platform_rule
+$1: $(addsuffix _$1,$(BUILD_VARIANTS))
+endef
+
+$(foreach target_platform,$(TARGET_PLATFORMS), \
+	$(eval $(call create_whole_platform_rule,$(target_platform))))
 
 
 
