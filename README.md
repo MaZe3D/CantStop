@@ -6,7 +6,7 @@
 // indentation using TABS not spaces!
 // no trailing whitespaces!
 
-// comments have a space after "//"
+// comments have a space after "//" (and before, if there's code before it)
 // alsways use uint32_t and the like instead of standard integers
 constexpr uint32_t WINDOW_WIDTH  = 800;
 constexpr uint32_t WINDOW_HEIGHT = 800;
@@ -16,7 +16,7 @@ constexpr uint32_t WINDOW_HEIGHT = 800;
 // struct and class names are capital and in CamelCase
 class MyCoolClass
 {
-public: // start with explicit "public:" (except if there is nothing public), indentaion like in this example
+public: // start with explicit "public:" (except if there is nothing public), indentation like here
 →   MyCoolClass()
 →   {
 →   →   // ...
@@ -31,7 +31,7 @@ public: // start with explicit "public:" (except if there is nothing public), in
 protected: // "protected:" after "public:" (if there is something protected)
 →   uint8_t m_protectedInteger; // leading "m_" for protected AND private member variables
 
-private:// "private:" after "protected:" (if there is something private)
+private: // "private:" after "protected:" (if there is something private)
 →   int32_t m_privateSigned32BitInteger;
 
 };
