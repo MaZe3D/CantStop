@@ -3,6 +3,11 @@
 
 class Game
 {
+public:
+    Game(/* args */);
+    ~Game();
+
+    void run();
 private:
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -15,10 +20,4 @@ private:
     void render();
 
     void init();
-
-public:
-    Game(/* args */);
-    ~Game();
-
-    void run();
 };
