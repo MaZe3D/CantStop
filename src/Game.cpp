@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "util/log.h"
 
 void Game::eventHandler() {
     SDL_Event event;
@@ -22,24 +23,23 @@ void Game::init(char* title, int xpos, int ypos, int width, int height, bool ful
     if(fullscreen)
         flags = SDL_WINDOW_FULLSCREEN;
     if(SDL_Init(SDL_INIT_EVERYTHING) == 0) {
-        std::cout << "Subsystems initialized" << std::endl;
+        DEBUG_LOG("Subsystems initialized");
         m_window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
-        if(m_window)
-        {
-            std::cout << "Window created" << std::endl;
+        if(m_window) {
+            DEBUG_LOG("Window created");
             m_renderer = SDL_CreateRenderer(m_window, -1, 0);
             if(m_renderer) {
-                std::cout << "Renderer created" << std::endl;
+                DEBUG_LOG("Renderer created");
                 SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
                 m_gameState = GameState::MENU;
             }
             else {
-                std::cout << "Renderer failed to create!" << std::endl;
+                DEBUG_LOG("Renderer failed to create!");
                 m_gameState = GameState::EXIT;
             }
         }
         else {
-            std::cout << "Window failed to create!" << std::endl;
+            DEBUG_LOG("Window failed to create!");
             m_gameState = GameState::EXIT;
         }
     }
@@ -78,7 +78,7 @@ void Game::run() {
         render();
 
         frameTime = SDL_GetTicks() - frameStart;
-        std::cout << "Loop time: " << frameTime << "ms" << std::endl;
+        DEBUG_LOG("Loop time: " << frameTime << "ms");
         if (frameDelay > frameTime)
             SDL_Delay(frameDelay - frameTime);
     }
