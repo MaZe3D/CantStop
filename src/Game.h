@@ -4,17 +4,17 @@
 class Game
 {
 public:
-    Game(/* args */);
+    Game();
     ~Game();
 
     void run();
 private:
-    SDL_Window* window;
-    SDL_Renderer* renderer;
+    SDL_Window* m_window;
+    SDL_Renderer* m_renderer;
 
     bool m_isRunning;
 
-    //Methods
+    // Methods
     void eventHandler();
     void update();
     void render();
