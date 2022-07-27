@@ -80,9 +80,21 @@ Game::Game(char* title, int xpos, int ypos, int width, int height, bool fullscre
 
 void Game::run()
 {
+    const int FPS = 60;
+    const int frameDelay = 1000 / FPS;
+
+    Uint32 frameStart;
+    Uint32 frameTime;
     while (m_gameState != GameState::EXIT)
     {
+        frameStart = SDL_GetTicks();
+
         eventHandler();
         render();
+
+        frameTime = SDL_GetTicks() - frameStart;
+        std::cout << "Loop time: " << frameTime << "ms" << std::endl;
+        if (frameDelay > frameTime)
+            SDL_Delay(frameDelay - frameTime);
     }
 }
