@@ -12,7 +12,7 @@
 #include "Game.h"
 
 int main(int argc, char** argv) {
-	Game game = Game("Cant Stop", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
+	Game game = Game(const_cast<char*>("Cant Stop"), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
 	game.run();
 	return 0;
 }
