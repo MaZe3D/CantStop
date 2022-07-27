@@ -3,15 +3,13 @@
 #include <iostream>
 #include <string>
 
-enum class GameState
-{
+enum class GameState {
     MENU,
     PLAY,
     EXIT
 };
 
-class Game
-{
+class Game{
 public:
     Game(char* title, int xpos, int ypos, int width, int height, bool fullscreen);
     ~Game();

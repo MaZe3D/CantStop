@@ -1,7 +1,6 @@
 #include "Game.h"
 
-void Game::eventHandler()
-{
+void Game::eventHandler() {
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
@@ -16,13 +15,11 @@ void Game::eventHandler()
     }
 }
 
-void Game::render()
-{
+void Game::render() {
 
 }
 
-void Game::init(char* title, int xpos, int ypos, int width, int height, bool fullscreen)
-{
+void Game::init(char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
     int flags = 0;
     if(fullscreen)
         flags = SDL_WINDOW_FULLSCREEN;
@@ -54,15 +51,13 @@ void Game::init(char* title, int xpos, int ypos, int width, int height, bool ful
     }
 }
 
-Game::~Game()
-{
+Game::~Game() {
     SDL_DestroyWindow(m_window);
     SDL_DestroyRenderer(m_renderer);
     SDL_Quit();
 }
 
-Game::Game(char* title, int xpos, int ypos, int width, int height, bool fullscreen)
-{
+Game::Game(char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
     const int minimalWindowWidth = 800;
     const int minimalWindowHeight = 600;
     if (width < minimalWindowWidth)
@@ -78,8 +73,7 @@ Game::Game(char* title, int xpos, int ypos, int width, int height, bool fullscre
     init(title, xpos, ypos, width, height, fullscreen);
 }
 
-void Game::run()
-{
+void Game::run() {
     const int FPS = 60;
     const int frameDelay = 1000 / FPS;
 
