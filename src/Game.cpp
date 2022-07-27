@@ -31,9 +31,14 @@ void Game::init()
 
 }
 
+Game::~Game()
+{
+
+}
+
 Game::Game()
 {
-    init();
+
 }
 
 void Game::run()
