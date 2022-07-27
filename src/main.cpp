@@ -13,7 +13,7 @@
 
 int main(int argc, char** argv) 
 {
-	Game game = Game();
+	Game game = Game("Cant Stop", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
 	game.run();
 	return 0;
 }
