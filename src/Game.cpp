@@ -60,13 +60,11 @@ Game::~Game() {
 Game::Game(char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
     const int minimalWindowWidth = 800;
     const int minimalWindowHeight = 600;
-    if (width < minimalWindowWidth)
-    {
+    if (width < minimalWindowWidth) {
         throw std::invalid_argument("Width must be greater than " + std::to_string(minimalWindowWidth) + "px");
     }
 
-    if(height < minimalWindowHeight)
-    {
+    if(height < minimalWindowHeight) {
         throw std::invalid_argument("Height must be greater than " + std::to_string(minimalWindowHeight) + "px");
     }
 
@@ -79,8 +77,7 @@ void Game::run() {
 
     Uint32 frameStart;
     Uint32 frameTime;
-    while (m_gameState != GameState::EXIT)
-    {
+    while (m_gameState != GameState::EXIT) {
         frameStart = SDL_GetTicks();
 
         eventHandler();
