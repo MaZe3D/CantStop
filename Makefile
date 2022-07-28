@@ -59,7 +59,6 @@ LINKER_FLAGS_release_windows := -mwindows
 LINKER_FLAGS := -Wl,--gc-sections
 
 # FILES_TO_COPY behave like COMPILER_FLAGS (do not add trailing / for directories!)
-FILES_TO_COPY_windows := external/windows/SDL2-2.0.22/bin/SDL2.dll external/windows/SDL2_ttf-2.20.0/bin/SDL2_ttf.dll external/windows/SDL2_image-2.6.0/bin/SDL2_image.dll
 FILES_TO_COPY := res
 
 
