@@ -14,6 +14,7 @@ void Game::eventHandler() {
 }
 
 void Game::render() {
+	SDL_RenderClear(m_renderer);
 	for (auto& uiElement : m_uiElements) {
 		uiElement->render(m_renderer);
 	}
@@ -51,6 +52,12 @@ void Game::init(char* title, int xpos, int ypos, int width, int height, bool ful
 }
 
 Game::~Game() {
+	for (auto& uiElement : m_uiElements) {
+		delete uiElement;
+	}
+	for (auto& interactableUIElement : m_interactableUIElements) {
+		delete interactableUIElement;
+	}
 	SDL_DestroyWindow(m_window);
 	SDL_DestroyRenderer(m_renderer);
 	SDL_Quit();
@@ -91,13 +98,4 @@ void Game::run() {
 
 void Game::exampleRender() {
 	new UIElement(&m_uiElements, 20, 20, 100, 100, IMG_LoadTexture(m_renderer, "res/git-logo.png"));
-}
-
-Game::~Game(){
-	for (auto& uiElement : m_uiElements) {
-		delete uiElement;
-	}
-	for (auto& interactableUIElement : m_interactableUIElements) {
-		delete interactableUIElement;
-	}
 }
