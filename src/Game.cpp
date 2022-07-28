@@ -97,5 +97,5 @@ void Game::run() {
 }
 
 void Game::exampleRender() {
-	new UIElement(&m_uiElements, 20, 20, 100, 100, IMG_LoadTexture(m_renderer, "res/git-logo.png"));
+	new UIElement(&m_uiElements, 20, 20, 100, 200, IMG_LoadTexture(m_renderer, "res/git-logo.png"));
 }
