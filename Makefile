@@ -51,12 +51,14 @@ COMPILER_FLAGS_test    := -O2
 COMPILER_FLAGS := -Wall -std=c++17 -I $(SRC_DIRECTORY) -I external/doctest-2.4.9/include
 
 # LINKER_FLAGS behave like COMPILER_FLAGS
-LINKER_FLAGS_windows := -static-libstdc++ -L external/windows/combined_lib
+LINKER_FLAGS_linux:= -lSDL2 -lSDL2_ttf -lSDL2_image
+LINKER_FLAGS_windows := -static -L external/windows/combined_lib -lSDL2 -lSDL2_ttf -lSDL2_image -Wl,--dynamicbase -Wl,--nxcompat -Wl,--high-entropy-va -lm -ldinput8 -ldxguid -ldxerr8 -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lsetupapi -lversion -luuid
+LINKER_FLAGS_release := -s
+LINKER_FLAGS_test := -s
 LINKER_FLAGS_release_windows := -mwindows
-LINKER_FLAGS := -lSDL2 -lSDL2_ttf -lSDL2_image
+LINKER_FLAGS := -Wl,--gc-sections
 
 # FILES_TO_COPY behave like COMPILER_FLAGS (do not add trailing / for directories!)
-FILES_TO_COPY_windows := external/windows/SDL2-2.0.22/bin/SDL2.dll external/windows/SDL2_ttf-2.20.0/bin/SDL2_ttf.dll external/windows/SDL2_image-2.6.0/bin/SDL2_image.dll
 FILES_TO_COPY := res
 
 

@@ -12,7 +12,7 @@ enum class GameState {
 	EXIT
 };
 
-class Game{
+class Game {
 public:
 	Game(char* title, int xpos, int ypos, int width, int height, bool fullscreen);
 	~Game();
