@@ -14,7 +14,10 @@ void Game::eventHandler() {
 }
 
 void Game::render() {
-
+	for (auto& uiElement : m_uiElements) {
+		uiElement->render(m_renderer);
+	}
+	SDL_RenderPresent(m_renderer);
 }
 
 void Game::init(char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
@@ -43,6 +46,8 @@ void Game::init(char* title, int xpos, int ypos, int width, int height, bool ful
 			m_gameState = GameState::EXIT;
 		}
 	}
+	IMG_Init(IMG_INIT_PNG);
+	exampleRender();
 }
 
 Game::~Game() {
@@ -81,5 +86,18 @@ void Game::run() {
 		std::cout << "Loop time: " << frameTime << "ms" << std::endl;
 		if (frameDelay > frameTime)
 			SDL_Delay(frameDelay - frameTime);
+	}
+}
+
+void Game::exampleRender() {
+	new UIElement(&m_uiElements, 20, 20, 100, 100, IMG_LoadTexture(m_renderer, "res/git-logo.png"));
+}
+
+Game::~Game(){
+	for (auto& uiElement : m_uiElements) {
+		delete uiElement;
+	}
+	for (auto& interactableUIElement : m_interactableUIElements) {
+		delete interactableUIElement;
 	}
 }
