@@ -14,13 +14,7 @@ void Game::eventHandler() {
 	}
 }
 
-void Game::render() {
-	SDL_RenderClear(m_renderer);
-	for (auto& uiElement : m_uiElements) {
-		uiElement->render(m_renderer);
-	}
-	SDL_RenderPresent(m_renderer);
-}
+void Game::render() {}
 
 void Game::init(char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
 	int flags = 0;
@@ -45,17 +39,9 @@ void Game::init(char* title, int xpos, int ypos, int width, int height, bool ful
 			m_gameState = GameState::EXIT;
 		}
 	}
-	IMG_Init(IMG_INIT_PNG);
-	exampleRender();
 }
 
 Game::~Game() {
-	for (auto& uiElement : m_uiElements) {
-		delete uiElement;
-	}
-	for (auto& interactableUIElement : m_interactableUIElements) {
-		delete interactableUIElement;
-	}
 	SDL_DestroyWindow(m_window);
 	SDL_DestroyRenderer(m_renderer);
 	SDL_Quit();
@@ -92,8 +78,4 @@ void Game::run() {
 		if (frameDelay > frameTime)
 			SDL_Delay(frameDelay - frameTime);
 	}
-}
-
-void Game::exampleRender() {
-	new UIElement(&m_uiElements, 20, 20, 100, 200, IMG_LoadTexture(m_renderer, "res/git-logo.png"));
 }
