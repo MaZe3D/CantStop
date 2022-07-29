@@ -1,16 +1,11 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <string>
-#include <vector>
 #include <memory>
-#include "util/sdlcall.h"
+#include <list>
 #include "Texture.h"
 #include "Rect.h"
-#include <list>
-#include <algorithm>
-#include <functional>
 
-class Event;
 class ClickEvent;
 class WindowEvent;
 
@@ -47,5 +42,5 @@ private:
 	
 	std::shared_ptr<SDL_Window> m_sdlWindow;
 	std::shared_ptr<SDL_Renderer> m_sdlRenderer;
-	std::vector<Texture> m_textures;
+	std::list<Texture> m_textures;
 };
