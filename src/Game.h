@@ -6,6 +6,7 @@
 #include <list>
 #include "mysdl/Window.h"
 #include "drawables/TextureDrawable.h"
+#include "mysdl/EventListener.h"
 
 enum class GameState {
 	MENU,
@@ -13,9 +14,9 @@ enum class GameState {
 	EXIT
 };
 
-class Game {
+class Game : public WindowClosedEvent {
 public:
-	Game();
+	Game(Window &window);
 
 	void run();
 
@@ -25,6 +26,6 @@ private:
 
 	GameState m_gameState = GameState::MENU;
 
-	void eventHandler();
+	void onWindowClosedEvent() override;
 	void render();
 };

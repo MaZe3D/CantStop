@@ -62,19 +62,33 @@ void Window::unsubscribeWindowEvent(WindowEvent* listener) {
 	m_windowEventSubscribers.remove(listener);
 }
 
-void Window::handleEvents(const SDL_Event& event) {
-	switch (event.type) {
-	case SDL_MOUSEBUTTONDOWN:
-		for (auto listener : m_clickEventSubscribers) {
-			listener->onClick(event);
+void Window::handleEvents() {
+	
+	SDL_Event event;
+	while (SDL_PollEvent(&event)) {
+		switch (event.type) {
+		case SDL_MOUSEBUTTONDOWN:
+			for (auto listener : m_clickEventSubscribers) {
+				listener->onClick(event);
+			}
+			break;
+		case SDL_WINDOWEVENT:
+			for (auto listener : m_windowEventSubscribers) {
+				listener->onWindowEvent(event);
+			}
+			break;
+		default:
+			break;
 		}
-		break;
-	case SDL_WINDOWEVENT:
-		for (auto listener : m_windowEventSubscribers) {
-			listener->onWindowEvent(event);
-		}
-		break;
-	default:
-		break;
+	}
+}
+
+WindowClosedEvent::WindowClosedEvent(Window& window, bool subscribeEvent) : WindowEvent(window, subscribeEvent) {
+}
+
+void WindowClosedEvent::onWindowEvent(const SDL_Event& event)
+{
+	if (event.window.event == SDL_WINDOWEVENT_CLOSE) {
+		onWindowClosedEvent();
 	}
 }

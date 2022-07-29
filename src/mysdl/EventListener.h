@@ -31,3 +31,10 @@ public:
 	
 	virtual void onWindowEvent(const SDL_Event &event) = 0;
 };
+
+class WindowClosedEvent : public WindowEvent {
+public:
+	WindowClosedEvent(Window &window, bool subscribeEvent = true);	
+	void onWindowEvent(const SDL_Event &event) final;
+	virtual void onWindowClosedEvent() = 0;
+};

@@ -32,7 +32,7 @@ public:
 	void drawRect() const;
 	void fillRect() const;
 
-	void handleEvents(const SDL_Event& event);
+	void handleEvents();
 
 	void subscribeClickEvent(ClickEvent* listener);
 	void unsubscribeClickEvent(ClickEvent* listener);
@@ -44,7 +44,7 @@ public:
 private:
 	std::list<ClickEvent*> m_clickEventSubscribers;
 	std::list<WindowEvent*> m_windowEventSubscribers;
-
+	
 	std::shared_ptr<SDL_Window> m_sdlWindow;
 	std::shared_ptr<SDL_Renderer> m_sdlRenderer;
 	std::vector<Texture> m_textures;

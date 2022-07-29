@@ -1,21 +1,8 @@
 #include "Game.h"
 #include "util/log.h"
 
-Game::Game() : m_window("Cant Stop"), m_texture("res/git-logo.png", m_window) {
+Game::Game(Window &window) : WindowClosedEvent(window, true), m_window(window), m_texture("res/git-logo.png", m_window) {
 	m_window.setDrawColor(0xFFFFFFFF);
-}
-
-void Game::eventHandler() {
-	SDL_Event event;
-	while (SDL_PollEvent(&event)) {
-		switch (event.type) {
-		case SDL_QUIT:
-			m_gameState = GameState::EXIT;
-			break;
-		default:
-			break;
-		}
-	}
 }
 
 void Game::render() {
@@ -33,7 +20,7 @@ void Game::run() {
 	while (m_gameState != GameState::EXIT) {
 		frameStart = SDL_GetTicks();
 
-		eventHandler();
+		m_window.handleEvents();
 		render();
 
 		frameTime = SDL_GetTicks() - frameStart;
@@ -41,4 +28,8 @@ void Game::run() {
 		if (frameDelay > frameTime)
 			SDL_Delay(frameDelay - frameTime);
 	}
+}
+
+void Game::onWindowClosedEvent() {
+	m_gameState = GameState::EXIT;
 }

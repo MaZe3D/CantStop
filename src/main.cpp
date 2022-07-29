@@ -14,8 +14,9 @@ int main(int argc, char** argv) {
 	SDL_CALL(SDL_Init(SDL_INIT_VIDEO));
 	SDL_CALL(IMG_Init(IMG_INIT_PNG)-IMG_INIT_PNG);
 	SDL_CALL(TTF_Init());
-
-	Game().run();
+	
+	auto window = Window("Cant Stop");
+	Game(window).run();
 	//Window window("Cant Stop");
 
 	TTF_Quit();
