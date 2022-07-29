@@ -22,7 +22,7 @@ void Window::presentFrame() const {
 const Texture& Window::loadTexture(const std::string& path) {
 	SDL_Texture* sdlTexture;
 	SDL_CALL_INV(sdlTexture = IMG_LoadTexture(m_sdlRenderer.get(), path.c_str()));
-	m_textures.push_back(Texture(sdlTexture));
+	m_textures.push_back(Texture(sdlTexture, *this));
 	return m_textures.back();
 }
 
