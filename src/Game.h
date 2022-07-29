@@ -5,6 +5,7 @@
 #include <string>
 #include <list>
 #include "UIElement.h"
+#include "Window.h"
 
 enum class GameState {
 	MENU,
@@ -14,14 +15,13 @@ enum class GameState {
 
 class Game {
 public:
-	Game(char* title, int xpos, int ypos, int width, int height, bool fullscreen);
+	Game();
 	~Game();
 
 	void run();
 
 private:
-	SDL_Window* m_window;
-	SDL_Renderer* m_renderer;
+	Window m_window;
 
 	GameState m_gameState = GameState::MENU;
 
@@ -33,6 +33,4 @@ private:
 
 	void eventHandler();
 	void render();
-
-	void init(char* title, int xpos, int ypos, int width, int height, bool fullscreen);
 };

@@ -3,24 +3,25 @@
 #include <doctest.h>
 #else
 
-#include <doctest.h>
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
-#include <memory>
+#include <SDL2/SDL_ttf.h>
+#include "util/sdlcall.h"
 #include "Game.h"
 
 int main(int argc, char** argv) {
-	Game game = Game(const_cast<char*>("Cant Stop"), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
-	game.run();
+	SDL_CALL(SDL_Init(SDL_INIT_VIDEO));
+	SDL_CALL(IMG_Init(IMG_INIT_PNG)-IMG_INIT_PNG);
+	SDL_CALL(TTF_Init());
+
+	Game().run();
+	//Window window("Cant Stop");
+
+	TTF_Quit();
+	IMG_Quit();
+	SDL_Quit();
 	return 0;
 }
 
 #endif
-
-TEST_CASE("sanity check") {
-	REQUIRE(1 < 2);
-	CHECK('a' != 'b');
-	WARN('a'+1 == 'b');
-}

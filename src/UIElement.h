@@ -1,33 +1,31 @@
 #pragma once
 #include "SDL2/SDL.h"
 #include <list>
+#include "Texture.h"
+#include "Window.h"
 
-struct Rectangle {
-	Rectangle(int p_x, int p_y, int p_w, int p_h);
-	SDL_Rect m_rect;
-};
-
-class UIElement : public Rectangle {
+class UIElement {
 public:
-	UIElement(std::list<UIElement*>* UIElement_list, int p_x, int p_y, int p_w, int p_h, SDL_Texture* p_texture);
+	UIElement(std::list<UIElement*>* UIElement_list, const Rect& rect, const Texture& texture);
 	virtual ~UIElement();
 
-	void setTexture(SDL_Texture* p_texture);
-	void render(SDL_Renderer* p_render);
+	//void setTexture(const Texture& texture);
+	void render(const Window& window);
 
 private:
-	std::list<UIElement*>* m_UIElement_list;
-	SDL_Texture* m_texture;
+	std::list<UIElement*>* m_UIElements;
+	Rect m_rect;
+	const Texture& m_texture;
 };
 
 class InteractableUIElement : public UIElement {
 public:
-	InteractableUIElement(std::list<UIElement*>* UIElement_list, std::list<InteractableUIElement*>* interactableUIElement_list, int x, int y, int w, int h, SDL_Texture* texture);
-	InteractableUIElement(std::list<UIElement*>* UIElement_list, std::list<InteractableUIElement*>* interactableUIElement_list, int x, int y, int w, int h, SDL_Texture* texture, void(*clickedEvent_callback)());
+	InteractableUIElement(std::list<UIElement*>* UIElement_list, std::list<InteractableUIElement*>* interactableUIElements, const Rect& rect, const Texture& texture);
+	InteractableUIElement(std::list<UIElement*>* UIElement_list, std::list<InteractableUIElement*>* interactableUIElements, const Rect& rect, const Texture& texture, void(*clickedEventCallback)());
 	~InteractableUIElement();
 
-	void (*m_clickedEvent_callback)();
+	void (*m_clickedEventCallback)();
 
 private:
-	std::list<InteractableUIElement*>* m_interactableUIElement_list;
+	std::list<InteractableUIElement*>* m_interactableUIElements;
 };

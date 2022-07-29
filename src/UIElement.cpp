@@ -1,40 +1,35 @@
 #include "UIElement.h"
 
-Rectangle::Rectangle(int p_x, int p_y, int p_w, int p_h) {
-	m_rect.x = p_x;
-	m_rect.y = p_y;
-	m_rect.w = p_w;
-	m_rect.h = p_h;
+UIElement::UIElement(std::list<UIElement*>* UIElement_list, const Rect& rect, const Texture& texture)
+	: m_UIElements(UIElement_list), m_rect(rect), m_texture(texture)
+{
+	m_UIElements->push_back(this);
 }
 
-UIElement::UIElement(std::list<UIElement*>* UIElement_list, int p_x, int p_y, int p_w, int p_h, SDL_Texture* p_texture) : Rectangle(p_x, p_y, p_w, p_h), m_UIElement_list(UIElement_list), m_texture(p_texture) {
-	m_UIElement_list->push_back(this);
+UIElement::~UIElement() {
+	m_UIElements->remove(this);
 }
 
-UIElement::~UIElement(){
-	m_UIElement_list->remove(this);
-	SDL_DestroyTexture(m_texture);
+//void UIElement::setTexture(const Texture& texture) {
+//	m_texture = texture;
+//}
+
+void UIElement::render(const Window& window) {
+	window.drawTexture(m_texture, m_rect);
 }
 
-void UIElement::setTexture(SDL_Texture* p_texture) {
-	if (m_texture != NULL) {
-		SDL_DestroyTexture(m_texture);
-	}
-	m_texture = p_texture;
+InteractableUIElement::InteractableUIElement(std::list<UIElement*>* UIElement_list, std::list<InteractableUIElement*>* interactableUIElements, const Rect& rect, const Texture& texture)
+	: UIElement(UIElement_list, rect, texture), m_interactableUIElements(interactableUIElements)
+{
+	m_interactableUIElements->push_back(this);
 }
 
-void UIElement::render(SDL_Renderer* p_render) {
-	SDL_RenderCopy(p_render, m_texture, NULL, &m_rect);
-}
-
-InteractableUIElement::InteractableUIElement(std::list<UIElement*>* UIElement_list, std::list<InteractableUIElement*>* interactableUIElement_list, int x, int y, int w, int h, SDL_Texture* texture) : UIElement(UIElement_list, x, y, w, h, texture), m_interactableUIElement_list(interactableUIElement_list) {
-	m_interactableUIElement_list->push_back(this);
-}
-
-InteractableUIElement::InteractableUIElement(std::list<UIElement*>* UIElement_list, std::list<InteractableUIElement*>* interactableUIElement_list, int x, int y, int w, int h, SDL_Texture* texture, void(*clickedEvent_callback)()) : UIElement(UIElement_list, x, y, w, h, texture), m_clickedEvent_callback(clickedEvent_callback), m_interactableUIElement_list(interactableUIElement_list) {
-	m_interactableUIElement_list->push_back(this);
+InteractableUIElement::InteractableUIElement(std::list<UIElement*>* UIElement_list, std::list<InteractableUIElement*>* interactableUIElements, const Rect& rect, const Texture& texture, void(*clickedEventCallback)())
+	: UIElement(UIElement_list, rect, texture), m_clickedEventCallback(clickedEventCallback), m_interactableUIElements(interactableUIElements)
+{
+	m_interactableUIElements->push_back(this);
 }
 
 InteractableUIElement::~InteractableUIElement() {
-	m_interactableUIElement_list->remove(this);
+	m_interactableUIElements->remove(this);
 }
