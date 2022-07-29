@@ -148,10 +148,10 @@ TEST_CASE("Rect"){
 		r.setAnchorModeX(Rect::AnchorMode::RIGHT);
 		CHECK(r.getLeft() == -100);
 		CHECK(r.getRight() == 0);
-		CHECK(r.getTop() == 100);
-		r.setAnchorModeY(Rect::AnchorMode::BOTTOM);
 		CHECK(r.getTop() == 0);
-		CHECK(r.getBottom() == -100);
+		r.setAnchorModeY(Rect::AnchorMode::BOTTOM);
+		CHECK(r.getTop() == -100);
+		CHECK(r.getBottom() == 0);
 		CHECK_THROWS(r.setAnchorModeX(Rect::AnchorMode::BOTTOM));
 		CHECK_THROWS(r.setAnchorModeY(Rect::AnchorMode::LEFT));
 	}
