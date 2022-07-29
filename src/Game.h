@@ -5,7 +5,7 @@
 #include <string>
 #include <list>
 #include "UIElement.h"
-#include "Window.h"
+#include "mysdl/Window.h"
 
 enum class GameState {
 	MENU,

@@ -1,8 +1,8 @@
 #pragma once
 #include "SDL2/SDL.h"
 #include <list>
-#include "Texture.h"
-#include "Window.h"
+#include "mysdl/Texture.h"
+#include "mysdl/Window.h"
 
 class UIElement {
 public:
