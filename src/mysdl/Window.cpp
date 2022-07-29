@@ -1,6 +1,7 @@
 #include "Window.h"
 #include "util/sdlcall.h"
 #include <SDL2/SDL_image.h>
+#include "EventListener.h"
 
 Window::Window(const std::string& title, bool fullscreen, int width, int height) {
 	uint32_t windowFlags = SDL_WINDOW_RESIZABLE;
