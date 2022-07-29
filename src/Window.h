@@ -2,17 +2,14 @@
 #include <SDL2/SDL.h>
 #include <string>
 #include <vector>
+#include <memory>
 #include "util/sdlcall.h"
 #include "Texture.h"
 #include "Rect.h"
 
 class Window {
 public:
-	Window(const Window&) = delete;
-	Window &operator=(const Window&) = delete;
-
 	Window(const std::string& title, bool fullscreen = false, int width = 800, int height = 500);
-	~Window();
 
 	void presentFrame() const;
 
@@ -29,7 +26,7 @@ public:
 	void fillRect() const;
 
 private:
-	SDL_Window* m_sdlWindow;
-	SDL_Renderer* m_sdlRenderer;
+	std::shared_ptr<SDL_Window> m_sdlWindow;
+	std::shared_ptr<SDL_Renderer> m_sdlRenderer;
 	std::vector<Texture> m_textures;
 };
