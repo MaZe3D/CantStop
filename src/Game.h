@@ -4,7 +4,9 @@
 #include <iostream>
 #include <string>
 #include <list>
-#include "UIElement.h"
+#include "mysdl/Window.h"
+#include "drawables/TextureDrawable.h"
+#include "mysdl/EventListener.h"
 
 enum class GameState {
 	MENU,
@@ -12,27 +14,18 @@ enum class GameState {
 	EXIT
 };
 
-class Game {
+class Game : public WindowClosedEvent {
 public:
-	Game(char* title, int xpos, int ypos, int width, int height, bool fullscreen);
-	~Game();
+	Game(Window &window);
 
 	void run();
 
 private:
-	SDL_Window* m_window;
-	SDL_Renderer* m_renderer;
+	Window m_window;
+	TextureDrawable m_texture;
 
 	GameState m_gameState = GameState::MENU;
 
-	std::list<UIElement*> m_uiElements = std::list<UIElement*>();
-
-	std::list<InteractableUIElement*> m_interactableUIElements = std::list<InteractableUIElement*>();
-
-	void exampleRender();
-
-	void eventHandler();
+	void onWindowClosedEvent() override;
 	void render();
-
-	void init(char* title, int xpos, int ypos, int width, int height, bool fullscreen);
 };
