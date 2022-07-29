@@ -36,6 +36,10 @@ Rect& Rect::setHeightKeepAspect(int height, float aspect) { m_sdlRect.h = height
 Rect& Rect::setAnchorModeX(AnchorMode anchorModeX) { m_anchorModeX = anchorModeX; updateX(); return *this; }
 Rect& Rect::setAnchorModeY(AnchorMode anchorModeY) { m_anchorModeY = anchorModeY; updateY(); return *this; }
 
+bool Rect::containsPoint(int x, int y) {
+	return (getLeft() <= x && x <= getRight() && getTop() <= y && y <= getBottom());
+}
+
 void Rect::updateX() {
 	if (m_sdlRect.w < 0) throw std::runtime_error("Rect - values out of range");
 	m_sdlRect.x = m_anchorPosX;

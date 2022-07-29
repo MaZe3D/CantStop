@@ -35,6 +35,8 @@ public:
 	Rect& setAnchorModeX(AnchorMode anchorModeX);
 	Rect& setAnchorModeY(AnchorMode anchorModeY);
 
+	bool containsPoint(int x, int y);
+
 private:
 	friend Window;
 
