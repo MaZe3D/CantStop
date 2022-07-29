@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "util/log.h"
 
-Game::Game() : m_window("Cant Stop") {
+Game::Game() : m_window("Cant Stop"), m_texture("res/git-logo.png", m_window) {
 	m_window.setDrawColor(0xFFFFFFFF);
 }
 
@@ -20,6 +20,7 @@ void Game::eventHandler() {
 
 void Game::render() {
 	m_window.clear();
+	m_texture.draw();
 	m_window.presentFrame();
 }
 

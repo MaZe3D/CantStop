@@ -5,6 +5,7 @@
 #include <string>
 #include <list>
 #include "mysdl/Window.h"
+#include "drawables/TextureDrawable.h"
 
 enum class GameState {
 	MENU,
@@ -20,6 +21,7 @@ public:
 
 private:
 	Window m_window;
+	TextureDrawable m_texture;
 
 	GameState m_gameState = GameState::MENU;
 
