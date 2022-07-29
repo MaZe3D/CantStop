@@ -3,7 +3,6 @@
 
 Game::Game() : m_window("Cant Stop") {
 	m_window.setDrawColor(0xFFFFFFFF);
-	exampleRender();
 }
 
 void Game::eventHandler() {
@@ -21,21 +20,8 @@ void Game::eventHandler() {
 
 void Game::render() {
 	m_window.clear();
-	for (auto& uiElement : m_uiElements) {
-		uiElement->render(m_window);
-	}
 	m_window.presentFrame();
 }
-
-Game::~Game() {
-	for (auto& uiElement : m_uiElements) {
-		delete uiElement;
-	}
-	for (auto& interactableUIElement : m_interactableUIElements) {
-		delete interactableUIElement;
-	}
-}
-
 
 void Game::run() {
 	const int FPS = 60;
@@ -54,8 +40,4 @@ void Game::run() {
 		if (frameDelay > frameTime)
 			SDL_Delay(frameDelay - frameTime);
 	}
-}
-
-void Game::exampleRender() {
-	new UIElement(&m_uiElements, Rect(20, 20, 100, 200), m_window.loadTexture("res/git-logo.png"));
 }
