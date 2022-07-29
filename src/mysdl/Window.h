@@ -6,6 +6,13 @@
 #include "util/sdlcall.h"
 #include "Texture.h"
 #include "Rect.h"
+#include <list>
+#include <algorithm>
+#include <functional>
+
+class Event;
+class ClickEvent;
+class WindowEvent;
 
 class Window {
 public:
@@ -25,7 +32,19 @@ public:
 	void drawRect() const;
 	void fillRect() const;
 
+	void handleEvents(const SDL_Event& event);
+
+	void subscribeClickEvent(ClickEvent* listener);
+	void unsubscribeClickEvent(ClickEvent* listener);
+
+	void subscribeWindowEvent(WindowEvent* listener);
+	void unsubscribeWindowEvent(WindowEvent*listener);
+
+
 private:
+	std::list<ClickEvent*> m_clickEventSubscribers;
+	std::list<WindowEvent*> m_windowEventSubscribers;
+
 	std::shared_ptr<SDL_Window> m_sdlWindow;
 	std::shared_ptr<SDL_Renderer> m_sdlRenderer;
 	std::vector<Texture> m_textures;

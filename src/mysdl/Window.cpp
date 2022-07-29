@@ -40,3 +40,40 @@ void Window::setDrawColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a) const {
 void Window::clear() const {
 	SDL_CALL(SDL_RenderClear(m_sdlRenderer.get()));
 }
+
+void Window::subscribeClickEvent(ClickEvent* listener) {
+	if (std::find(m_clickEventSubscribers.begin(), m_clickEventSubscribers.end(), listener) == m_clickEventSubscribers.end()) {
+		m_clickEventSubscribers.push_back(listener);
+	}
+}
+
+void Window::unsubscribeClickEvent(ClickEvent* listener) {
+	m_clickEventSubscribers.remove(listener);
+}
+
+void Window::subscribeWindowEvent(WindowEvent* listener) {
+	if (std::find(m_windowEventSubscribers.begin(), m_windowEventSubscribers.end(), listener) == m_windowEventSubscribers.end()) {
+		m_windowEventSubscribers.push_back(listener);
+	}
+}
+
+void Window::unsubscribeWindowEvent(WindowEvent* listener) {
+	m_windowEventSubscribers.remove(listener);
+}
+
+void Window::handleEvents(const SDL_Event& event) {
+	switch (event.type) {
+	case SDL_MOUSEBUTTONDOWN:
+		for (auto listener : m_clickEventSubscribers) {
+			listener->onClick(event);
+		}
+		break;
+	case SDL_WINDOWEVENT:
+		for (auto listener : m_windowEventSubscribers) {
+			listener->onWindowEvent(event);
+		}
+		break;
+	default:
+		break;
+	}
+}
