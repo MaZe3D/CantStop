@@ -1,4 +1,4 @@
-#include "randomBot.h"
+#include "RandomBot.h"
 #include <random>
 
 randomBot::randomBot() {}
