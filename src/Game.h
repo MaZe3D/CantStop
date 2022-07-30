@@ -7,7 +7,7 @@
 #include "mysdl/Window.h"
 #include "drawables/TextureDrawable.h"
 #include "drawables/TextDrawable.h"
-#include "mysdl/EventListener.h"
+#include "mysdl/Events.h"
 
 enum class GameState {
 	MENU,
@@ -15,7 +15,7 @@ enum class GameState {
 	EXIT
 };
 
-class Game : public WindowClosedEvent {
+class Game : WindowClosedEvent, LeftClickEvent, WindowResizedEvent {
 public:
 	Game(const std::shared_ptr<Window>& window);
 	void run();
@@ -27,5 +27,7 @@ private:
 	GameState m_gameState = GameState::MENU;
 
 	void render();
-	void onWindowClosedEvent() override;
+	void onWindowClosed() override;
+	void onLeftClick(int32_t x, int32_t y) override;
+	void onWindowResized(int32_t width, int32_t height) override;
 };

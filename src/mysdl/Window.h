@@ -29,20 +29,23 @@ public:
 	void drawRect() const;
 	void fillRect() const;
 
-	void handleEvents() const;
+	void handleEvents();
 
-	void subscribeClickEvent(ClickEvent* listener);
-	void unsubscribeClickEvent(ClickEvent* listener);
+	void subscribeClickEvent(ClickEvent* event);
+	void unsubscribeClickEvent(ClickEvent* event);
 
-	void subscribeWindowEvent(WindowEvent* listener);
-	void unsubscribeWindowEvent(WindowEvent*listener);
+	void subscribeWindowEvent(WindowEvent* event);
+	void unsubscribeWindowEvent(WindowEvent* event);
 
 
 private:
 	Window(const std::string& title, bool fullscreen, int width, int height);
 
-	std::list<ClickEvent*> m_clickEventSubscribers;
-	std::list<WindowEvent*> m_windowEventSubscribers;
+	std::list<ClickEvent*> m_clickEvents;
+	std::list<WindowEvent*> m_windowEvents;
+
+	std::list<ClickEvent*> m_clickEventsToRemove;
+	std::list<WindowEvent*> m_windowEventsToRemove;
 	
 	std::shared_ptr<SDL_Window> m_sdlWindow;
 	std::shared_ptr<SDL_Renderer> m_sdlRenderer;
