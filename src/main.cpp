@@ -15,9 +15,7 @@ int main(int argc, char** argv) {
 	SDL_CALL(IMG_Init(IMG_INIT_PNG)-IMG_INIT_PNG);
 	SDL_CALL(TTF_Init());
 	
-	auto window = Window("Cant Stop");
-	Game(window).run();
-	//Window window("Cant Stop");
+	Game(Window::create("Can't Stop")).run();
 
 	TTF_Quit();
 	IMG_Quit();

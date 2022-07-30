@@ -16,16 +16,14 @@ enum class GameState {
 
 class Game : public WindowClosedEvent {
 public:
-	Game(Window &window);
-
+	Game(const std::shared_ptr<Window>& window);
 	void run();
 
 private:
-	Window m_window;
+	const std::shared_ptr<Window> m_window;
 	TextureDrawable m_texture;
-
 	GameState m_gameState = GameState::MENU;
 
-	void onWindowClosedEvent() override;
 	void render();
+	void onWindowClosedEvent() override;
 };

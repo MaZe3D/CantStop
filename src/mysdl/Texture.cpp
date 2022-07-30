@@ -6,10 +6,12 @@ int Texture::getWidth()  const { return m_width;  }
 int Texture::getHeight() const { return m_height; }
 
 void Texture::draw(const Rect& rect) const {
-	m_window.drawTexture(*this, rect);
+	if (auto window = m_window.lock())
+		window->drawTexture(*this, rect);
+	else throw std::runtime_error("window doesn't exist anymore");
 }
 
-Texture::Texture(SDL_Texture* texture, const Window& window)
+Texture::Texture(SDL_Texture* texture, const std::weak_ptr<const Window>& window)
 	: m_sdlTexture(texture, [](const SDL_Texture* t){ SDL_DestroyTexture(const_cast<SDL_Texture*>(t)); })
 	, m_window(window)
 {

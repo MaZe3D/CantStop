@@ -9,13 +9,13 @@
 class ClickEvent;
 class WindowEvent;
 
-class Window {
+class Window : public std::enable_shared_from_this<Window> {
 public:
-	Window(const std::string& title, bool fullscreen = false, int width = 800, int height = 500);
+	static std::shared_ptr<Window> create(const std::string& title, bool fullscreen = false, int width = 800, int height = 500);
 
 	void presentFrame() const;
 
-	const Texture& loadTexture(const std::string& path);
+	std::shared_ptr<const Texture> loadTexture(const std::string& path) const;
 
 	void drawTexture(const Texture& texture, const Rect& rect) const;
 
@@ -27,7 +27,7 @@ public:
 	void drawRect() const;
 	void fillRect() const;
 
-	void handleEvents();
+	void handleEvents() const;
 
 	void subscribeClickEvent(ClickEvent* listener);
 	void unsubscribeClickEvent(ClickEvent* listener);
@@ -37,10 +37,11 @@ public:
 
 
 private:
+	Window(const std::string& title, bool fullscreen, int width, int height);
+
 	std::list<ClickEvent*> m_clickEventSubscribers;
 	std::list<WindowEvent*> m_windowEventSubscribers;
 	
 	std::shared_ptr<SDL_Window> m_sdlWindow;
 	std::shared_ptr<SDL_Renderer> m_sdlRenderer;
-	std::list<Texture> m_textures;
 };

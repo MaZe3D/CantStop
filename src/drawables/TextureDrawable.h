@@ -5,12 +5,12 @@
 
 class TextureDrawable : public Drawable {
 public:
-	TextureDrawable(const std::string& path, Window& window);
-	TextureDrawable(const std::string& path, Window& window, const Rect& rect);
-	TextureDrawable(const Texture& texture);
-	TextureDrawable(const Texture& texture, const Rect& rect);
+	TextureDrawable(const std::string& path, const std::shared_ptr<Window>& window);
+	TextureDrawable(const std::string& path, const std::shared_ptr<Window>& window, const Rect& rect);
+	TextureDrawable(const std::shared_ptr<const Texture>& texture);
+	TextureDrawable(const std::shared_ptr<const Texture>& texture, const Rect& rect);
 	void draw();
 
-	Texture texture;
+	std::shared_ptr<const Texture> texture;
 	Rect rect;
 };
