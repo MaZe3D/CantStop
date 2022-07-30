@@ -13,7 +13,7 @@ public:
 	const int ptSize;
 
 	std::shared_ptr<const Font> createDifferentSize(int ptSize) const;
-	std::shared_ptr<const Texture> renderText(const std::string& text, const std::shared_ptr<const Window>& window) const;
+	std::shared_ptr<const Texture> renderText(const std::string& text, const std::shared_ptr<const Window>& window, uint32_t color) const;
 
 private:
 	std::shared_ptr<TTF_Font> m_sdlFont;

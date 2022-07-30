@@ -29,7 +29,7 @@ void Game::run() {
 }
 
 void Game::render() {
-	m_text.rect.setPosX(m_text.rect.getPosX()+1);
+	//m_text.rect.setPosX(m_text.rect.getPosX()+1);
 
 	m_window->clear();
 	m_texture.draw();
@@ -40,5 +40,6 @@ void Game::render() {
 void Game::onWindowClosedEvent() {
 	//m_gameState = GameState::EXIT;
 	m_text.text += " :D";
+	m_text.color = rand() << 16 | rand() | 0x70;
 	m_text.update(m_window);
 }
