@@ -24,8 +24,8 @@ bool Board::applyRunnerOffsetsToActorMarkersAndCheckWin(const ActorEnum actor) {
 }
 
 void Board::advanceRunnerMarkers(const DiceThrow::Combination &combination) {
-	m_columns[(combination.a - 2)].runnerOffset++;
-	m_columns[(combination.b - 2)].runnerOffset++;
+	if (combination.a > 1) m_columns[(combination.a - 2)].runnerOffset++;
+	if (combination.b > 1) m_columns[(combination.b - 2)].runnerOffset++;
 }
 
 const Board::Column& Board::getColumn(uint8_t column) const {
