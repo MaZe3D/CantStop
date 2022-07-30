@@ -1,16 +1,16 @@
 #include "Menu.h"
 
-Menu::Menu(const std::shared_ptr<Window> window, const std::shared_ptr<const Font>& font)
+Menu::Menu(const std::shared_ptr<Window> window, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2)
 	: Event(window)
 	, m_title("res/sprites/MainMenu_Title.png", window)
-	, m_playButton(font, "play", window, 0xFF)
-	, m_vsText(font, "vs.", window, 0xFF)
-	, m_player1Text(font, m_actorNames[m_player1Selection], window, 0xFF)
-	, m_player2Text(font, m_actorNames[m_player2Selection], window, 0xFF)
+	, m_playButton(font1, "play", window, 0xFF)
+	, m_vs("res/sprites/MainMenu_PlayerSelect_Background.png", window)
+	, m_player1Text(font2, m_actorNames[m_player1Selection], window, 0xFFFFFFFF)
+	, m_player2Text(font2, m_actorNames[m_player2Selection], window, 0xFFFFFFFF)
 {
 	m_title      .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 	m_playButton .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
-	m_vsText     .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
+	m_vs     .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 	m_player1Text.rect.setAnchorModeX(Rect::AnchorMode::RIGHT ).setAnchorModeY(Rect::AnchorMode::CENTER);
 	m_player2Text.rect.setAnchorModeX(Rect::AnchorMode::LEFT  ).setAnchorModeY(Rect::AnchorMode::CENTER);
 
@@ -20,7 +20,7 @@ Menu::Menu(const std::shared_ptr<Window> window, const std::shared_ptr<const Fon
 void Menu::draw() {
 	m_title.draw();
 	m_playButton.draw();
-	m_vsText.draw();
+	m_vs.draw();
 	m_player1Text.draw();
 	m_player2Text.draw();
 }
@@ -40,10 +40,10 @@ void Menu::onWindowResized(int width, int height) {
 	m_title.rect.setHeightKeepAspect(height/8, aspect).setPos(width/2, height/5);
 
 	aspect = (float)m_playButton.texture->getWidth()/m_playButton.texture->getHeight();
-	m_playButton.rect.setHeightKeepAspect(height/8, aspect).setPos(width/2, 13*height/20);
+	m_playButton.rect.setHeightKeepAspect(height/12, aspect).setPos(width/2, 13*height/20);
 
-	aspect = (float)m_vsText.texture->getWidth()/m_vsText.texture->getHeight();
-	m_vsText.rect.setHeightKeepAspect(height/20, aspect).setPos(width/2, height/2);
+	aspect = (float)m_vs.texture->getWidth()/m_vs.texture->getHeight();
+	m_vs.rect.setHeightKeepAspect(height/7, aspect).setPos(width/2, 0.49*height);
 
 	adjustSizePlayer1(width, height);
 	adjustSizePlayer2(width, height);

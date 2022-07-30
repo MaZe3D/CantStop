@@ -5,7 +5,7 @@ Game::Game(const std::shared_ptr<Window>& window)
 	: Event(window)
 	, m_window(window)
 	, m_background("res/sprites/MainMenu_Background.png", window)
-	, m_menu(window, Font::create("res/fonts/upheavtt.ttf", 80))
+	, m_menu(window, Font::create("res/fonts/upheavtt.ttf", 80), Font::create("res/fonts/Mx437_Nix8810_M15.ttf", 80))
 {
 	m_window->setDrawColor(0x000000FF);
 	m_background.rect.setAnchorModeX(Rect::AnchorMode::CENTER);
