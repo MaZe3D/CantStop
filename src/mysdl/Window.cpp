@@ -26,6 +26,18 @@ void Window::presentFrame() const {
 	SDL_RenderPresent(m_sdlRenderer.get());
 }
 
+int Window::getWidth () const {
+	int width;
+	SDL_GetWindowSize(m_sdlWindow.get(), &width, NULL);
+	return width;
+}
+
+int Window::getHeight() const {
+	int height;
+	SDL_GetWindowSize(m_sdlWindow.get(), NULL, &height);
+	return height;
+}
+
 std::shared_ptr<const Texture> Window::loadTexture(const std::string& path) const {
 	SDL_Texture* sdlTexture;
 	SDL_CALL_INV(sdlTexture = IMG_LoadTexture(m_sdlRenderer.get(), path.c_str()));
