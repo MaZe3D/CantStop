@@ -1,5 +1,6 @@
 #include "Rect.h"
 #include <stdexcept>
+#include "doctest.h"
 
 Rect::Rect(int posX, int posY, int width, int height, AnchorMode anchorModeX, AnchorMode anchorModeY)
 	: m_anchorPosX{posX}, m_anchorPosY{posY},
@@ -22,7 +23,7 @@ int Rect::getBottom() const { return m_sdlRect.y + m_sdlRect.h; }
 
 Rect& Rect::setPos(int x, int y) { setPosX(x); setPosY(y); return *this; }
 Rect& Rect::setPosX(int x) { m_anchorPosX = x; updateX(); return *this; }
-Rect& Rect::setPosY(int y) { m_anchorPosX = y; updateY(); return *this; }
+Rect& Rect::setPosY(int y) { m_anchorPosY = y; updateY(); return *this; }
 
 Rect& Rect::setDimensions (int width, int height) { setWidth(width); setHeight(height); return *this; }
 Rect& Rect::setWidth (int width)  { m_sdlRect.w = width;  updateX(); return *this; }
@@ -64,4 +65,94 @@ void Rect::updateY() {
 		default: throw std::runtime_error("Rect - invalid anchor mode");
 	}
 	if (m_sdlRect.y > m_anchorPosY) throw std::runtime_error("Rect - values out of range");
+}
+TEST_CASE("Rect"){
+	Rect r(0, 0, 100, 100, Rect::AnchorMode::LEFT, Rect::AnchorMode::TOP);
+
+	SUBCASE("Rect testing Positions and edges") {
+		CHECK(r.getPosX() == 0);
+		CHECK(r.getPosY() == 0);
+		CHECK(r.getWidth() == 100);
+		CHECK(r.getHeight() == 100);
+		CHECK(r.getLeft() == 0);
+		CHECK(r.getTop() == 0);
+		CHECK(r.getRight() == 100);
+		CHECK(r.getBottom() == 100);
+		CHECK(r.containsPoint(0, 0));
+		CHECK(r.containsPoint(50, 50));
+		CHECK(r.containsPoint(100, 100));
+		CHECK(!r.containsPoint(101, 101));
+		CHECK(!r.containsPoint(-1, -1));
+		CHECK(!r.containsPoint(101, 0));
+		CHECK(!r.containsPoint(0, 101));
+		r.setPos(50, 50);
+		CHECK(r.getPosX() == 50);
+		CHECK(r.getPosY() == 50);
+		r.setPosX(100);
+		CHECK(r.getPosX() == 100);
+		CHECK(r.getPosY() == 50);
+		r.setPosY(100);
+		CHECK(r.getPosX() == 100);
+		CHECK(r.getPosY() == 100);
+
+	}
+	SUBCASE("Rect testing Dimensions") {
+		r.setDimensions(200, 200);
+		CHECK(r.getWidth() == 200);
+		CHECK(r.getHeight() == 200);
+		CHECK(r.getLeft() == 0);
+		CHECK(r.getTop() == 0);
+		CHECK(r.getRight() == 200);
+		CHECK(r.getBottom() == 200);
+		r.setWidth(300);
+		CHECK(r.getWidth() == 300);
+		CHECK(r.getHeight() == 200);
+		r.setHeight(300);
+		CHECK(r.getWidth() == 300);
+		CHECK(r.getHeight() == 300);
+		CHECK_THROWS(r.setWidth(-100));
+		CHECK_THROWS(r.setHeight(-100));
+	}
+	SUBCASE("Rect testing Dimensions with keep aspect") {
+		r.setWidthKeepAspect(200);
+		CHECK(r.getWidth() == 200);
+		CHECK(r.getHeight() == 200);
+		r.setHeightKeepAspect(200);
+		CHECK(r.getWidth() == 200);
+		CHECK(r.getHeight() == 200);
+
+		r.setDimensions(100,0);
+		r.setWidthKeepAspect(200);
+		CHECK(r.getWidth() == 200);
+		CHECK(r.getHeight() == 0);
+
+		r.setWidthKeepAspect(100, 2);
+		CHECK(r.getWidth() == 100);
+		CHECK(r.getHeight() == 50);
+		r.setHeightKeepAspect(100, 2);
+		CHECK(r.getWidth() == 200);
+		CHECK(r.getHeight() == 100);
+		r.setWidthKeepAspect(100, 0.5);
+		CHECK(r.getWidth() == 100);
+		CHECK(r.getHeight() == 200);
+		r.setHeightKeepAspect(100, 0.5);
+		CHECK(r.getWidth() == 50);
+		CHECK(r.getHeight() == 100);
+		CHECK_THROWS(r.setWidthKeepAspect(100, -1));
+		CHECK_THROWS(r.setWidthKeepAspect(100, 0));
+		CHECK_THROWS(r.setWidthKeepAspect(-100, 1));
+		CHECK_THROWS(r.setHeightKeepAspect(100, -1));
+		CHECK_THROWS(r.setHeightKeepAspect(-100, 1));
+	}
+	SUBCASE("Rect testing AnchorMode") {
+		r.setAnchorModeX(Rect::AnchorMode::RIGHT);
+		CHECK(r.getLeft() == -100);
+		CHECK(r.getRight() == 0);
+		CHECK(r.getTop() == 0);
+		r.setAnchorModeY(Rect::AnchorMode::BOTTOM);
+		CHECK(r.getTop() == -100);
+		CHECK(r.getBottom() == 0);
+		CHECK_THROWS(r.setAnchorModeX(Rect::AnchorMode::BOTTOM));
+		CHECK_THROWS(r.setAnchorModeY(Rect::AnchorMode::LEFT));
+	}
 }
