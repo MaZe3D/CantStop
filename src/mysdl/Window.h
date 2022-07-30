@@ -13,6 +13,8 @@ class Window : public std::enable_shared_from_this<Window> {
 public:
 	static std::shared_ptr<Window> create(const std::string& title, bool fullscreen = false, int width = 800, int height = 500);
 
+	void setWindowIcon(const std::string& path) const;
+
 	int getWidth() const;
 	int getHeight() const;
 

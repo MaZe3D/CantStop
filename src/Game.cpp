@@ -7,6 +7,7 @@ Game::Game(const std::shared_ptr<Window>& window)
 	, m_background("res/sprites/MainMenu_Background.png", window)
 	, m_menu(window, Font::create("res/fonts/upheavtt.ttf", 80), Font::create("res/fonts/Mx437_Nix8810_M15.ttf", 80))
 {
+	m_window->setWindowIcon("res/sprites/Dice_Player1_5.png");
 	m_window->setDrawColor(0x000000FF);
 	m_background.rect.setAnchorModeX(Rect::AnchorMode::CENTER);
 	m_background.rect.setAnchorModeY(Rect::AnchorMode::CENTER);
