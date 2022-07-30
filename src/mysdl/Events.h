@@ -3,38 +3,72 @@
 #include "Window.h"
 
 class Event {
-public:
-	Event(const std::shared_ptr<Window>& window);
-	
 protected:
-	std::shared_ptr<Window> m_window;
+	Event(const std::shared_ptr<Window>& window);
+
+	const std::shared_ptr<Window> m_window;
 };
 
-class ClickEvent : public Event {
-public:
-	ClickEvent(const std::shared_ptr<Window>& window, bool subscribeEvent = true);
+
+
+
+
+
+
+// ==================== ClickEvent ====================
+class ClickEvent : virtual public Event {
+protected:
+	ClickEvent(bool subscribeEvent = true);
 	virtual ~ClickEvent();
 
-	void subscribeClickEvent();
-	void unsubscribeClickEvent();
-	
-	virtual void onClick(const SDL_Event &event) = 0;
+	virtual void subscribe() final;
+	virtual void unsubscribe() final;
+
+private:
+	friend Window;
+	virtual void onClickEvent(const SDL_Event &event) = 0;
 };
 
-class WindowEvent : public Event {
-public:
-	WindowEvent(const std::shared_ptr<Window>& window, bool subscribeEvent = true);
+
+// LeftClickEvent
+class LeftClickEvent : virtual public ClickEvent {
+private:
+	virtual void onClickEvent(const SDL_Event &event) override final;
+	virtual void onLeftClick(int32_t x, int32_t y) = 0;
+};
+
+
+
+
+
+
+
+// ==================== WindowEvent ====================
+class WindowEvent : virtual public Event {
+protected:
+	WindowEvent(bool subscribeEvent = true);
 	virtual ~WindowEvent();
 
-	void subscribeWindowEvent();
-	void unsubscribeWindowEvent();
-	
+	virtual void subscribe() final;
+	virtual void unsubscribe() final;
+
+private:
+	friend Window; // onWindowEvent may ONLY be called from Window
 	virtual void onWindowEvent(const SDL_Event &event) = 0;
 };
 
+
+// WindowClosedEvent
 class WindowClosedEvent : public WindowEvent {
-public:
-	WindowClosedEvent(const std::shared_ptr<Window>& window, bool subscribeEvent = true);
-	void onWindowEvent(const SDL_Event &event) final;
-	virtual void onWindowClosedEvent() = 0;
+private:
+	virtual void onWindowEvent(const SDL_Event &event) override;
+	virtual void onWindowClosed() = 0;
+};
+
+
+// WindowResizedEvent
+class WindowResizedEvent : public WindowEvent {
+private:
+	virtual void onWindowEvent(const SDL_Event &event) override;
+	virtual void onWindowResized(int32_t width, int32_t height) = 0;
 };

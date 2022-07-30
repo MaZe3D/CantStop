@@ -53,53 +53,43 @@ void Window::clear() const {
 	SDL_CALL(SDL_RenderClear(m_sdlRenderer.get()));
 }
 
-void Window::subscribeClickEvent(ClickEvent* listener) {
-	if (std::find(m_clickEventSubscribers.begin(), m_clickEventSubscribers.end(), listener) == m_clickEventSubscribers.end()) {
-		m_clickEventSubscribers.push_back(listener);
+void Window::subscribeClickEvent(ClickEvent* event) {
+	if (std::find(m_clickEvents.begin(), m_clickEvents.end(), event) == m_clickEvents.end()) {
+		m_clickEvents.push_back(event);
 	}
 }
 
-void Window::unsubscribeClickEvent(ClickEvent* listener) {
-	m_clickEventSubscribers.remove(listener);
+void Window::unsubscribeClickEvent(ClickEvent* event) {
+	m_clickEventsToRemove.push_back(event);
 }
 
-void Window::subscribeWindowEvent(WindowEvent* listener) {
-	if (std::find(m_windowEventSubscribers.begin(), m_windowEventSubscribers.end(), listener) == m_windowEventSubscribers.end()) {
-		m_windowEventSubscribers.push_back(listener);
+void Window::subscribeWindowEvent(WindowEvent* event) {
+	if (std::find(m_windowEvents.begin(), m_windowEvents.end(), event) == m_windowEvents.end()) {
+		m_windowEvents.push_back(event);
 	}
 }
 
-void Window::unsubscribeWindowEvent(WindowEvent* listener) {
-	m_windowEventSubscribers.remove(listener);
+void Window::unsubscribeWindowEvent(WindowEvent* event) {
+	m_windowEventsToRemove.push_back(event);
 }
 
-void Window::handleEvents() const {
-	
+void Window::handleEvents() {
+	// can't remove from above lists while iterating through them -> buffer removal
+	for (auto e : m_clickEventsToRemove ) m_clickEvents .remove(e);
+	for (auto e : m_windowEventsToRemove) m_windowEvents.remove(e);
+	m_clickEventsToRemove .clear();
+	m_windowEventsToRemove.clear();
+
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
-		case SDL_MOUSEBUTTONDOWN:
-			for (auto listener : m_clickEventSubscribers) {
-				listener->onClick(event);
-			}
+		case SDL_MOUSEBUTTONUP:
+			for (auto e : m_clickEvents) e->onClickEvent(event);
 			break;
 		case SDL_WINDOWEVENT:
-			for (auto listener : m_windowEventSubscribers) {
-				listener->onWindowEvent(event);
-			}
+			for (auto e : m_windowEvents) e->onWindowEvent(event);
 			break;
-		default:
-			break;
+		default: break;
 		}
-	}
-}
-
-WindowClosedEvent::WindowClosedEvent(const std::shared_ptr<Window>& window, bool subscribeEvent) : WindowEvent(window, subscribeEvent) {
-}
-
-void WindowClosedEvent::onWindowEvent(const SDL_Event& event)
-{
-	if (event.window.event == SDL_WINDOWEVENT_CLOSE) {
-		onWindowClosedEvent();
 	}
 }
