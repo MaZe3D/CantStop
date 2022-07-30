@@ -1,0 +1,1 @@
+Die Stufen für das Asset Beginnen sich auf der höhe 1657/2160 gemessen von oben. Die höhe eines Balkenabschnittes sind 7/135.
