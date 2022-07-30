@@ -22,6 +22,13 @@ Window::Window(const std::string& title, bool fullscreen, int width, int height)
 	m_sdlRenderer = std::shared_ptr<SDL_Renderer>(renderer, [](SDL_Renderer* r){ SDL_DestroyRenderer(r); });
 }
 
+void Window::setWindowIcon(const std::string& path) const {
+	SDL_Surface* sdlSurface;
+	SDL_CALL_INV(sdlSurface = IMG_Load(path.c_str()));
+	SDL_SetWindowIcon(m_sdlWindow.get(), sdlSurface);
+	SDL_FreeSurface(sdlSurface);
+}
+
 void Window::presentFrame() const {
 	SDL_RenderPresent(m_sdlRenderer.get());
 }
