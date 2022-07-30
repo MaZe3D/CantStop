@@ -17,6 +17,8 @@ public:
 
 	std::shared_ptr<const Texture> loadTexture(const std::string& path) const;
 
+	std::shared_ptr<const Texture> createTextureFromSurface(const std::shared_ptr<SDL_Surface>& surface) const;
+
 	void drawTexture(const Texture& texture, const Rect& rect) const;
 
 	void setDrawColor(uint32_t rgba) const;

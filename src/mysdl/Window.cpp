@@ -32,6 +32,12 @@ std::shared_ptr<const Texture> Window::loadTexture(const std::string& path) cons
 	return std::shared_ptr<const Texture>(new Texture(sdlTexture, weak_from_this()));
 }
 
+std::shared_ptr<const Texture> Window::createTextureFromSurface(const std::shared_ptr<SDL_Surface>& surface) const {
+	SDL_Texture* sdlTexture;
+	SDL_CALL_INV(sdlTexture = SDL_CreateTextureFromSurface(m_sdlRenderer.get(), surface.get()));
+	return std::shared_ptr<const Texture>(new Texture(sdlTexture, weak_from_this()));
+}
+
 void Window::drawTexture(const Texture& texture, const Rect& rect) const {
 		SDL_CALL(SDL_RenderCopy(m_sdlRenderer.get(), const_cast<SDL_Texture*>(texture.m_sdlTexture.get()), NULL, &rect.m_sdlRect));
 	}
