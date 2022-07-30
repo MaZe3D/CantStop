@@ -7,7 +7,7 @@
 #include "mysdl/Window.h"
 #include "drawables/TextureDrawable.h"
 #include "drawables/TextDrawable.h"
-#include "mysdl/EventListener.h"
+#include "mysdl/Events.h"
 
 enum class GameState {
 	MENU,

@@ -2,7 +2,7 @@
 #include <algorithm>
 #include "Window.h"
 #include "util/sdlcall.h"
-#include "EventListener.h"
+#include "Events.h"
 
 // static factory, so that there is always a shared_ptr associated and weak_from_this() can be called
 std::shared_ptr<Window> Window::create(const std::string& title, bool fullscreen, int width, int height) {
