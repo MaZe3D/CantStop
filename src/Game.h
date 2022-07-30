@@ -8,6 +8,7 @@
 #include "drawables/TextureDrawable.h"
 #include "drawables/TextDrawable.h"
 #include "mysdl/Events.h"
+#include "Menu.h"
 
 enum class GameState {
 	MENU,
@@ -22,8 +23,9 @@ public:
 
 private:
 	const std::shared_ptr<Window> m_window;
-	TextureDrawable m_texture;
-	TextDrawable m_text;
+	TextureDrawable m_background;
+	Menu m_menu;
+
 	GameState m_gameState = GameState::MENU;
 
 	void render();
