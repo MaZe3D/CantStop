@@ -54,8 +54,6 @@ void Rect::updateX() {
 }
 
 void Rect::updateY() {
-	if (m_anchorModeY == AnchorMode::LEFT || m_anchorModeY == AnchorMode::RIGHT)
-		throw std::runtime_error("Rect - invalid anchor mode");
 	if (m_sdlRect.h < 0) throw std::runtime_error("Rect - values out of range");
 	m_sdlRect.y = m_anchorPosY;
 	switch (m_anchorModeY) {
