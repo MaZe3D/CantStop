@@ -4,7 +4,10 @@
 #include <iostream>
 #include <string>
 #include <list>
-#include "UIElement.h"
+#include "mysdl/Window.h"
+#include "drawables/TextureDrawable.h"
+#include "drawables/TextDrawable.h"
+#include "mysdl/Events.h"
 
 enum class GameState {
 	MENU,
@@ -12,27 +15,19 @@ enum class GameState {
 	EXIT
 };
 
-class Game {
+class Game : WindowClosedEvent, LeftClickEvent, WindowResizedEvent {
 public:
-	Game(char* title, int xpos, int ypos, int width, int height, bool fullscreen);
-	~Game();
-
+	Game(const std::shared_ptr<Window>& window);
 	void run();
 
 private:
-	SDL_Window* m_window;
-	SDL_Renderer* m_renderer;
-
+	const std::shared_ptr<Window> m_window;
+	TextureDrawable m_texture;
+	TextDrawable m_text;
 	GameState m_gameState = GameState::MENU;
 
-	std::list<UIElement*> m_uiElements = std::list<UIElement*>();
-
-	std::list<InteractableUIElement*> m_interactableUIElements = std::list<InteractableUIElement*>();
-
-	void exampleRender();
-
-	void eventHandler();
 	void render();
-
-	void init(char* title, int xpos, int ypos, int width, int height, bool fullscreen);
+	void onWindowClosed() override;
+	void onLeftClick(int32_t x, int32_t y) override;
+	void onWindowResized(int32_t width, int32_t height) override;
 };
