@@ -33,5 +33,5 @@ const Board::Column& Board::getColumn(uint8_t column) const {
 }
 
 const uint8_t Board::getColumnHeight(uint8_t column) const {
-	return (12 - std::abs(7 - (column + 2)) * 2);
+	return (12 - std::abs(7 - (column + 2)) * 2 + 1);
 }
