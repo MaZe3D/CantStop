@@ -3,17 +3,17 @@
 #include "Window.h"
 
 class Event {
-public: 
-	Event(Window &window);
+public:
+	Event(const std::shared_ptr<Window>& window);
 	
 protected:
-	Window &m_window;
+	std::shared_ptr<Window> m_window;
 };
 
 class ClickEvent : public Event {
 public:
-	ClickEvent(Window &window, bool subscribeEvent = true);
-	~ClickEvent();
+	ClickEvent(const std::shared_ptr<Window>& window, bool subscribeEvent = true);
+	virtual ~ClickEvent();
 
 	void subscribeClickEvent();
 	void unsubscribeClickEvent();
@@ -23,8 +23,8 @@ public:
 
 class WindowEvent : public Event {
 public:
-	WindowEvent(Window &window, bool subscribeEvent = true);
-	~WindowEvent();
+	WindowEvent(const std::shared_ptr<Window>& window, bool subscribeEvent = true);
+	virtual ~WindowEvent();
 
 	void subscribeWindowEvent();
 	void unsubscribeWindowEvent();
@@ -34,7 +34,7 @@ public:
 
 class WindowClosedEvent : public WindowEvent {
 public:
-	WindowClosedEvent(Window &window, bool subscribeEvent = true);	
+	WindowClosedEvent(const std::shared_ptr<Window>& window, bool subscribeEvent = true);
 	void onWindowEvent(const SDL_Event &event) final;
 	virtual void onWindowClosedEvent() = 0;
 };

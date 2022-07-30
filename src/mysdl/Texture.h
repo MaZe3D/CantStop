@@ -15,9 +15,9 @@ public:
 private:
 	friend Window;
 
-	Texture(SDL_Texture* texture, const Window& window);
+	Texture(SDL_Texture* texture, const std::weak_ptr<const Window>& window);
 
 	std::shared_ptr<const SDL_Texture> m_sdlTexture;
-	const Window& m_window;
+	const std::weak_ptr<const Window> m_window;
 	int m_width, m_height;
 };

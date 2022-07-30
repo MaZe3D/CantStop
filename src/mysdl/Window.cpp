@@ -4,6 +4,11 @@
 #include "util/sdlcall.h"
 #include "EventListener.h"
 
+// static factory, so that there is always a shared_ptr associated and weak_from_this() can be called
+std::shared_ptr<Window> Window::create(const std::string& title, bool fullscreen, int width, int height) {
+	return std::shared_ptr<Window>(new Window(title, fullscreen, width, height));
+}
+
 Window::Window(const std::string& title, bool fullscreen, int width, int height) {
 	uint32_t windowFlags = SDL_WINDOW_RESIZABLE;
 	if (fullscreen) windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
@@ -21,11 +26,16 @@ void Window::presentFrame() const {
 	SDL_RenderPresent(m_sdlRenderer.get());
 }
 
-const Texture& Window::loadTexture(const std::string& path) {
+std::shared_ptr<const Texture> Window::loadTexture(const std::string& path) const {
 	SDL_Texture* sdlTexture;
 	SDL_CALL_INV(sdlTexture = IMG_LoadTexture(m_sdlRenderer.get(), path.c_str()));
-	m_textures.push_back(Texture(sdlTexture, *this));
-	return m_textures.back();
+	return std::shared_ptr<const Texture>(new Texture(sdlTexture, weak_from_this()));
+}
+
+std::shared_ptr<const Texture> Window::createTextureFromSurface(const std::shared_ptr<SDL_Surface>& surface) const {
+	SDL_Texture* sdlTexture;
+	SDL_CALL_INV(sdlTexture = SDL_CreateTextureFromSurface(m_sdlRenderer.get(), surface.get()));
+	return std::shared_ptr<const Texture>(new Texture(sdlTexture, weak_from_this()));
 }
 
 void Window::drawTexture(const Texture& texture, const Rect& rect) const {
@@ -63,7 +73,7 @@ void Window::unsubscribeWindowEvent(WindowEvent* listener) {
 	m_windowEventSubscribers.remove(listener);
 }
 
-void Window::handleEvents() {
+void Window::handleEvents() const {
 	
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
@@ -84,7 +94,7 @@ void Window::handleEvents() {
 	}
 }
 
-WindowClosedEvent::WindowClosedEvent(Window& window, bool subscribeEvent) : WindowEvent(window, subscribeEvent) {
+WindowClosedEvent::WindowClosedEvent(const std::shared_ptr<Window>& window, bool subscribeEvent) : WindowEvent(window, subscribeEvent) {
 }
 
 void WindowClosedEvent::onWindowEvent(const SDL_Event& event)

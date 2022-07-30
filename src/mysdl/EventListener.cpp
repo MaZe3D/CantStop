@@ -1,8 +1,8 @@
 #include "EventListener.h"
 
-Event::Event(Window &window) : m_window(window) {}
+Event::Event(const std::shared_ptr<Window>& window) : m_window(window) {}
 
-ClickEvent::ClickEvent(Window &window, bool subscribeEvent) : Event(window) {
+ClickEvent::ClickEvent(const std::shared_ptr<Window>& window, bool subscribeEvent) : Event(window) {
     if (subscribeEvent) {
         subscribeClickEvent();
     }
@@ -13,14 +13,14 @@ ClickEvent::~ClickEvent() {
 }
 
 void ClickEvent::subscribeClickEvent() {
-    m_window.subscribeClickEvent(this);
+    m_window->subscribeClickEvent(this);
 }
 
 void ClickEvent::unsubscribeClickEvent() {
-    m_window.unsubscribeClickEvent(this);
+    m_window->unsubscribeClickEvent(this);
 }
 
-WindowEvent::WindowEvent(Window &window, bool subscribeEvent) : Event(window) {
+WindowEvent::WindowEvent(const std::shared_ptr<Window>& window, bool subscribeEvent) : Event(window) {
     if (subscribeEvent) {
         subscribeWindowEvent();
     }
@@ -31,9 +31,9 @@ WindowEvent::~WindowEvent() {
 }
 
 void WindowEvent::subscribeWindowEvent() {
-    m_window.subscribeWindowEvent(this);
+    m_window->subscribeWindowEvent(this);
 }
 
 void WindowEvent::unsubscribeWindowEvent() {
-    m_window.unsubscribeWindowEvent(this);
+    m_window->unsubscribeWindowEvent(this);
 }
