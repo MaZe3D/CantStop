@@ -15,9 +15,9 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 	}
 
 	for (auto& bars : m_bars) {
-		bars.barPlayer1.rect.setAnchorModeX(Rect::AnchorMode::LEFT).setAnchorModeY(Rect::AnchorMode::BOTTOM);
-		bars.barPlayer2.rect.setAnchorModeX(Rect::AnchorMode::LEFT).setAnchorModeY(Rect::AnchorMode::BOTTOM);
-		bars.barTemp   .rect.setAnchorModeX(Rect::AnchorMode::LEFT).setAnchorModeY(Rect::AnchorMode::BOTTOM);
+		bars.barPlayer1.rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::BOTTOM);
+		bars.barPlayer2.rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::BOTTOM);
+		bars.barTemp   .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::BOTTOM);
 	}
 
 	onWindowResized(window->getWidth(), window->getHeight());
@@ -63,9 +63,9 @@ void GameRoundDrawer::setBars() {
 void GameRoundDrawer::onWindowResized(int width, int height) {
 	m_background.rect.setHeightKeepAspect(height, m_background.getTexture()->getAspect()).setPos(width/2, height/2);
 
-	const int firstBarPosX = (width/2) - (height * (10./27.));
+	const int firstBarPosX = (width/2) - (height * (786.5/2160));
 	const int firstBarPosY = height * (1657./2160.);
-	const int barWidth = height * (1./80.);
+	const int barWidth = height * (1./20.);
 	const int barDistance = height * (152.6/2160.);
 	const int barPairDistance = height * (47./2160.);
 	m_barIncrement = height * (7./135.);
