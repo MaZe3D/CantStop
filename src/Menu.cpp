@@ -2,12 +2,14 @@
 
 Menu::Menu(const std::shared_ptr<Window> window, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2)
 	: Event(window)
+	, m_background("res/sprites/MainMenu_Background.png", window)
 	, m_title("res/sprites/MainMenu_Title.png", window)
 	, m_playButton(font1, "play", window, 0xFF)
 	, m_vs("res/sprites/MainMenu_PlayerSelect_Background.png", window)
 	, m_player1Text(font2, m_actorNames[m_player1Selection], window, 0xFFFFFFFF)
 	, m_player2Text(font2, m_actorNames[m_player2Selection], window, 0xFFFFFFFF)
 {
+	m_background .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 	m_title      .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 	m_playButton .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 	m_vs     .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
@@ -18,6 +20,7 @@ Menu::Menu(const std::shared_ptr<Window> window, const std::shared_ptr<const Fon
 }
 
 void Menu::draw() {
+	m_background.draw();
 	m_title.draw();
 	m_playButton.draw();
 	m_vs.draw();
@@ -36,7 +39,10 @@ void Menu::adjustSizePlayer2(int width, int height) {
 }
 
 void Menu::onWindowResized(int width, int height) {
-	float aspect = (float)m_title.texture->getWidth()/m_title.texture->getHeight();
+	float aspect = (float)m_background.texture->getWidth()/m_background.texture->getHeight();
+	m_background.rect.setHeightKeepAspect(height, aspect).setPos(width/2, height/2);
+
+	aspect = (float)m_title.texture->getWidth()/m_title.texture->getHeight();
 	m_title.rect.setHeightKeepAspect(height/8, aspect).setPos(width/2, height/5);
 
 	aspect = (float)m_playButton.texture->getWidth()/m_playButton.texture->getHeight();

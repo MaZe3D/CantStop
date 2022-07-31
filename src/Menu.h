@@ -17,6 +17,7 @@ private:
 	uint8_t m_player1Selection = 0;
 	uint8_t m_player2Selection = 1;
 
+	TextureDrawable m_background;
 	TextureDrawable m_title;
 	TextDrawable m_playButton;
 	TextureDrawable m_vs;

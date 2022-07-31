@@ -23,7 +23,6 @@ public:
 
 private:
 	const std::shared_ptr<Window> m_window;
-	TextureDrawable m_background;
 	Menu m_menu;
 
 	GameState m_gameState = GameState::MENU;
