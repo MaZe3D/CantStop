@@ -3,6 +3,16 @@
 #include "Board.h"
 
 DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor) {
+
+	uint8_t usedRunnerCount = 0;
+	uint8_t usedRunners[3];
+	for (int i = 0; i < 11; i++) {
+		if (board.getColumn(i).runnerOffset > 0)
+			usedRunners[usedRunnerCount++] = i+2;
+	}
+
+
+
 	// throw dice
 	for (uint8_t i = 0; i < 4; i++)
 		m_dice[i] = rand() % 6 + 1;
@@ -13,18 +23,30 @@ DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor) {
 	for (int i = 0; i < 3; ++i) {
 		for (int j = i+1; j < 4; ++j) {
 			int8_t a1 = -1;
-            int8_t b1 = -1;
+			int8_t b1 = -1;
 			uint8_t a = m_dice[i] + m_dice[j];
 			uint8_t b = maxValue - a;
 			const Board::Column& columnA = board.getColumn(a-2);
 			const Board::Column& columnB = board.getColumn(b-2);
 			const uint8_t& actorMarkera = (currentActor == ActorEnum::ACTOR1) ? columnA.actor1Marker : columnA.actor2Marker;
 			const uint8_t& actorMarkerb = (currentActor == ActorEnum::ACTOR1) ? columnB.actor1Marker : columnB.actor2Marker;
-			if (actorMarkera + columnA.runnerOffset < columnA.maxHeight) {
-				a1 = a;
+			if (actorMarkera + columnA.runnerOffset >= columnA.maxHeight) {
+				a = -1;
 			}
-			if (actorMarkerb + columnB.runnerOffset < columnB.maxHeight) {
-				b1 = b;
+			if (actorMarkerb + columnB.runnerOffset >= columnB.maxHeight) {
+				b = -1;
+			}
+
+			if (usedRunnerCount > 1) {
+				for (int runner = 0; runner < usedRunnerCount; runner++) {
+					if (a != m_dice[runner]) a = -1;
+					if (b != m_dice[runner]) b = -1;
+				}
+			}
+
+			if (a < 0) {
+				a = b;
+				b = -1;
 			}
 			m_combinations[++m_combinationCount] = {a1, b1};
 		}
