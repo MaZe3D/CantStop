@@ -27,15 +27,17 @@ DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor) {
 		int8_t b = maxValue - a;
 		const Board::Column& columnA = board.getColumn(a-2);
 		const Board::Column& columnB = board.getColumn(b-2);
-		const uint8_t& actorMarkera = (currentActor == ActorEnum::ACTOR1) ? columnA.actor1Marker : columnA.actor2Marker;
-		const uint8_t& actorMarkerb = (currentActor == ActorEnum::ACTOR1) ? columnB.actor1Marker : columnB.actor2Marker;
-		if (actorMarkera + columnA.runnerOffset >= columnA.maxHeight) {
+		const uint8_t& actorMarkerA            = (currentActor == ActorEnum::ACTOR1) ? columnA.actor1Marker : columnA.actor2Marker;
+		const uint8_t& actorMarkerAOtherPlayer = (currentActor == ActorEnum::ACTOR1) ? columnA.actor2Marker : columnA.actor1Marker;
+		const uint8_t& actorMarkerB            = (currentActor == ActorEnum::ACTOR1) ? columnB.actor1Marker : columnB.actor2Marker;
+		const uint8_t& actorMarkerBOtherPlayer = (currentActor == ActorEnum::ACTOR1) ? columnB.actor2Marker : columnB.actor1Marker;
+		if (actorMarkerAOtherPlayer == columnA.maxHeight || actorMarkerA + columnA.runnerOffset >= columnA.maxHeight) {
 			a = -1;
 		}
-		if (actorMarkerb + columnB.runnerOffset >= columnB.maxHeight) {
+		if (actorMarkerBOtherPlayer == columnB.maxHeight || actorMarkerB + columnB.runnerOffset >= columnB.maxHeight) {
 			b = -1;
 		}
-		if (a == b && actorMarkera + columnA.runnerOffset +1 >= columnA.maxHeight) {
+		if (a == b && actorMarkerA + columnA.runnerOffset +1 >= columnA.maxHeight) {
 			b = -1;
 		}
 
