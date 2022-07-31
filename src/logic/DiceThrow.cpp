@@ -14,7 +14,8 @@ DiceThrow::DiceThrow(const Board &board, const ActorEnum currentActor) :
 	// calculate all possible valid combinations for player
 	for (int i = 0; i < 3; ++i) {
 		for (int j = i+1; j < 4; ++j) {
-			int8_t a1, b1;
+			int8_t a1 = -1;
+            int8_t b1 = -1;
 			uint8_t a = m_dice[i] + m_dice[j];
 			uint8_t b = maxValue - a;
 			const uint8_t& actorMarkera = (currentActor == ActorEnum::ACTOR1) ? board.getColumn(a-2).actor1Marker : board.getColumn(a-2).actor2Marker;
