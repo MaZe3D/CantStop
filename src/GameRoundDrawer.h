@@ -5,9 +5,9 @@
 #include "drawables/TextureDrawable.h"
 #include "drawables/TextDrawable.h"
 
-class GameRound : WindowResizedEvent, LeftClickEvent {
+class GameRoundDrawer : WindowResizedEvent, LeftClickEvent {
 public:
-	GameRound(const std::shared_ptr<Window> window, const std::shared_ptr<const Font>& font);
+	GameRoundDrawer(const std::shared_ptr<Window> window, const std::shared_ptr<const Font>& font);
 
 	void draw();
 
