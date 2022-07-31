@@ -1,4 +1,19 @@
 # CantStop
+## Build process
+The build process is is done via the MinGW-64 Compiler within a Linux envoirement. To build on Windows you need a running version of WSL to cross-compile the code.
+The following example is done with a Ubuntu 22.04 LTS Instance in WSL2.
+### Dependencies
+The Dependensies for this Software are the following:
+
+- build-essential
+- mingw-w64-x86-64-dev
+- libsdl2-dev
+- libsdl2-image-dev
+- libsdl2-ttf-dev
+
+They can be installed via the following command (Ubuntu):
+
+
 ## Coding Guidelines
 ```c++
 #include <iostream>
