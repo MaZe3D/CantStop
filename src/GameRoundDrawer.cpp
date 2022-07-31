@@ -115,22 +115,22 @@ void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 	if (!m_round) return;
 	if (!m_round->isOver()) m_round->nextStep();
 	const DiceThrow& diceThrow = m_round->getDiceThrow();
-	std::cout << "combinationCount: " << (int)diceThrow.getCombinationCount() << std::endl;
+	DEBUG_LOG_NO_NL("combinationCount: " << (int)diceThrow.getCombinationCount() << std::endl);
 	for (int i = 0; i < diceThrow.getCombinationCount(); i++) {
-		std::cout << "combination #" << i << ": " << (int)diceThrow.getCombination(i).a << " " << (int)diceThrow.getCombination(i).b << std::endl;
+		DEBUG_LOG_NO_NL("combination #" << i << ": " << (int)diceThrow.getCombination(i).a << " " << (int)diceThrow.getCombination(i).b << std::endl);
 	}
-	std::cout << "current player: " << ((m_round->getCurrentActor() == ActorEnum::ACTOR1) ? "ACTOR 1" : "ACTOR 2");
-	std::cout << "\nnext step: " << ((m_round->getNextStep() == GameRound::NextStep::CHOOSE_DICE_COMBINATION) ? "CHOOSE_DICE_COMBINATION" : "CHOOSE_TO_CONTINUE_OR_STOP");
-	std::cout << "\nactor1Marker:";
+	DEBUG_LOG_NO_NL("\ncurrent player: " << ((m_round->getCurrentActor() == ActorEnum::ACTOR1) ? "ACTOR 1" : "ACTOR 2"));
+	DEBUG_LOG_NO_NL("\nnext step: " << ((m_round->getNextStep() == GameRound::NextStep::CHOOSE_DICE_COMBINATION) ? "CHOOSE_DICE_COMBINATION" : "CHOOSE_TO_CONTINUE_OR_STOP"));
+	DEBUG_LOG_NO_NL("\nactor1Marker:");
 	for (unsigned int i = 0; i < m_bars.size(); i++)
-		std::cout << " " << (int)m_round->getBoard().getColumn(i).actor1Marker;
-	std::cout << "\nactor2Marker:";
+		DEBUG_LOG_NO_NL(" " << (int)m_round->getBoard().getColumn(i).actor1Marker);
+	DEBUG_LOG_NO_NL("\nactor2Marker:");
 	for (unsigned int i = 0; i < m_bars.size(); i++)
-		std::cout << " " << (int)m_round->getBoard().getColumn(i).actor2Marker;
-	std::cout << "\nrunnerOffset:";
+		DEBUG_LOG_NO_NL(" " << (int)m_round->getBoard().getColumn(i).actor2Marker);
+	DEBUG_LOG_NO_NL("\nrunnerOffset:");
 	for (unsigned int i = 0; i < m_bars.size(); i++)
-		std::cout << " " << (int)m_round->getBoard().getColumn(i).runnerOffset;
-	std::cout << "\n-----------------------------------------------------------------------------------------\n";
+		DEBUG_LOG_NO_NL(" " << (int)m_round->getBoard().getColumn(i).runnerOffset);
+	DEBUG_LOG_NO_NL("\n-----------------------------------------------------------------------------------------\n");
 }
 
 void GameRoundDrawer::setDiceTextures()
