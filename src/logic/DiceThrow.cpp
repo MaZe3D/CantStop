@@ -19,13 +19,13 @@ DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor) {
 
 	uint8_t maxValue = m_dice[0] + m_dice[1] + m_dice[2] + m_dice[3];
 
+	m_combinationCount = 0;
+
 	// calculate all possible valid combinations for player
 	for (int i = 0; i < 3; ++i) {
 		for (int j = i+1; j < 4; ++j) {
-			int8_t a1 = -1;
-			int8_t b1 = -1;
-			uint8_t a = m_dice[i] + m_dice[j];
-			uint8_t b = maxValue - a;
+			int8_t a = m_dice[i] + m_dice[j];
+			int8_t b = maxValue - a;
 			const Board::Column& columnA = board.getColumn(a-2);
 			const Board::Column& columnB = board.getColumn(b-2);
 			const uint8_t& actorMarkera = (currentActor == ActorEnum::ACTOR1) ? columnA.actor1Marker : columnA.actor2Marker;
@@ -37,18 +37,18 @@ DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor) {
 				b = -1;
 			}
 
-			if (usedRunnerCount > 1) {
-				for (int runner = 0; runner < usedRunnerCount; runner++) {
-					if (a != m_dice[runner]) a = -1;
-					if (b != m_dice[runner]) b = -1;
-				}
-			}
+			//if (usedRunnerCount > 1) {
+			//	for (int runner = 0; runner < usedRunnerCount; runner++) {
+			//		if (a != m_dice[runner]) a = -1;
+			//		if (b != m_dice[runner]) b = -1;
+			//	}
+			//}
 
 			if (a < 0) {
 				a = b;
 				b = -1;
 			}
-			m_combinations[++m_combinationCount] = {a1, b1};
+			m_combinations[m_combinationCount++] = {a, b};
 		}
 	}
 }

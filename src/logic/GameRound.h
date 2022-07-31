@@ -15,6 +15,7 @@ public:
 
 	const Board& getBoard();
 	ActorEnum getCurrentActor();
+	const DiceThrow& getDiceThrow();
 	bool isOver();
 
 	NextStep getNextStep();

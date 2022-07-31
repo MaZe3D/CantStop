@@ -114,8 +114,13 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 	if (!m_round) return;
 	if (!m_round->isOver()) m_round->nextStep();
+	const DiceThrow& diceThrow = m_round->getDiceThrow();
+	std::cout << "combinationCount: " << (int)diceThrow.getCombinationCount() << std::endl;
+	for (int i = 0; i < diceThrow.getCombinationCount(); i++) {
+		std::cout << "combination #" << i << ": " << (int)diceThrow.getCombination(i).a << " " << (int)diceThrow.getCombination(i).b << std::endl;
+	}
 	std::cout << "current player: " << ((m_round->getCurrentActor() == ActorEnum::ACTOR1) ? "ACTOR 1" : "ACTOR 2");
-	std::cout << "next step: " << ((m_round->getNextStep() == GameRound::NextStep::CHOOSE_DICE_COMBINATION) ? "CHOOSE_DICE_COMBINATION" : "CHOOSE_TO_CONTINUE_OR_STOP");
+	std::cout << "\nnext step: " << ((m_round->getNextStep() == GameRound::NextStep::CHOOSE_DICE_COMBINATION) ? "CHOOSE_DICE_COMBINATION" : "CHOOSE_TO_CONTINUE_OR_STOP");
 	std::cout << "\nactor1Marker:";
 	for (unsigned int i = 0; i < m_bars.size(); i++)
 		std::cout << " " << (int)m_round->getBoard().getColumn(i).actor1Marker;
