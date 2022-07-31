@@ -96,8 +96,8 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 			.setWidth(barWidth);
 	}
 
-	const double diceWidth(height * (100./2160.));
-	const double diceSpaceWidth(height * (10./2160.));
+	const double diceWidth(height * (150./2160.));
+	const double diceSpaceWidth(diceWidth * (1./10.));
 
 	for (int i = 0; i < 4; i++) {
 		m_diceTextureDrawable[i].rect
