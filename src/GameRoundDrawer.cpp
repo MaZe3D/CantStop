@@ -32,9 +32,13 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 		m_diceTextureDrawable.push_back(TextureDrawable(m_diceTextures[i]));
 	}
 
-	m_victoryTextures[0] = (window->loadTexture("res/sprites/Victory_Player1.png"));
-	m_victoryTextures[1] = (window->loadTexture("res/sprites/Victory_Player2.png"));
+	for (int i = 0; i < 2; i++) {
+		m_btnCombinationSelectBackground[i] = (window->loadTexture("res/sprites/Game_Player" + std::to_string(i + 1) + "_Select.png"));
+	}
 
+	for (int i = 0; i < 2; i++) {
+		m_victoryTextures[i] = (window->loadTexture("res/sprites/Victory_Player" + std::to_string(i + 1) + ".png"));
+	}
 	m_victoryDrawable = std::make_shared<TextureDrawable>(m_victoryTextures[0]);
 	m_victoryDrawable->rect
 		.setAnchorModeX(Rect::AnchorMode::CENTER)
