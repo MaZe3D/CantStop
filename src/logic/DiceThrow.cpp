@@ -42,8 +42,8 @@ DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor) {
 		}
 
 		if (usedRunnerCount == 2 && a != usedRunners[0] && a != usedRunners[1] && b != usedRunners[0] && b != usedRunners[1]) {
-			m_combinations[m_combinationCount++] = {a, -1};
-			m_combinations[m_combinationCount++] = {b, -1};
+			if (a > 0) m_combinations[m_combinationCount++] = {a, -1};
+			if (b > 0) m_combinations[m_combinationCount++] = {b, -1};
 			continue;
 		}
 
