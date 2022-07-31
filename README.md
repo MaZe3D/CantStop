@@ -35,7 +35,10 @@ The Build-configuration and Plattform can be combined like in the following exam
 WSL2 supports the starting of windows executables right from the linux-bash so you can compile and run windows-binaries right from the WSL. Linux-GUI applications are only supported on Windows 11. On Windows 10 you can compile the Linux binaries, but you can only run the tests (as they do not need a GUI).
 
 ### Binaries
-The Binaries are located 
+The Binaries are located in the Porject folder `bin/[Platform]/`.
+Nessesary dependecies like sprites and fonts are stored `bin/[Platform]/res`.
+
+Windows binarys are staticly linked, to midigate dependency issues. Linux binarys are dynamically linked, they need the requiered dependencys (mentioned above) for the programs to run.
 
 ## Coding Guidelines
 ```c++
