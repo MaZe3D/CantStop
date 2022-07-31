@@ -13,9 +13,20 @@ TextureDrawable::TextureDrawable(const std::shared_ptr<const Texture>& texture)
 {}
 
 TextureDrawable::TextureDrawable(const std::shared_ptr<const Texture>& texture, const Rect& rect)
-	: texture{texture}, rect{rect}
-{}
+	: rect{rect}, m_texture{texture}
+{
+	if (!texture) throw std::runtime_error("TextureDrawable::TextureDrawable() - texture can't ben nullptr");
+}
+
+const std::shared_ptr<const Texture>& TextureDrawable::getTexture() {
+	return m_texture;
+}
+
+void TextureDrawable::setTexture(const std::shared_ptr<const Texture>& texture) {
+	if (!texture) throw std::runtime_error("TextureDrawable::setTexture() - texture can't ben nullptr");
+	m_texture = texture;
+}
 
 void TextureDrawable::draw() {
-	texture->draw(rect);
+	m_texture->draw(rect);
 }

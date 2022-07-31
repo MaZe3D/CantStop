@@ -29,18 +29,18 @@ void Menu::draw() {
 }
 
 void Menu::adjustSizePlayer1(int width, int height) {
-	m_player1Text.rect.setHeightKeepAspect(height/10, m_player1Text.texture->getAspect()).setPos(width/2-height/8, height/2);
+	m_player1Text.rect.setHeightKeepAspect(height/10, m_player1Text.getTexture()->getAspect()).setPos(width/2-height/8, height/2);
 }
 
 void Menu::adjustSizePlayer2(int width, int height) {
-	m_player2Text.rect.setHeightKeepAspect(height/10, m_player2Text.texture->getAspect()).setPos(width/2+height/8, height/2);
+	m_player2Text.rect.setHeightKeepAspect(height/10, m_player2Text.getTexture()->getAspect()).setPos(width/2+height/8, height/2);
 }
 
 void Menu::onWindowResized(int width, int height) {
-	m_background.rect.setHeightKeepAspect(height   , m_background.texture->getAspect()).setPos(width/2, height/2);
-	m_title     .rect.setHeightKeepAspect(height/8 , m_title     .texture->getAspect()).setPos(width/2, height/5);
-	m_playButton.rect.setHeightKeepAspect(height/12, m_playButton.texture->getAspect()).setPos(width/2, 13*height/20);
-	m_vs        .rect.setHeightKeepAspect(height/7 , m_vs        .texture->getAspect()).setPos(width/2, 0.49*height);
+	m_background.rect.setHeightKeepAspect(height   , m_background.getTexture()->getAspect()).setPos(width/2, height/2);
+	m_title     .rect.setHeightKeepAspect(height/8 , m_title     .getTexture()->getAspect()).setPos(width/2, height/5);
+	m_playButton.rect.setHeightKeepAspect(height/12, m_playButton.getTexture()->getAspect()).setPos(width/2, 13*height/20);
+	m_vs        .rect.setHeightKeepAspect(height/7 , m_vs        .getTexture()->getAspect()).setPos(width/2, 0.49*height);
 
 	adjustSizePlayer1(width, height);
 	adjustSizePlayer2(width, height);
