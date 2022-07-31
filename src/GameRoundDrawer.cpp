@@ -63,11 +63,11 @@ void GameRoundDrawer::setBars() {
 void GameRoundDrawer::onWindowResized(int width, int height) {
 	m_background.rect.setHeightKeepAspect(height, m_background.getTexture()->getAspect()).setPos(width/2, height/2);
 
-	const int firstBarPosX = (width/2) - (height * (786.5/2160));
-	const int firstBarPosY = height * (1657./2160.);
-	const int barWidth = height * (1./20.);
-	const int barDistance = height * (152.6/2160.);
-	const int barPairDistance = height * (47./2160.);
+	const double firstBarPosX = (width/2) - (height * (786.5/2160));
+	const double firstBarPosY = height * (1657./2160.);
+	const double barWidth = height * (1./20.);
+	const double barDistance = height * (152.6/2160.);
+	const double barPairDistance = height * (47./2160.);
 	m_barIncrement = height * (7./135.);
 
 	for (unsigned int i = 0; i < m_bars.size(); i++) {

@@ -31,7 +31,7 @@ private:
 
 	TextureDrawable m_background;
 
-	int m_barIncrement;
+	double m_barIncrement;
 	
 	const std::shared_ptr<const Texture> m_textureBarPlayer1;
 	const std::shared_ptr<const Texture> m_textureBarPlayer2;
