@@ -2,10 +2,11 @@
 
 ## Build process
 The build process is done via the MinGW-64 Compiler within a Linux environment. To build on Windows you need a running version of WSL to cross-compile the code.
-The following example is done with a Ubuntu 22.04 LTS Instance in WSL2.
+The following example is done with an Ubuntu 22.04 LTS Instance in WSL2.
 ### Dependencies
 The Dependencies for this Software are the following:
-- `build-essential`
+- `build-essential`,
+- `git`
 - `mingw-w64-x86-64-dev`
 - `libsdl2-dev`
 - `libsdl2-image-dev`
@@ -17,7 +18,7 @@ sudo apt update && sudo apt install build-essential mingw-w64-x86-64-dev libsdl2
 ```
 
 ### Build
-to build the file navigate to the project folder via the `cd` command. On WSL you can nacigate to your Windows Drives by navigating to the mount folder `/mnt/c/` for the `C:\` drive or any other drive letter on your computer.
+To build the project navigate to the project folder via the `cd` command. On WSL you can nacigate to your Windows Drives by navigating to the mount folder `/mnt/c/` for the `C:\` drive or any other drive letter on your computer.
 Within your project folder you can start the build process via the `make` command.
 Our project supports the following build-targets:
 | Build configuration | Plattform |
@@ -26,10 +27,10 @@ Our project supports the following build-targets:
 | `release` | `linux` |
 | `test` | |
 
-The Build-configuration can be combined like following:
-To build on windows in release mode you type `make release_windows`
-To test on linux you can type `make test_linux`
-I you like to run the code immediately you can use the `run` command like `make run_debug_windows` right after building the program will run. 
+The Build-configuration and Plattform can be combined like in the following examples:
+- To build on windows in release mode you type `make release_windows`.
+- To build the test on linux you can type `make test_linux`.
+- If you'd like to run the code immediately you can add the prepend `run_` command like `make run_debug_windows`. Right after building the program will be executed. 
 
 WSL2 supports the starting of windows executables right from the linux-bash so you can compile and run right from the WSL.
 
