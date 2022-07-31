@@ -9,6 +9,7 @@
 #include "drawables/TextDrawable.h"
 #include "mysdl/Events.h"
 #include "Menu.h"
+#include "GameRound.h"
 
 enum class GameState {
 	MENU,
@@ -21,9 +22,14 @@ public:
 	Game(const std::shared_ptr<Window>& window);
 	void run();
 
+	void startNewRound();
+
 private:
 	const std::shared_ptr<Window> m_window;
+	const std::shared_ptr<const Font> m_font1;
+	const std::shared_ptr<const Font> m_font2;
 	Menu m_menu;
+	GameRound m_gameRound;
 
 	GameState m_gameState = GameState::MENU;
 

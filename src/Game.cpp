@@ -4,7 +4,10 @@
 Game::Game(const std::shared_ptr<Window>& window)
 	: Event(window)
 	, m_window(window)
-	, m_menu(window, Font::create("res/fonts/upheavtt.ttf", 80), Font::create("res/fonts/Mx437_Nix8810_M15.ttf", 80))
+	, m_font1(Font::create("res/fonts/upheavtt.ttf", 80))
+	, m_font2(Font::create("res/fonts/Mx437_Nix8810_M15.ttf", 80))
+	, m_menu(window, *this, m_font1, m_font2)
+	, m_gameRound(window, m_font1)
 {
 	m_window->setWindowIcon("res/sprites/Dice_Player1_5.png");
 	m_window->setDrawColor(0x000000FF);
@@ -30,10 +33,22 @@ void Game::run() {
 	}
 }
 
+void Game::startNewRound() {
+	m_gameState = GameState::PLAY;
+}
+
 void Game::render() {
 	m_window->clear();
 
-	m_menu.draw();
+	switch (m_gameState) {
+	case GameState::MENU:
+		m_menu.draw();
+		break;
+	case GameState::PLAY:
+		m_gameRound.draw();
+	default:
+		break;
+	}
 
 	m_window->presentFrame();
 }

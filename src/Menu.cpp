@@ -1,7 +1,9 @@
 #include "Menu.h"
+#include "Game.h"
 
-Menu::Menu(const std::shared_ptr<Window> window, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2)
+Menu::Menu(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2)
 	: Event(window)
+	, m_game(game)
 	, m_background("res/sprites/MainMenu_Background.png", window)
 	, m_title("res/sprites/MainMenu_Title.png", window)
 	, m_playButton(font1, "play", window, 0xFF)
@@ -60,5 +62,8 @@ void Menu::onLeftClick(int32_t x, int32_t y) {
 		m_player2Text.text = m_actorNames[m_player2Selection];
 		m_player2Text.update(m_window);
 		adjustSizePlayer2(m_window->getWidth(), m_window->getHeight());
+	}
+	if (m_playButton.rect.containsPoint(x, y)) {
+		m_game.startNewRound();
 	}
 }
