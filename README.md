@@ -7,14 +7,16 @@ The following example is done with an Ubuntu 22.04 LTS Instance in WSL2. WSL1 an
 The Dependencies for this Software are the following:
 - `build-essential`,
 - `git`
+- `make`
 - `mingw-w64-x86-64-dev`
+- `g++-mingw-w64-x86-64`
 - `libsdl2-dev`
 - `libsdl2-image-dev`
 - `libsdl2-ttf-dev`
 
 They can be installed via the following command (Ubuntu):
 ```bash
-sudo apt update && sudo apt install build-essential git mingw-w64-x86-64-dev libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
+sudo apt update && sudo apt install build-essential git make mingw-w64-x86-64-dev g++-mingw-w64-x86-64 libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
 ```
 
 ### Build
