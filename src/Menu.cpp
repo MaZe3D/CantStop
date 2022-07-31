@@ -29,27 +29,18 @@ void Menu::draw() {
 }
 
 void Menu::adjustSizePlayer1(int width, int height) {
-	float aspect = (float)m_player1Text.texture->getWidth()/m_player1Text.texture->getHeight();
-	m_player1Text.rect.setHeightKeepAspect(height/10, aspect).setPos(width/2-height/8, height/2);
+	m_player1Text.rect.setHeightKeepAspect(height/10, m_player1Text.texture->getAspect()).setPos(width/2-height/8, height/2);
 }
 
 void Menu::adjustSizePlayer2(int width, int height) {
-	float aspect = (float)m_player2Text.texture->getWidth()/m_player2Text.texture->getHeight();
-	m_player2Text.rect.setHeightKeepAspect(height/10, aspect).setPos(width/2+height/8, height/2);
+	m_player2Text.rect.setHeightKeepAspect(height/10, m_player2Text.texture->getAspect()).setPos(width/2+height/8, height/2);
 }
 
 void Menu::onWindowResized(int width, int height) {
-	float aspect = (float)m_background.texture->getWidth()/m_background.texture->getHeight();
-	m_background.rect.setHeightKeepAspect(height, aspect).setPos(width/2, height/2);
-
-	aspect = (float)m_title.texture->getWidth()/m_title.texture->getHeight();
-	m_title.rect.setHeightKeepAspect(height/8, aspect).setPos(width/2, height/5);
-
-	aspect = (float)m_playButton.texture->getWidth()/m_playButton.texture->getHeight();
-	m_playButton.rect.setHeightKeepAspect(height/12, aspect).setPos(width/2, 13*height/20);
-
-	aspect = (float)m_vs.texture->getWidth()/m_vs.texture->getHeight();
-	m_vs.rect.setHeightKeepAspect(height/7, aspect).setPos(width/2, 0.49*height);
+	m_background.rect.setHeightKeepAspect(height   , m_background.texture->getAspect()).setPos(width/2, height/2);
+	m_title     .rect.setHeightKeepAspect(height/8 , m_title     .texture->getAspect()).setPos(width/2, height/5);
+	m_playButton.rect.setHeightKeepAspect(height/12, m_playButton.texture->getAspect()).setPos(width/2, 13*height/20);
+	m_vs        .rect.setHeightKeepAspect(height/7 , m_vs        .texture->getAspect()).setPos(width/2, 0.49*height);
 
 	adjustSizePlayer1(width, height);
 	adjustSizePlayer2(width, height);
