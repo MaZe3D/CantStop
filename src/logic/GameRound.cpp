@@ -28,9 +28,10 @@ void GameRound::nextStep() {
 		if (m_diceThrow.getCombinationCount() == 0) {
 			m_board.resetRunnerOffsets();
 			m_currentActor = (m_currentActor == ActorEnum::ACTOR1) ? ActorEnum::ACTOR2 : ActorEnum::ACTOR1;
+			m_diceThrow = DiceThrow(m_board, m_currentActor);
 			break;
 		}
-		m_board.advanceRunnerMarkers(m_diceThrow.getCombination(currentActor->choseCombination(m_board, m_diceThrow)), m_currentActor);
+		m_board.advanceRunnerMarkers(m_diceThrow.getCombination(currentActor->choseCombination(m_board, m_diceThrow)));
 		m_nextStep = NextStep::CHOOSE_TO_CONTINUE_OR_STOP;
 		break;
 	case (NextStep::CHOOSE_TO_CONTINUE_OR_STOP):

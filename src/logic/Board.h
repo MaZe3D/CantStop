@@ -15,7 +15,7 @@ public:
 	Board();
 
 	const Column& getColumn(uint8_t column) const;
-	void advanceRunnerMarkers(const DiceThrow::Combination& combination, const ActorEnum actor);
+	void advanceRunnerMarkers(const DiceThrow::Combination& combination);
 	void resetRunnerOffsets();
 	bool applyRunnerOffsetsToActorMarkersAndCheckWin(const ActorEnum actor);
 
