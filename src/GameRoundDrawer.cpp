@@ -32,6 +32,14 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 		m_diceTextureDrawable.push_back(TextureDrawable(m_diceTextures[i]));
 	}
 
+	m_victoryTextures[0] = (window->loadTexture("res/sprites/Victory_Player1.png"));
+	m_victoryTextures[1] = (window->loadTexture("res/sprites/Victory_Player2.png"));
+
+	m_victoryDrawable = std::make_shared<TextureDrawable>(m_victoryTextures[0]);
+	m_victoryDrawable->rect
+		.setAnchorModeX(Rect::AnchorMode::CENTER)
+		.setAnchorModeY(Rect::AnchorMode::CENTER);
+
 	onWindowResized(window->getWidth(), window->getHeight());
 }
 
@@ -41,6 +49,7 @@ void GameRoundDrawer::setGameRound(const std::shared_ptr<GameRound>& round) {
 
 void GameRoundDrawer::draw() {
 	m_background.draw();
+
 	setBars();
 
 	for(auto &bars : m_bars) {
@@ -50,6 +59,11 @@ void GameRoundDrawer::draw() {
 	setDiceTextures();
 	for (int i = 0; i < 4; i++) {
 		m_diceTextureDrawable[i].draw();
+	}
+
+	if (m_round->isOver())
+	{
+		drawVictoryScreen(m_round->getCurrentActor());
 	}
 }
 
@@ -109,6 +123,10 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 	m_diceTextureDrawable[1].rect.setPos(m_diceTextureDrawable[0].rect.getPosX() + diceWidth + diceSpaceWidth, m_diceTextureDrawable[0].rect.getPosY());
 	m_diceTextureDrawable[2].rect.setPos(m_diceTextureDrawable[0].rect.getPosX(), m_diceTextureDrawable[0].rect.getPosY() + diceWidth + diceSpaceWidth);
 	m_diceTextureDrawable[3].rect.setPos(m_diceTextureDrawable[2].rect.getPosX() + diceWidth + diceSpaceWidth, m_diceTextureDrawable[2].rect.getPosY());
+
+	m_victoryDrawable->rect
+		.setHeightKeepAspect(height * (1070./2160.), m_victoryDrawable->getTexture()->getAspect())
+		.setPos(width / 2, height * (750./2160.));
 }
 
 void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
@@ -153,4 +171,19 @@ void GameRoundDrawer::Bars::draw() {
 	barPlayer1.draw();
 	barPlayer2.draw();
 	barTemp.draw();
+}
+
+void GameRoundDrawer::drawVictoryScreen(ActorEnum winner) {
+	switch (winner) {
+	case ActorEnum::ACTOR1:
+		m_victoryDrawable->setTexture(m_victoryTextures[0]);
+		break;
+	case ActorEnum::ACTOR2:
+		m_victoryDrawable->setTexture(m_victoryTextures[1]);
+		break;
+	default:
+		break;
+	}
+
+	m_victoryDrawable->draw();
 }

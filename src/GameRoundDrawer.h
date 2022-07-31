@@ -18,6 +18,10 @@ private:
 
 	std::shared_ptr<GameRound> m_round;
 
+	std::shared_ptr<const Texture> m_victoryTextures[2];
+
+	std::shared_ptr<TextureDrawable> m_victoryDrawable;
+
 	struct Bars
 	{
 		TextureDrawable barPlayer1;
@@ -49,4 +53,6 @@ private:
 
 	void onWindowResized(int width, int height) override;
 	void onLeftClick(int32_t x, int32_t y) override;
+
+	void drawVictoryScreen(ActorEnum winner);
 };

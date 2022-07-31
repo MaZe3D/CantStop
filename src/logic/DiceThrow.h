@@ -11,7 +11,7 @@ class DiceThrow {
 public:
 	struct Combination {
 		int8_t a;
-		int8_t b;
+		int8_t b; // -1 means just one value
 	};
 
 	DiceThrow(const Board& board, const ActorEnum currentActor);
