@@ -1,4 +1,5 @@
 #include "TextureDrawable.h"
+#include <stdexcept>
 
 TextureDrawable::TextureDrawable(const std::string& path, const std::shared_ptr<Window>& window)
 	: TextureDrawable(window->loadTexture(path))
