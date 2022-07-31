@@ -3,7 +3,6 @@
 #include "Board.h"
 #include "DiceThrow.h"
 #include "ActorEnum.h"
-#include <inttypes.h>
 
 class Actor {
 public:

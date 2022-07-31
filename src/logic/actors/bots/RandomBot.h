@@ -1,7 +1,7 @@
 #pragma once
-#include "../Actor.h"
+#include "../Bot.h"
 
-class RandomBot : public Actor {
+class RandomBot : public Bot {
 public:
     RandomBot();
     uint8_t choseCombination(const Board& board, const DiceThrow& diceThrow) override;

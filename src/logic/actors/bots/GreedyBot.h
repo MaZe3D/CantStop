@@ -1,8 +1,8 @@
 #pragma once
-#include "../Actor.h"
+#include "../Bot.h"
 
-class SmartBot : public Actor {
-    SmartBot();
+class GreedyBot : public Bot {
+    GreedyBot();
     uint8_t choseCombination(const Board& board, const DiceThrow& diceThrow) override;
     bool finishedTurn(const Board& board) override;
 };
