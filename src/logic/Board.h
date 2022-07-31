@@ -5,19 +5,19 @@
 
 class Board {
 public:
-	struct Column;
-
-	const Column& getColumn(uint8_t column) const;
-	const uint8_t getColumnHeight(uint8_t column) const;
-	void advanceRunnerMarkers(const DiceThrow::Combination& combination); // ActorEnum entfernt bitte beobachten
-	void resetRunnerOffsets();
-	bool applyRunnerOffsetsToActorMarkersAndCheckWin(const ActorEnum actor);
-
 	struct Column {
 		uint8_t actor1Marker;
 		uint8_t actor2Marker;
 		uint8_t runnerOffset;
+		uint8_t maxHeight;
 	};
+
+	Board();
+
+	const Column& getColumn(uint8_t column) const;
+	void advanceRunnerMarkers(const DiceThrow::Combination& combination, const ActorEnum actor);
+	void resetRunnerOffsets();
+	bool applyRunnerOffsetsToActorMarkersAndCheckWin(const ActorEnum actor);
 
 private:
 	Column m_columns[11];

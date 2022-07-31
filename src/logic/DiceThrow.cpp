@@ -16,12 +16,14 @@ DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor) {
             int8_t b1 = -1;
 			uint8_t a = m_dice[i] + m_dice[j];
 			uint8_t b = maxValue - a;
-			const uint8_t& actorMarkera = (currentActor == ActorEnum::ACTOR1) ? board.getColumn(a-2).actor1Marker : board.getColumn(a-2).actor2Marker;
-			const uint8_t& actorMarkerb = (currentActor == ActorEnum::ACTOR1) ? board.getColumn(b-2).actor1Marker : board.getColumn(b-2).actor2Marker;
-			if (actorMarkera + board.getColumn(a-2).runnerOffset < board.getColumnHeight(a-2)) {
+			const Board::Column& columnA = board.getColumn(a-2);
+			const Board::Column& columnB = board.getColumn(b-2);
+			const uint8_t& actorMarkera = (currentActor == ActorEnum::ACTOR1) ? columnA.actor1Marker : columnA.actor2Marker;
+			const uint8_t& actorMarkerb = (currentActor == ActorEnum::ACTOR1) ? columnB.actor1Marker : columnB.actor2Marker;
+			if (actorMarkera + columnA.runnerOffset < columnA.maxHeight) {
 				a1 = a;
 			}
-			if (actorMarkerb + board.getColumn(b-2).runnerOffset < board.getColumnHeight(b-2)) {
+			if (actorMarkerb + columnB.runnerOffset < columnB.maxHeight) {
 				b1 = b;
 			}
 			m_combinations[++m_combinationCount] = {a1, b1};

@@ -6,12 +6,19 @@
 
 class GameRound {
 public:
+
+	enum class NextStep {
+		CHOOSE_DICE_COMBINATION,
+		CHOOSE_TO_CONTINUE_OR_STOP
+	};
+
 	GameRound(const std::shared_ptr<Actor>& actor1, const std::shared_ptr<Actor>& actor2);
 
 	const Board& getBoard();
 	ActorEnum getCurrentActor();
 	bool isOver();
 
+	NextStep getNextStep();
 	void nextStep();
 
 private:
