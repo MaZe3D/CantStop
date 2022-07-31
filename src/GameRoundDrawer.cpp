@@ -7,7 +7,7 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 	, m_textureBarPlayer1(window->loadTexture("res/sprites/Game_Player1_Bar.png"))
 	, m_textureBarPlayer2(window->loadTexture("res/sprites/Game_Player2_Bar.png"))
 	, m_textureBarTemp(window->loadTexture("res/sprites/Game_Temp_Bar.png"))
-
+	, m_victoryText(font, "Click to continue", window)
 {
 	m_background.rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 
@@ -39,6 +39,10 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 	m_victoryDrawable->rect
 		.setAnchorModeX(Rect::AnchorMode::CENTER)
 		.setAnchorModeY(Rect::AnchorMode::CENTER);
+
+	m_victoryText.rect
+		.setAnchorModeX(Rect::AnchorMode::CENTER)
+		.setAnchorModeY(Rect::AnchorMode::TOP);
 
 	onWindowResized(window->getWidth(), window->getHeight());
 }
@@ -125,8 +129,11 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 	m_diceTextureDrawable[3].rect.setPos(m_diceTextureDrawable[2].rect.getPosX() + diceWidth + diceSpaceWidth, m_diceTextureDrawable[2].rect.getPosY());
 
 	m_victoryDrawable->rect
-		.setHeightKeepAspect(height * (1070./2160.), m_victoryDrawable->getTexture()->getAspect())
-		.setPos(width / 2, height * (750./2160.));
+		.setHeightKeepAspect(height, m_victoryDrawable->getTexture()->getAspect())
+		.setPos(width / 2, height / 2);
+
+	m_victoryText.rect.setHeightKeepAspect(height*(70./2160.), m_victoryText.getTexture()->getAspect())
+		.setPos(width / 2, height * (2033./2160.));
 }
 
 void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
@@ -186,4 +193,6 @@ void GameRoundDrawer::drawVictoryScreen(ActorEnum winner) {
 	}
 
 	m_victoryDrawable->draw();
+	m_victoryText.draw();
+
 }

@@ -21,6 +21,7 @@ private:
 	std::shared_ptr<const Texture> m_victoryTextures[2];
 
 	std::shared_ptr<TextureDrawable> m_victoryDrawable;
+	TextDrawable m_victoryText;
 
 	struct Bars
 	{
