@@ -10,6 +10,7 @@
 #include "mysdl/Events.h"
 #include "Menu.h"
 #include "GameRoundDrawer.h"
+#include "logic/GameRound.h"
 
 enum class GameState {
 	MENU,
@@ -22,7 +23,7 @@ public:
 	Game(const std::shared_ptr<Window>& window);
 	void run();
 
-	void startNewRound();
+	void startNewRound(const std::shared_ptr<GameRound>& round);
 
 private:
 	const std::shared_ptr<Window> m_window;
@@ -30,6 +31,7 @@ private:
 	const std::shared_ptr<const Font> m_font2;
 	Menu m_menu;
 	GameRoundDrawer m_gameRoundDrawer;
+	std::shared_ptr<GameRound> m_round;
 
 	GameState m_gameState = GameState::MENU;
 

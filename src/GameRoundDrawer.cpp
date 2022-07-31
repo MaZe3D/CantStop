@@ -8,7 +8,7 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 	onWindowResized(window->getWidth(), window->getHeight());
 }
 
-void GameRoundDrawer::draw() {
+void GameRoundDrawer::draw(std::shared_ptr<GameRound>& round) {
 	m_background.draw();
 }
 

@@ -4,12 +4,13 @@
 #include "mysdl/Font.h"
 #include "drawables/TextureDrawable.h"
 #include "drawables/TextDrawable.h"
+#include "logic/GameRound.h"
 
 class GameRoundDrawer : WindowResizedEvent, LeftClickEvent {
 public:
 	GameRoundDrawer(const std::shared_ptr<Window> window, const std::shared_ptr<const Font>& font);
 
-	void draw();
+	void draw(std::shared_ptr<GameRound>& round);
 
 private:
 	TextureDrawable m_background;

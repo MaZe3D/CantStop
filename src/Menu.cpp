@@ -1,5 +1,9 @@
 #include "Menu.h"
 #include "Game.h"
+#include "logic/actors/Player.h"
+#include "logic/actors/bots/SmartBot.h"
+#include "logic/actors/bots/GreedyBot.h"
+#include "logic/actors/bots/RandomBot.h"
 
 Menu::Menu(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2)
 	: Event(window)
@@ -64,6 +68,20 @@ void Menu::onLeftClick(int32_t x, int32_t y) {
 		adjustSizePlayer2(m_window->getWidth(), m_window->getHeight());
 	}
 	if (m_playButton.rect.containsPoint(x, y)) {
-		m_game.startNewRound();
+		std::shared_ptr<Actor> actor1;
+		switch(m_player1Selection) {
+			case 0: actor1 = std::make_shared<Player>(); break;
+			case 1: actor1 = std::make_shared<SmartBot>(); break;
+			case 2: actor1 = std::make_shared<GreedyBot>(); break;
+			case 3: actor1 = std::make_shared<RandomBot>(); break;
+		}
+		std::shared_ptr<Actor> actor2;
+		switch(m_player2Selection) {
+			case 0: actor2 = std::make_shared<Player>(); break;
+			case 1: actor2 = std::make_shared<SmartBot>(); break;
+			case 2: actor2 = std::make_shared<GreedyBot>(); break;
+			case 3: actor2 = std::make_shared<RandomBot>(); break;
+		}
+		m_game.startNewRound(std::make_shared<GameRound>(actor1, actor2));
 	}
 }

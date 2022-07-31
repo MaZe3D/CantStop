@@ -33,7 +33,8 @@ void Game::run() {
 	}
 }
 
-void Game::startNewRound() {
+void Game::startNewRound(const std::shared_ptr<GameRound>& round) {
+	m_round = round;
 	m_gameState = GameState::PLAY;
 }
 
@@ -45,7 +46,7 @@ void Game::render() {
 		m_menu.draw();
 		break;
 	case GameState::PLAY:
-		m_gameRoundDrawer.draw();
+		m_gameRoundDrawer.draw(m_round);
 	default:
 		break;
 	}

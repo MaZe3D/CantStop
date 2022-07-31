@@ -13,7 +13,7 @@ public:
 	void draw();
 
 private:
-	const char* m_actorNames[4] { "HUMAN", "RANDOM BOT", "GREEDY BOT", "SMART BOT" };
+	const char* m_actorNames[4] { "HUMAN", "SMART BOT", "GREEDY BOT", "RANDOM BOT" };
 
 	uint8_t m_player1Selection = 0;
 	uint8_t m_player2Selection = 1;
