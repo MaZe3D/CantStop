@@ -14,7 +14,7 @@ The Dependencies for this Software are the following:
 
 They can be installed via the following command (Ubuntu):
 ```bash
-sudo apt update && sudo apt install build-essential mingw-w64-x86-64-dev libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
+sudo apt update && sudo apt install build-essential git mingw-w64-x86-64-dev libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
 ```
 
 ### Build
@@ -30,9 +30,9 @@ Our project supports the following build-targets:
 The Build-configuration and Plattform can be combined like in the following examples:
 - To build on windows in release mode you type `make release_windows`.
 - To build the test on linux you can type `make test_linux`.
-- If you'd like to run the code immediately you can add the prepend `run_` command like `make run_debug_windows`. Right after building the program will be executed. 
+- If you'd like to run the code immediately you can prepend `run_`, for example `make run_debug_windows`. Right after building the program will be executed. 
 
-WSL2 supports the starting of windows executables right from the linux-bash so you can compile and run right from the WSL.
+WSL2 supports the starting of windows executables right from the linux-bash so you can compile and run windows-binaries right from the WSL. Linux-GUI applications are only supported on Windows 11. On Windows 10 you can compile the Linux binaries, but you can only run the tests (as they do not need a GUI).
 
 ## Coding Guidelines
 ```c++
