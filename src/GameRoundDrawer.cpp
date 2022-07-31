@@ -139,7 +139,7 @@ void GameRoundDrawer::setDiceTextures()
 	if (m_round->getCurrentActor() == ActorEnum::ACTOR2) offset = 6;
 	
 	for (int i = 0; i < 4; i++) {
-		m_diceTextureDrawable[i].setTexture(m_diceTextures[i+offset]);
+		m_diceTextureDrawable[i].setTexture(m_diceTextures[m_round->getDiceThrow().getDie(i) -1 + offset]);
 	}
 }
 
