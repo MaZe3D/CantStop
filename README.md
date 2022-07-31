@@ -2,7 +2,7 @@
 
 ## Build process
 The build process is done via the MinGW-64 Compiler within a Linux environment. To build on Windows you need a running version of WSL to cross-compile the code.
-The following example is done with an Ubuntu 22.04 LTS Instance in WSL2.
+The following example is done with an Ubuntu 22.04 LTS Instance in WSL2. WSL1 and Ubuntu 20.04 are also supported.
 ### Dependencies
 The Dependencies for this Software are the following:
 - `build-essential`,
@@ -33,6 +33,9 @@ The Build-configuration and Plattform can be combined like in the following exam
 - If you'd like to run the code immediately you can prepend `run_`, for example `make run_debug_windows`. Right after building the program will be executed. 
 
 WSL2 supports the starting of windows executables right from the linux-bash so you can compile and run windows-binaries right from the WSL. Linux-GUI applications are only supported on Windows 11. On Windows 10 you can compile the Linux binaries, but you can only run the tests (as they do not need a GUI).
+
+### Binaries
+The Binaries are located 
 
 ## Coding Guidelines
 ```c++
