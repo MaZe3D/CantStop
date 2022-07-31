@@ -1,7 +1,5 @@
 #include "GreedyBot.h"
 
-GreedyBot::GreedyBot() {}
-
 bool GreedyBot::finishedTurn(const Board &board) {
 	for (uint8_t i = 0; i < 11; i++) {
 		if (board.getColumn(i).runnerOffset != 0) {

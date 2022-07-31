@@ -1,13 +1,11 @@
+#include <stdexcept>
 #include "DiceThrow.h"
 #include "Board.h"
 
-DiceThrow::DiceThrow(const Board &board, const ActorEnum currentActor) :
-	m_dice{ rand() % 6 + 1, rand() % 6 + 1, rand() % 6 + 1, rand() % 6 + 1 } {
-	// throw dices
-	/*m_dice[0] = rand() % 6 + 1;
-	m_dice[1] = rand() % 6 + 1;
-	m_dice[2] = rand() % 6 + 1;
-	m_dice[3] = rand() % 6 + 1;*/
+DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor) {
+	// throw dice
+	for (uint8_t i = 0; i < 4; i++)
+		m_dice[i] = rand() % 6 + 1;
 
 	uint8_t maxValue = m_dice[0] + m_dice[1] + m_dice[2] + m_dice[3];
 
@@ -26,9 +24,21 @@ DiceThrow::DiceThrow(const Board &board, const ActorEnum currentActor) :
 			if (actorMarkerb + board.getColumn(b-2).runnerOffset < board.getColumnHeight(b-2)) {
 				b1 = b;
 			}
-			Combination combination = { a1, b1 };
-			m_combinations.push_back(combination);
+			m_combinations[++m_combinationCount] = {a1, b1};
 		}
 	}
+}
 
+uint8_t DiceThrow::getDie(uint8_t dieID) const {
+	if (dieID >= 4) throw std::runtime_error("DiceThrow::getDie() - dieID must be smaller than 4");
+	return m_dice[dieID];
+}
+
+uint8_t DiceThrow::getCombinationCount() const {
+	return m_combinationCount;
+}
+
+const DiceThrow::Combination& DiceThrow::getCombination(uint8_t combinationID) const {
+	if (combinationID >= m_combinationCount) throw std::runtime_error("DiceThrow::getCombination() - invalid combinationID");
+	return m_combinations[combinationID];
 }
