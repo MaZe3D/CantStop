@@ -6,7 +6,6 @@
 
 class GameRound {
 public:
-
 	enum class NextStep {
 		CHOOSE_DICE_COMBINATION,
 		CHOOSE_TO_CONTINUE_OR_STOP
@@ -22,10 +21,12 @@ public:
 	void nextStep();
 
 private:
+	NextStep m_nextStep = NextStep::CHOOSE_DICE_COMBINATION;
 	ActorEnum m_currentActor = ActorEnum::ACTOR1;
 	bool m_isOver = false;
 
 	Board m_board;
 	std::shared_ptr<Actor> m_actor1;
 	std::shared_ptr<Actor> m_actor2;
+	DiceThrow m_diceThrow;
 };
