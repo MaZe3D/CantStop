@@ -74,6 +74,9 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 		m_bars[i].barPlayer2.rect
 			.setPos(firstBarPosX + barPairDistance + (i * barDistance), firstBarPosY)
 			.setWidth(barWidth);
+		m_bars[i].barTemp.rect
+			.setPos(firstBarPosX + barPairDistance + (i * barDistance), firstBarPosY)
+			.setWidth(barWidth);
 	}
 }
 
