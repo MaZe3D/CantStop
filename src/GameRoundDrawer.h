@@ -29,6 +29,12 @@ private:
 		void draw();
 	};
 
+	std::vector<std::shared_ptr<const Texture>> m_diceTextures; // 0-5 Player 1, 6-11 Player 2
+
+	std::vector<TextureDrawable> m_diceTextureDrawable;
+
+	void setDiceTextures();
+
 	TextureDrawable m_background;
 
 	double m_barIncrement;

@@ -21,8 +21,18 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 		bars.barTemp   .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::BOTTOM);
 	}
 
-	onWindowResized(window->getWidth(), window->getHeight());
+	for (int i = 0; i < 6; i++) {
+		m_diceTextures.push_back(window->loadTexture("res/sprites/Dice_Player1_" + std::to_string(i + 1) + ".png"));
+	}
+	for (int i = 0; i < 6; i++) {
+		m_diceTextures.push_back(window->loadTexture("res/sprites/Dice_Player2_" + std::to_string(i + 1) + ".png"));
+	}
 
+	for (int i = 0; i < 4; i++) {
+		m_diceTextureDrawable.push_back(TextureDrawable(m_diceTextures[i]));
+	}
+
+	onWindowResized(window->getWidth(), window->getHeight());
 }
 
 void GameRoundDrawer::setGameRound(const std::shared_ptr<GameRound>& round) {
@@ -35,6 +45,11 @@ void GameRoundDrawer::draw() {
 
 	for(auto &bars : m_bars) {
 		bars.draw();
+	}
+
+	setDiceTextures();
+	for (int i = 0; i < 4; i++) {
+		m_diceTextureDrawable[i].draw();
 	}
 }
 
@@ -80,6 +95,20 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 			.setPos(firstBarPosX + barPairDistance + (i * barDistance), firstBarPosY)
 			.setWidth(barWidth);
 	}
+
+	const double diceWidth(height * (100./2160.));
+	const double diceSpaceWidth(height * (10./2160.));
+
+	for (int i = 0; i < 4; i++) {
+		m_diceTextureDrawable[i].rect
+			.setWidth(diceWidth)
+			.setHeight(diceWidth);
+	}
+
+	m_diceTextureDrawable[0].rect.setPos(firstBarPosX - (400./2160.)*height, firstBarPosY - (13*m_barIncrement));
+	m_diceTextureDrawable[1].rect.setPos(m_diceTextureDrawable[0].rect.getPosX() + diceWidth + diceSpaceWidth, m_diceTextureDrawable[0].rect.getPosY());
+	m_diceTextureDrawable[2].rect.setPos(m_diceTextureDrawable[0].rect.getPosX(), m_diceTextureDrawable[0].rect.getPosY() + diceWidth + diceSpaceWidth);
+	m_diceTextureDrawable[3].rect.setPos(m_diceTextureDrawable[2].rect.getPosX() + diceWidth + diceSpaceWidth, m_diceTextureDrawable[2].rect.getPosY());
 }
 
 void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
@@ -97,6 +126,16 @@ void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 	for (unsigned int i = 0; i < m_bars.size(); i++)
 		std::cout << " " << (int)m_round->getBoard().getColumn(i).runnerOffset;
 	std::cout << "\n-----------------------------------------------------------------------------------------\n";
+}
+
+void GameRoundDrawer::setDiceTextures()
+{
+	int offset = 0;
+	if (m_round->getCurrentActor() == ActorEnum::ACTOR2) offset = 6;
+	
+	for (int i = 0; i < 4; i++) {
+		m_diceTextureDrawable[i].setTexture(m_diceTextures[i+offset]);
+	}
 }
 
 GameRoundDrawer::Bars::Bars(TextureDrawable barPlayer1, TextureDrawable barPlayer2, TextureDrawable barTemp)
