@@ -31,7 +31,6 @@ private:
 	const std::shared_ptr<const Font> m_font2;
 	Menu m_menu;
 	GameRoundDrawer m_gameRoundDrawer;
-	std::shared_ptr<GameRound> m_round;
 
 	GameState m_gameState = GameState::MENU;
 

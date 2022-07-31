@@ -8,8 +8,7 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 	, m_textureBarTemp(window->loadTexture("res/sprites/Game_Temp_Bar.png"))
 
 {
-	m_background .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
-	onWindowResized(window->getWidth(), window->getHeight());
+	m_background.rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 
 	for (int i = 0; i < 11; i++) {
 		m_bars.push_back(Bars(TextureDrawable(m_textureBarPlayer1), TextureDrawable(m_textureBarPlayer2), TextureDrawable(m_textureBarTemp)));
@@ -25,30 +24,34 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 
 }
 
-void GameRoundDrawer::draw(std::shared_ptr<GameRound>& round) {
+void GameRoundDrawer::setGameRound(const std::shared_ptr<GameRound>& round) {
+	m_round = round;
+}
+
+void GameRoundDrawer::draw() {
 	m_background.draw();
-	setBars(round);
+	setBars();
 
 	for(auto &bars : m_bars) {
 		bars.draw();
 	}
 }
 
-void GameRoundDrawer::setBars(std::shared_ptr<GameRound> round) {
+void GameRoundDrawer::setBars() {
 	for (unsigned int i = 0; i < m_bars.size(); i++) {
-		m_bars[i].barPlayer1.rect.setHeight(round->getBoard().getColumn(i).actor1Marker * m_barIncrement);
-		m_bars[i].barPlayer2.rect.setHeight(round->getBoard().getColumn(i).actor2Marker * m_barIncrement);
-		if (round->getBoard().getColumn(i).runnerOffset > 0) {
-			switch (round->getCurrentActor()) {
+		m_bars[i].barPlayer1.rect.setHeight(m_round->getBoard().getColumn(i).actor1Marker * m_barIncrement);
+		m_bars[i].barPlayer2.rect.setHeight(m_round->getBoard().getColumn(i).actor2Marker * m_barIncrement);
+		if (m_round->getBoard().getColumn(i).runnerOffset > 0) {
+			switch (m_round->getCurrentActor()) {
 			case ActorEnum::ACTOR1:
 				m_bars[i].barTemp.rect
 					.setPos(m_bars[i].barPlayer1.rect.getPosX(), m_bars[i].barPlayer1.rect.getPosY() - m_bars[i].barPlayer1.rect.getHeight())
-					.setHeight(round->getBoard().getColumn(i).runnerOffset * m_barIncrement);
+					.setHeight(m_round->getBoard().getColumn(i).runnerOffset * m_barIncrement);
 				break;
 			case ActorEnum::ACTOR2:
 				m_bars[i].barTemp.rect
 					.setPos(m_bars[i].barPlayer2.rect.getPosX(), m_bars[i].barPlayer2.rect.getPosY() - m_bars[i].barPlayer2.rect.getHeight())
-					.setHeight(round->getBoard().getColumn(i).runnerOffset * m_barIncrement);
+					.setHeight(m_round->getBoard().getColumn(i).runnerOffset * m_barIncrement);
 				break;
 			default:
 				break;
@@ -81,6 +84,8 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 }
 
 void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
+	if (!m_round) return;
+	if (!m_round->isOver()) m_round->nextStep();
 }
 
 GameRoundDrawer::Bars::Bars(TextureDrawable barPlayer1, TextureDrawable barPlayer2, TextureDrawable barTemp)
