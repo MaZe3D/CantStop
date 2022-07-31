@@ -14,6 +14,10 @@ const Board& GameRound::getBoard() { return m_board; }
 ActorEnum GameRound::getCurrentActor() { return m_currentActor; }
 bool GameRound::isOver() { return m_isOver; }
 
+GameRound::NextStep GameRound::getNextStep() {
+	return m_nextStep;
+}
+
 void GameRound::nextStep() {
 	if (m_isOver) throw std::runtime_error("GameRound::nextStep() - game is over!");
 	std::shared_ptr<Actor>& currentActor = (m_currentActor == ActorEnum::ACTOR1) ? m_actor1 : m_actor2;
