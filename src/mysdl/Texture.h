@@ -9,6 +9,7 @@ class Texture {
 public:
 	int getWidth() const;
 	int getHeight() const;
+	float getAspect() const;
 
 	void draw(const Rect& rect) const;
 
@@ -20,4 +21,5 @@ private:
 	std::shared_ptr<const SDL_Texture> m_sdlTexture;
 	const std::weak_ptr<const Window> m_window;
 	int m_width, m_height;
+	float m_aspect;
 };

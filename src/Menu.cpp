@@ -1,13 +1,21 @@
 #include "Menu.h"
+#include "Game.h"
+#include "logic/actors/Player.h"
+#include "logic/actors/bots/SmartBot.h"
+#include "logic/actors/bots/GreedyBot.h"
+#include "logic/actors/bots/RandomBot.h"
 
-Menu::Menu(const std::shared_ptr<Window> window, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2)
+Menu::Menu(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2)
 	: Event(window)
+	, m_game(game)
+	, m_background("res/sprites/MainMenu_Background.png", window)
 	, m_title("res/sprites/MainMenu_Title.png", window)
 	, m_playButton(font1, "play", window, 0xFF)
 	, m_vs("res/sprites/MainMenu_PlayerSelect_Background.png", window)
 	, m_player1Text(font2, m_actorNames[m_player1Selection], window, 0xFFFFFFFF)
 	, m_player2Text(font2, m_actorNames[m_player2Selection], window, 0xFFFFFFFF)
 {
+	m_background .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 	m_title      .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 	m_playButton .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 	m_vs     .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
@@ -18,6 +26,7 @@ Menu::Menu(const std::shared_ptr<Window> window, const std::shared_ptr<const Fon
 }
 
 void Menu::draw() {
+	m_background.draw();
 	m_title.draw();
 	m_playButton.draw();
 	m_vs.draw();
@@ -26,24 +35,18 @@ void Menu::draw() {
 }
 
 void Menu::adjustSizePlayer1(int width, int height) {
-	float aspect = (float)m_player1Text.texture->getWidth()/m_player1Text.texture->getHeight();
-	m_player1Text.rect.setHeightKeepAspect(height/10, aspect).setPos(width/2-height/8, height/2);
+	m_player1Text.rect.setHeightKeepAspect(height/10, m_player1Text.getTexture()->getAspect()).setPos(width/2-height/8, height/2);
 }
 
 void Menu::adjustSizePlayer2(int width, int height) {
-	float aspect = (float)m_player2Text.texture->getWidth()/m_player2Text.texture->getHeight();
-	m_player2Text.rect.setHeightKeepAspect(height/10, aspect).setPos(width/2+height/8, height/2);
+	m_player2Text.rect.setHeightKeepAspect(height/10, m_player2Text.getTexture()->getAspect()).setPos(width/2+height/8, height/2);
 }
 
 void Menu::onWindowResized(int width, int height) {
-	float aspect = (float)m_title.texture->getWidth()/m_title.texture->getHeight();
-	m_title.rect.setHeightKeepAspect(height/8, aspect).setPos(width/2, height/5);
-
-	aspect = (float)m_playButton.texture->getWidth()/m_playButton.texture->getHeight();
-	m_playButton.rect.setHeightKeepAspect(height/12, aspect).setPos(width/2, 13*height/20);
-
-	aspect = (float)m_vs.texture->getWidth()/m_vs.texture->getHeight();
-	m_vs.rect.setHeightKeepAspect(height/7, aspect).setPos(width/2, 0.49*height);
+	m_background.rect.setHeightKeepAspect(height   , m_background.getTexture()->getAspect()).setPos(width/2, height/2);
+	m_title     .rect.setHeightKeepAspect(height/8 , m_title     .getTexture()->getAspect()).setPos(width/2, height/5);
+	m_playButton.rect.setHeightKeepAspect(height/12, m_playButton.getTexture()->getAspect()).setPos(width/2, 13*height/20);
+	m_vs        .rect.setHeightKeepAspect(height/7 , m_vs        .getTexture()->getAspect()).setPos(width/2, 0.49*height);
 
 	adjustSizePlayer1(width, height);
 	adjustSizePlayer2(width, height);
@@ -63,5 +66,24 @@ void Menu::onLeftClick(int32_t x, int32_t y) {
 		m_player2Text.text = m_actorNames[m_player2Selection];
 		m_player2Text.update(m_window);
 		adjustSizePlayer2(m_window->getWidth(), m_window->getHeight());
+	}
+	if (m_playButton.rect.containsPoint(x, y)) {
+		std::shared_ptr<Actor> actor1;
+		switch(m_player1Selection) {
+			case 0: actor1 = std::make_shared<Player>(); break;
+			case 1: actor1 = std::make_shared<SmartBot>(); break;
+			case 2: actor1 = std::make_shared<GreedyBot>(); break;
+			case 3: actor1 = std::make_shared<RandomBot>(); break;
+		}
+		std::shared_ptr<Actor> actor2;
+		switch(m_player2Selection) {
+			case 0: actor2 = std::make_shared<Player>(); break;
+			case 1: actor2 = std::make_shared<SmartBot>(); break;
+			case 2: actor2 = std::make_shared<GreedyBot>(); break;
+			case 3: actor2 = std::make_shared<RandomBot>(); break;
+		}
+		m_game.startNewRound(std::make_shared<GameRound>(actor1, actor2));
+		LeftClickEvent::unsubscribe();
+		WindowResizedEvent::unsubscribe();
 	}
 }

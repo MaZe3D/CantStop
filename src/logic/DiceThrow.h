@@ -9,14 +9,19 @@ class Board;
 
 class DiceThrow {
 public:
-	struct Combination;
+	struct Combination {
+		int8_t a;
+		int8_t b;
+	};
 
 	DiceThrow(const Board& board, const ActorEnum currentActor);
-	const int m_dice[4];
-	std::list<Combination> m_combinations; // unänderbar machen
 
-	struct Combination {
-		const int8_t a;
-		const int8_t b;
-	};
+	uint8_t getDie(uint8_t dieID) const;
+	uint8_t getCombinationCount() const;
+	const Combination& getCombination(uint8_t combinationID) const;
+
+private:
+	int m_dice[4];
+	Combination m_combinations[6];
+	uint8_t m_combinationCount = 0;
 };

@@ -9,8 +9,14 @@ public:
 	TextureDrawable(const std::string& path, const std::shared_ptr<Window>& window, const Rect& rect);
 	TextureDrawable(const std::shared_ptr<const Texture>& texture);
 	TextureDrawable(const std::shared_ptr<const Texture>& texture, const Rect& rect);
+
+	const std::shared_ptr<const Texture>& getTexture();
+	void setTexture(const std::shared_ptr<const Texture>& texture);
+
 	void draw();
 
-	std::shared_ptr<const Texture> texture;
 	Rect rect;
+
+private:
+	std::shared_ptr<const Texture> m_texture;
 };

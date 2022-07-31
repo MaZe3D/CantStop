@@ -4,19 +4,23 @@
 #include "drawables/TextureDrawable.h"
 #include "drawables/TextDrawable.h"
 
+class Game;
+
 class Menu : WindowResizedEvent, LeftClickEvent {
 public:
-	Menu(const std::shared_ptr<Window> window, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2);
+	Menu(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2);
 
 	void draw();
 
 private:
-	//const char* m_actorNames[4] { "Human", "Random Bot", "Greedy Bot", "Smart Bot" };
-	const char* m_actorNames[4] { "HUMAN", "RANDOM BOT", "GREEDY BOT", "SMART BOT" };
+	const char* m_actorNames[4] { "HUMAN", "SMART BOT", "GREEDY BOT", "RANDOM BOT" };
 
 	uint8_t m_player1Selection = 0;
 	uint8_t m_player2Selection = 1;
 
+	Game& m_game;
+
+	TextureDrawable m_background;
 	TextureDrawable m_title;
 	TextDrawable m_playButton;
 	TextureDrawable m_vs;

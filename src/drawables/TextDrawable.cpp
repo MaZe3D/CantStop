@@ -5,7 +5,7 @@ TextDrawable::TextDrawable(const std::shared_ptr<const Font>& font, const std::s
 {}
 
 void TextDrawable::update(const std::shared_ptr<const Window>& window, bool keepRectDimensions) {
-	TextureDrawable::texture = font->renderText(text, window, color);
+	TextureDrawable::setTexture(font->renderText(text, window, color));
 	if (!keepRectDimensions)
-		TextureDrawable::rect.setDimensions(texture->getWidth(), texture->getHeight());
+		TextureDrawable::rect.setDimensions(TextureDrawable::getTexture()->getWidth(), TextureDrawable::getTexture()->getHeight());
 }
