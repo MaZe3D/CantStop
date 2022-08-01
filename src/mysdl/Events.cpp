@@ -1,5 +1,4 @@
 #include "Events.h"
-#include "util/log.h"
 
 Event::Event(const std::shared_ptr<Window>& window)
 	: m_window(window)
@@ -38,7 +37,6 @@ void LeftClickEvent::onClickEvent(const SDL_Event &event) {
 // ==================== WindowEvent ====================
 WindowEvent::WindowEvent(bool sub) {
 	if (sub) subscribe();
-	DEBUG_LOG("WindowEvent::WindowEvent(bool sub)");
 }
 WindowEvent::~WindowEvent() {
 	unsubscribe();

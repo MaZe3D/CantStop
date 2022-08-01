@@ -18,6 +18,12 @@ private:
 
 	std::shared_ptr<GameRound> m_round;
 
+	TextureDrawable m_background;
+	const std::shared_ptr<const Texture> m_textureBarPlayer1;
+	const std::shared_ptr<const Texture> m_textureBarPlayer2;
+	const std::shared_ptr<const Texture> m_textureBarTemp;
+
+
 	std::shared_ptr<const Texture> m_victoryTextures[2];
 	std::shared_ptr<TextureDrawable> m_victoryDrawable;
 
@@ -46,14 +52,9 @@ private:
 
 	void setDiceTextures();
 
-	TextureDrawable m_background;
 
 	double m_barIncrement;
 	
-	const std::shared_ptr<const Texture> m_textureBarPlayer1;
-	const std::shared_ptr<const Texture> m_textureBarPlayer2;
-	const std::shared_ptr<const Texture> m_textureBarTemp;
-
 	std::vector<Bars> m_bars;
 
 	void setBars();
