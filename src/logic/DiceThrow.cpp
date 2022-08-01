@@ -2,7 +2,7 @@
 #include "DiceThrow.h"
 #include "Board.h"
 
-DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor) {
+DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor, MersenneTwister& rand) {
 
 	uint8_t usedRunnerCount = 0;
 	uint8_t usedRunners[3];
@@ -13,7 +13,7 @@ DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor) {
 
 	// throw dice
 	for (uint8_t i = 0; i < 4; i++)
-		m_dice[i] = rand() % 6 + 1;
+		m_dice[i] = rand.getRandomInt(1, 6);
 
 
 

@@ -3,6 +3,7 @@
 #include "Actor.h"
 #include "Board.h"
 #include "ActorEnum.h"
+#include "util/MersenneTwister.h"
 
 class GameRound {
 public:
@@ -11,7 +12,7 @@ public:
 		CHOOSE_TO_CONTINUE_OR_STOP
 	};
 
-	GameRound(const std::shared_ptr<Actor>& actor1, const std::shared_ptr<Actor>& actor2);
+	GameRound(const std::shared_ptr<Actor>& actor1, const std::shared_ptr<Actor>& actor2, const MersenneTwister& rand);
 
 	const Board& getBoard() const;
 	ActorEnum getCurrentActorEnum() const;
@@ -29,6 +30,8 @@ private:
 	ActorEnum m_currentActor = ActorEnum::ACTOR1;
 	bool m_isOver = false;
 	uint8_t m_chosenCombinationID = 0;
+
+	MersenneTwister m_rand;
 
 	Board m_board;
 	std::shared_ptr<Actor> m_actor1;

@@ -11,6 +11,7 @@
 #include "Menu.h"
 #include "GameRoundDrawer.h"
 #include "logic/GameRound.h"
+#include "util/MersenneTwister.h"
 
 enum class GameState {
 	MENU,
