@@ -77,9 +77,8 @@ void Window::subscribeClickEvent(ClickEvent* event) {
 		m_clickEvents.push_back(event);
 	}
 }
-
 void Window::unsubscribeClickEvent(ClickEvent* event) {
-	m_clickEventsToRemove.push_back(event);
+	m_clickEvents.remove(event);
 }
 
 void Window::subscribeWindowEvent(WindowEvent* event) {
@@ -87,26 +86,33 @@ void Window::subscribeWindowEvent(WindowEvent* event) {
 		m_windowEvents.push_back(event);
 	}
 }
-
 void Window::unsubscribeWindowEvent(WindowEvent* event) {
-	m_windowEventsToRemove.push_back(event);
+	m_windowEvents.remove(event);
+}
+
+void Window::subscribeKeyboardEvent(KeyboardEvent* event) {
+	if (std::find(m_keyboardEvents.begin(), m_keyboardEvents.end(), event) == m_keyboardEvents.end()) {
+		m_keyboardEvents.push_back(event);
+	}
+}
+void Window::unsubscribeKeyboardEvent(KeyboardEvent* event) {
+	m_keyboardEvents.remove(event);
 }
 
 void Window::handleEvents() {
-	// can't remove from above lists while iterating through them -> buffer removal
-	for (auto e : m_clickEventsToRemove ) m_clickEvents .remove(e);
-	for (auto e : m_windowEventsToRemove) m_windowEvents.remove(e);
-	m_clickEventsToRemove .clear();
-	m_windowEventsToRemove.clear();
 
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
 		case SDL_MOUSEBUTTONUP:
-			for (auto e : m_clickEvents) e->onClickEvent(event);
+			for (auto e : std::list<ClickEvent*>(m_clickEvents)) e->onClickEvent(event);
 			break;
 		case SDL_WINDOWEVENT:
-			for (auto e : m_windowEvents) e->onWindowEvent(event);
+			for (auto e : std::list<WindowEvent*>(m_windowEvents)) e->onWindowEvent(event);
+			break;
+		case SDL_KEYDOWN:
+		case SDL_KEYUP:
+			for (auto e : std::list<KeyboardEvent*>(m_keyboardEvents)) e->onKeyboardEvent(event);
 			break;
 		default: break;
 		}
