@@ -12,7 +12,7 @@ class KeyboardEvent;
 
 class Window : public std::enable_shared_from_this<Window> {
 public:
-	static std::shared_ptr<Window> create(const std::string& title, bool fullscreen = false, int width = 800, int height = 500);
+	static std::shared_ptr<Window> create(const std::string& title, int width = 800, int height = 600, bool fullscreen = false);
 
 	bool getFullscreen() const;
 	void setFullscreen(bool fullscreen);
@@ -51,7 +51,7 @@ public:
 	void unsubscribeKeyboardEvent(KeyboardEvent* event);
 
 private:
-	Window(const std::string& title, bool fullscreen, int width, int height);
+	Window(const std::string& title, int width, int height, bool fullscreen);
 
 	bool m_fullscreen;
 

@@ -5,11 +5,11 @@
 #include "Events.h"
 
 // static factory, so that there is always a shared_ptr associated and weak_from_this() can be called
-std::shared_ptr<Window> Window::create(const std::string& title, bool fullscreen, int width, int height) {
-	return std::shared_ptr<Window>(new Window(title, fullscreen, width, height));
+std::shared_ptr<Window> Window::create(const std::string& title, int width, int height, bool fullscreen) {
+	return std::shared_ptr<Window>(new Window(title, width, height, fullscreen));
 }
 
-Window::Window(const std::string& title, bool fullscreen, int width, int height)
+Window::Window(const std::string& title, int width, int height, bool fullscreen)
 	: m_fullscreen(fullscreen)
 {
 	uint32_t windowFlags = SDL_WINDOW_RESIZABLE;
@@ -30,7 +30,7 @@ bool Window::getFullscreen() const {
 void Window::setFullscreen(bool fullscreen) {
 	m_fullscreen = fullscreen;
 	uint32_t flag = m_fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0;
-	SDLCALL(SDL_SetWindowFullscreen(m_sdlWindow.get(), flag));
+	SDL_CALL(SDL_SetWindowFullscreen(m_sdlWindow.get(), flag));
 }
 void Window::toggleFullscreen() {
 	setFullscreen(!m_fullscreen);

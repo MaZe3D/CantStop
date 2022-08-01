@@ -9,6 +9,7 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 	, m_textureBarTemp(window->loadTexture("res/sprites/Game_Temp_Bar.png"))
 	, m_victoryText(font, "Click to continue", window)
 {
+	WindowEvent::unsubscribe();
 	m_background.rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 
 	for (int i = 0; i < 11; i++) {
@@ -30,6 +31,7 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 
 	for (int i = 0; i < 4; i++) {
 		m_diceTextureDrawable.push_back(TextureDrawable(m_diceTextures[i]));
+		m_diceTextureDrawable[i].rect.setAnchorModeX(Rect::AnchorMode::CENTER);
 	}
 
 	for (int i = 0; i < 2; i++) {
@@ -59,12 +61,12 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 		.setAnchorModeX(Rect::AnchorMode::CENTER)
 		.setAnchorModeY(Rect::AnchorMode::TOP);
 
-	onWindowResized(window->getWidth(), window->getHeight());
+	//onWindowResized(window->getWidth(), window->getHeight());
 }
 
 void GameRoundDrawer::setGameRound(const std::shared_ptr<GameRound>& round) {
 	m_round = round;
-	
+	WindowEvent::subscribe();
 	setBars();
 	setDiceTextures();
 	updateCombinationButtons();
@@ -143,24 +145,28 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 			.setWidth(diceWidth)
 			.setHeight(diceWidth);
 	}
-
-	m_diceTextureDrawable[0].rect.setPos(firstBarPosX - (400./2160.)*height, firstBarPosY - (13*m_barIncrement));
-	m_diceTextureDrawable[1].rect.setPos(m_diceTextureDrawable[0].rect.getPosX() + diceWidth + diceSpaceWidth, m_diceTextureDrawable[0].rect.getPosY());
-	m_diceTextureDrawable[2].rect.setPos(m_diceTextureDrawable[0].rect.getPosX(), m_diceTextureDrawable[0].rect.getPosY() + diceWidth + diceSpaceWidth);
-	m_diceTextureDrawable[3].rect.setPos(m_diceTextureDrawable[2].rect.getPosX() + diceWidth + diceSpaceWidth, m_diceTextureDrawable[2].rect.getPosY());
+	
+	int8_t mirrorFactor = (m_round->getCurrentActor() == ActorEnum::ACTOR1) ? -1 : 1;
+	
+	for (int i = 0; i < 4; i++) {
+		m_diceTextureDrawable[i].rect
+			.setPos((width/2.) + mirrorFactor * (1200./2160.) * height + i * mirrorFactor * (diceWidth + diceSpaceWidth), firstBarPosY - m_barIncrement*13);
+	}
 
 	const double btnCombinationHight = (125./2160.) * height;
 	const double btnCombinationDistance = (1/10) * btnCombinationHight;
 
 	for(int i = 0; i < 6; i++) {
 		m_btnCombinationSelectDrawable[i]->rect
-			.setPos(width/2 + (1000./2160.)*height, height*(460./2160.) + i * (btnCombinationHight + btnCombinationDistance))
-			.setHeightKeepAspect((130./2160.)*height, m_btnCombinationSelectDrawable[i]->getTexture()->getAspect());
+			.setPos(m_diceTextureDrawable[(m_round->getCurrentActor() == ActorEnum::ACTOR1) ? 3 : 0].rect.getPosX(), m_diceTextureDrawable[0].rect.getPosY() + 1.5 * m_diceTextureDrawable[0].rect.getHeight() + i * (btnCombinationHight + btnCombinationDistance))
+			.setWidthKeepAspect(std::abs(m_diceTextureDrawable[0].rect.getPosX() - m_diceTextureDrawable[3].rect.getPosX()), m_btnCombinationSelectDrawable[i]->getTexture()->getAspect());
 		m_btnCombinationSelectText[i]->rect
 			.setPos(m_btnCombinationSelectDrawable[i]->rect.getPosX() + (m_btnCombinationSelectDrawable[i]->rect.getWidth()/2)
 				, m_btnCombinationSelectDrawable[i]->rect.getPosY() + (m_btnCombinationSelectDrawable[i]->rect.getHeight()/2))
 			.setHeightKeepAspect(m_btnCombinationSelectDrawable[i]->rect.getHeight()/2, m_btnCombinationSelectText[i]->getTexture()->getAspect());
 	}
+
+	m_diceTextureDrawable[(m_round->getCurrentActor() == ActorEnum::ACTOR1) ? 3 : 0].rect.getPosX();
 
 	m_victoryDrawable->rect
 		.setHeightKeepAspect(height, m_victoryDrawable->getTexture()->getAspect())
