@@ -64,23 +64,23 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 
 void GameRoundDrawer::setGameRound(const std::shared_ptr<GameRound>& round) {
 	m_round = round;
+	
+	setBars();
+	setDiceTextures();
+	updateCombinationButtons();
 }
 
 void GameRoundDrawer::draw() {
 	m_background.draw();
 
-	setBars();
-
 	for(auto &bars : m_bars) {
 		bars.draw();
 	}
 
-	setDiceTextures();
 	for (int i = 0; i < 4; i++) {
 		m_diceTextureDrawable[i].draw();
 	}
 
-	updateCombinationButtons();
 	drawCombinationButtons();
 
 	if (m_round->isOver())
@@ -132,6 +132,9 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 			.setWidth(barWidth);
 	}
 
+	if (m_round) {
+		setBars();
+	}
 	const double diceWidth(height * (150./2160.));
 	const double diceSpaceWidth(diceWidth * (1./10.));
 
@@ -152,24 +155,31 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 	for(int i = 0; i < 6; i++) {
 		m_btnCombinationSelectDrawable[i]->rect
 			.setPos(width/2 + (1000./2160.)*height, height*(460./2160.) + i * (btnCombinationHight + btnCombinationDistance))
-			.setHeightKeepAspect((130/2160)*height, m_btnCombinationSelectDrawable[i]->getTexture()->getAspect());
+			.setHeightKeepAspect((130./2160.)*height, m_btnCombinationSelectDrawable[i]->getTexture()->getAspect());
 		m_btnCombinationSelectText[i]->rect
 			.setPos(m_btnCombinationSelectDrawable[i]->rect.getPosX() + (m_btnCombinationSelectDrawable[i]->rect.getWidth()/2)
 				, m_btnCombinationSelectDrawable[i]->rect.getPosY() + (m_btnCombinationSelectDrawable[i]->rect.getHeight()/2))
-			.setHeightKeepAspect(m_btnCombinationSelectDrawable[i]->rect.getHeight()/4, m_btnCombinationSelectText[i]->getTexture()->getAspect());
+			.setHeightKeepAspect(m_btnCombinationSelectDrawable[i]->rect.getHeight()/2, m_btnCombinationSelectText[i]->getTexture()->getAspect());
 	}
 
 	m_victoryDrawable->rect
 		.setHeightKeepAspect(height, m_victoryDrawable->getTexture()->getAspect())
-		.setPos(width / 2, height / 2);
+		.setPos(width / 2., height / 2);
 
 	m_victoryText.rect.setHeightKeepAspect(height*(70./2160.), m_victoryText.getTexture()->getAspect())
-		.setPos(width / 2, height * (2033./2160.));
+		.setPos(width / 2., height * (2033./2160.));
 }
 
 void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 	if (!m_round) return;
 	if (!m_round->isOver()) m_round->nextStep();
+	
+	setBars();
+	setDiceTextures();
+	updateCombinationButtons();
+
+	onWindowResized(m_window->getWidth(), m_window->getHeight());
+
 	const DiceThrow& diceThrow = m_round->getDiceThrow();
 	std::cout << "combinationCount: " << (int)diceThrow.getCombinationCount() << std::endl;
 	for (int i = 0; i < diceThrow.getCombinationCount(); i++) {
@@ -232,7 +242,7 @@ void GameRoundDrawer::updateCombinationButtons() {
 	for (int i = 0; i < m_round->getDiceThrow().getCombinationCount(); i++)
 	{
 		m_btnCombinationSelectText[i]->text = std::to_string(m_round->getDiceThrow().getCombination(i).a) 
-			+ ((m_round->getDiceThrow().getCombination(i).b != 0) ? 
+			+ ((m_round->getDiceThrow().getCombination(i).b > 0) ? 
 				" + " + std::to_string(m_round->getDiceThrow().getCombination(i).b) 
 				: "");
 		m_btnCombinationSelectText[i]->update(m_window);
