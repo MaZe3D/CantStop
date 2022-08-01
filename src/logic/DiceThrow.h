@@ -24,4 +24,6 @@ private:
 	int m_dice[4];
 	Combination m_combinations[6];
 	uint8_t m_combinationCount = 0;
+
+	void insertCombination(int8_t a, int8_t b);
 };
