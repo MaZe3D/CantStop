@@ -30,6 +30,10 @@ const DiceThrow& GameRound::getDiceThrow() const {
 	return m_diceThrow;
 }
 
+uint8_t GameRound::getChosenCombinationID() const {
+	return m_chosenCombinationID;
+}
+
 bool GameRound::isOver() const {
 	return m_isOver;
 }
@@ -50,7 +54,8 @@ void GameRound::nextStep() {
 			m_diceThrow = DiceThrow(m_board, m_currentActor);
 			break;
 		}
-		m_board.advanceRunnerMarkers(m_diceThrow.getCombination(currentActor->choseCombination(m_board, m_diceThrow)));
+		m_chosenCombinationID = currentActor->choseCombination(m_board, m_diceThrow);
+		m_board.advanceRunnerMarkers(m_diceThrow.getCombination(m_chosenCombinationID));
 		m_nextStep = NextStep::CHOOSE_TO_CONTINUE_OR_STOP;
 		break;
 	case (NextStep::CHOOSE_TO_CONTINUE_OR_STOP):

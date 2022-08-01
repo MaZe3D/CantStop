@@ -18,6 +18,7 @@ public:
 	std::shared_ptr<Actor> getCurrentActor() const;
 	std::shared_ptr<Actor> getActor(ActorEnum actor) const;
 	const DiceThrow& getDiceThrow() const;
+	uint8_t getChosenCombinationID() const;
 	bool isOver() const;
 	NextStep getNextStep() const;
 
@@ -27,6 +28,7 @@ private:
 	NextStep m_nextStep = NextStep::CHOOSE_DICE_COMBINATION;
 	ActorEnum m_currentActor = ActorEnum::ACTOR1;
 	bool m_isOver = false;
+	uint8_t m_chosenCombinationID = 0;
 
 	Board m_board;
 	std::shared_ptr<Actor> m_actor1;
