@@ -8,6 +8,8 @@ GameRound::GameRound(const std::shared_ptr<Actor>& actor1, const std::shared_ptr
 {
 	if (!m_actor1 || !m_actor2)
 		throw std::runtime_error("GameRound::GameRound() - actors may not be nullptr");
+	m_actor1->setActorEnum(ActorEnum::ACTOR1);
+	m_actor2->setActorEnum(ActorEnum::ACTOR2);
 }
 
 const Board& GameRound::getBoard() const {

@@ -5,15 +5,15 @@
 #include "logic/actors/bots/GreedyBot.h"
 #include "logic/actors/bots/RandomBot.h"
 
-Menu::Menu(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2)
+Menu::Menu(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font)
 	: Event(window)
 	, m_game(game)
 	, m_background("res/sprites/MainMenu_Background.png", window)
 	, m_title("res/sprites/MainMenu_Title.png", window)
-	, m_playButton(font1, "play", window, 0xFF)
+	, m_playButton("res/sprites/MainMenu_StartGame_Button.png", window)
 	, m_vs("res/sprites/MainMenu_PlayerSelect_Background.png", window)
-	, m_player1Text(font2, m_actorNames[m_player1Selection], window, 0xFFFFFFFF)
-	, m_player2Text(font2, m_actorNames[m_player2Selection], window, 0xFFFFFFFF)
+	, m_player1Text(font, m_actorNames[m_player1Selection], window, 0xFFFFFFFF)
+	, m_player2Text(font, m_actorNames[m_player2Selection], window, 0xFFFFFFFF)
 {
 	m_background .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 	m_title      .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
@@ -45,7 +45,7 @@ void Menu::adjustSizePlayer2(int width, int height) {
 void Menu::onWindowResized(int width, int height) {
 	m_background.rect.setHeightKeepAspect(height   , m_background.getTexture()->getAspect()).setPos(width/2, height/2);
 	m_title     .rect.setHeightKeepAspect(height/8 , m_title     .getTexture()->getAspect()).setPos(width/2, height/5);
-	m_playButton.rect.setHeightKeepAspect(height/12, m_playButton.getTexture()->getAspect()).setPos(width/2, 13*height/20);
+	m_playButton.rect.setHeightKeepAspect(height/11, m_playButton.getTexture()->getAspect()).setPos(width/2, 13*height/20);
 	m_vs        .rect.setHeightKeepAspect(height/7 , m_vs        .getTexture()->getAspect()).setPos(width/2, 0.49*height);
 
 	adjustSizePlayer1(width, height);

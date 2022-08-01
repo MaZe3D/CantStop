@@ -8,7 +8,7 @@ class Game;
 
 class Menu : WindowResizedEvent, LeftClickEvent {
 public:
-	Menu(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2);
+	Menu(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font);
 
 	void draw();
 
@@ -22,7 +22,7 @@ private:
 
 	TextureDrawable m_background;
 	TextureDrawable m_title;
-	TextDrawable m_playButton;
+	TextureDrawable m_playButton;
 	TextureDrawable m_vs;
 	TextDrawable m_player1Text;
 	TextDrawable m_player2Text;
