@@ -11,8 +11,6 @@ Game::Game(const std::shared_ptr<Window>& window)
 {
 	m_window->setWindowIcon("res/sprites/Dice_Player1_5.png");
 	m_window->setDrawColor(0x000000FF);
-
-	onWindowResized(window->getWidth(), window->getHeight());
 }
 
 void Game::run() {
@@ -58,7 +56,6 @@ void Game::onWindowClosed() {
 	m_gameState = GameState::EXIT;
 }
 
-void Game::onLeftClick(int32_t x, int32_t y) {}
-
-void Game::onWindowResized(int32_t width, int32_t height) {
+void Game::onKeyPressed(const SDL_Keysym& key) {
+	if (key.sym == SDLK_F11) m_window->toggleFullscreen();
 }

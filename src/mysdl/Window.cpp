@@ -9,7 +9,9 @@ std::shared_ptr<Window> Window::create(const std::string& title, bool fullscreen
 	return std::shared_ptr<Window>(new Window(title, fullscreen, width, height));
 }
 
-Window::Window(const std::string& title, bool fullscreen, int width, int height) {
+Window::Window(const std::string& title, bool fullscreen, int width, int height)
+	: m_fullscreen(fullscreen)
+{
 	uint32_t windowFlags = SDL_WINDOW_RESIZABLE;
 	if (fullscreen) windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 
@@ -20,6 +22,18 @@ Window::Window(const std::string& title, bool fullscreen, int width, int height)
 	SDL_Renderer* renderer;
 	SDL_CALL_INV(renderer = SDL_CreateRenderer(m_sdlWindow.get(), -1, 0));
 	m_sdlRenderer = std::shared_ptr<SDL_Renderer>(renderer, [](SDL_Renderer* r){ SDL_DestroyRenderer(r); });
+}
+
+bool Window::getFullscreen() const {
+	return m_fullscreen;
+}
+void Window::setFullscreen(bool fullscreen) {
+	m_fullscreen = fullscreen;
+	uint32_t flag = m_fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0;
+	SDLCALL(SDL_SetWindowFullscreen(m_sdlWindow.get(), flag));
+}
+void Window::toggleFullscreen() {
+	setFullscreen(!m_fullscreen);
 }
 
 void Window::setWindowIcon(const std::string& path) const {
@@ -77,9 +91,8 @@ void Window::subscribeClickEvent(ClickEvent* event) {
 		m_clickEvents.push_back(event);
 	}
 }
-
 void Window::unsubscribeClickEvent(ClickEvent* event) {
-	m_clickEventsToRemove.push_back(event);
+	m_clickEvents.remove(event);
 }
 
 void Window::subscribeWindowEvent(WindowEvent* event) {
@@ -87,26 +100,33 @@ void Window::subscribeWindowEvent(WindowEvent* event) {
 		m_windowEvents.push_back(event);
 	}
 }
-
 void Window::unsubscribeWindowEvent(WindowEvent* event) {
-	m_windowEventsToRemove.push_back(event);
+	m_windowEvents.remove(event);
+}
+
+void Window::subscribeKeyboardEvent(KeyboardEvent* event) {
+	if (std::find(m_keyboardEvents.begin(), m_keyboardEvents.end(), event) == m_keyboardEvents.end()) {
+		m_keyboardEvents.push_back(event);
+	}
+}
+void Window::unsubscribeKeyboardEvent(KeyboardEvent* event) {
+	m_keyboardEvents.remove(event);
 }
 
 void Window::handleEvents() {
-	// can't remove from above lists while iterating through them -> buffer removal
-	for (auto e : m_clickEventsToRemove ) m_clickEvents .remove(e);
-	for (auto e : m_windowEventsToRemove) m_windowEvents.remove(e);
-	m_clickEventsToRemove .clear();
-	m_windowEventsToRemove.clear();
 
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
 		case SDL_MOUSEBUTTONUP:
-			for (auto e : m_clickEvents) e->onClickEvent(event);
+			for (auto e : std::list<ClickEvent*>(m_clickEvents)) e->onClickEvent(event);
 			break;
 		case SDL_WINDOWEVENT:
-			for (auto e : m_windowEvents) e->onWindowEvent(event);
+			for (auto e : std::list<WindowEvent*>(m_windowEvents)) e->onWindowEvent(event);
+			break;
+		case SDL_KEYDOWN:
+		case SDL_KEYUP:
+			for (auto e : std::list<KeyboardEvent*>(m_keyboardEvents)) e->onKeyboardEvent(event);
 			break;
 		default: break;
 		}

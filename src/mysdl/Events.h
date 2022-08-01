@@ -72,3 +72,31 @@ private:
 	virtual void onWindowEvent(const SDL_Event &event) override;
 	virtual void onWindowResized(int32_t width, int32_t height) = 0;
 };
+
+
+
+
+
+
+
+// ==================== KeyboardEvent ====================
+class KeyboardEvent : virtual public Event {
+protected:
+	KeyboardEvent(bool subscribeEvent = true);
+	virtual ~KeyboardEvent();
+
+	virtual void subscribe() final;
+	virtual void unsubscribe() final;
+
+private:
+	friend Window; // onKeyboardEvent may ONLY be called from Window
+	virtual void onKeyboardEvent(const SDL_Event &event) = 0;
+};
+
+
+// KeyPressedEvent
+class KeyPressedEvent : public KeyboardEvent {
+private:
+	virtual void onKeyboardEvent(const SDL_Event &event) override;
+	virtual void onKeyPressed(const SDL_Keysym& key) = 0;
+};

@@ -8,10 +8,15 @@
 
 class ClickEvent;
 class WindowEvent;
+class KeyboardEvent;
 
 class Window : public std::enable_shared_from_this<Window> {
 public:
 	static std::shared_ptr<Window> create(const std::string& title, bool fullscreen = false, int width = 800, int height = 500);
+
+	bool getFullscreen() const;
+	void setFullscreen(bool fullscreen);
+	void toggleFullscreen();
 
 	void setWindowIcon(const std::string& path) const;
 
@@ -42,15 +47,17 @@ public:
 	void subscribeWindowEvent(WindowEvent* event);
 	void unsubscribeWindowEvent(WindowEvent* event);
 
+	void subscribeKeyboardEvent(KeyboardEvent* event);
+	void unsubscribeKeyboardEvent(KeyboardEvent* event);
 
 private:
 	Window(const std::string& title, bool fullscreen, int width, int height);
 
+	bool m_fullscreen;
+
 	std::list<ClickEvent*> m_clickEvents;
 	std::list<WindowEvent*> m_windowEvents;
-
-	std::list<ClickEvent*> m_clickEventsToRemove;
-	std::list<WindowEvent*> m_windowEventsToRemove;
+	std::list<KeyboardEvent*> m_keyboardEvents;
 	
 	std::shared_ptr<SDL_Window> m_sdlWindow;
 	std::shared_ptr<SDL_Renderer> m_sdlRenderer;
