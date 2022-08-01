@@ -33,6 +33,9 @@ private:
 	std::shared_ptr<TextDrawable> m_btnCombinationSelectText[6];
 	std::vector<std::shared_ptr<TextureDrawable>> m_btnCombinationSelectDrawable;
 
+	std::shared_ptr<TextDrawable> m_stopText;
+	std::shared_ptr<TextDrawable> m_continueText;
+
 	void updateCombinationButtons();
 	void drawCombinationButtons();
 
