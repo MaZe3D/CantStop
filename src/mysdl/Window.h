@@ -14,6 +14,10 @@ class Window : public std::enable_shared_from_this<Window> {
 public:
 	static std::shared_ptr<Window> create(const std::string& title, bool fullscreen = false, int width = 800, int height = 500);
 
+	bool getFullscreen() const;
+	void setFullscreen(bool fullscreen);
+	void toggleFullscreen();
+
 	void setWindowIcon(const std::string& path) const;
 
 	int getWidth() const;
@@ -48,6 +52,8 @@ public:
 
 private:
 	Window(const std::string& title, bool fullscreen, int width, int height);
+
+	bool m_fullscreen;
 
 	std::list<ClickEvent*> m_clickEvents;
 	std::list<WindowEvent*> m_windowEvents;

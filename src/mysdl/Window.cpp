@@ -9,7 +9,9 @@ std::shared_ptr<Window> Window::create(const std::string& title, bool fullscreen
 	return std::shared_ptr<Window>(new Window(title, fullscreen, width, height));
 }
 
-Window::Window(const std::string& title, bool fullscreen, int width, int height) {
+Window::Window(const std::string& title, bool fullscreen, int width, int height)
+	: m_fullscreen(fullscreen)
+{
 	uint32_t windowFlags = SDL_WINDOW_RESIZABLE;
 	if (fullscreen) windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 
@@ -20,6 +22,18 @@ Window::Window(const std::string& title, bool fullscreen, int width, int height)
 	SDL_Renderer* renderer;
 	SDL_CALL_INV(renderer = SDL_CreateRenderer(m_sdlWindow.get(), -1, 0));
 	m_sdlRenderer = std::shared_ptr<SDL_Renderer>(renderer, [](SDL_Renderer* r){ SDL_DestroyRenderer(r); });
+}
+
+bool Window::getFullscreen() const {
+	return m_fullscreen;
+}
+void Window::setFullscreen(bool fullscreen) {
+	m_fullscreen = fullscreen;
+	uint32_t flag = m_fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0;
+	SDLCALL(SDL_SetWindowFullscreen(m_sdlWindow.get(), flag));
+}
+void Window::toggleFullscreen() {
+	setFullscreen(!m_fullscreen);
 }
 
 void Window::setWindowIcon(const std::string& path) const {
