@@ -11,7 +11,7 @@ GameRound::GameRound(const std::shared_ptr<Actor>& actor1, const std::shared_ptr
 }
 
 const Board& GameRound::getBoard() { return m_board; }
-ActorEnum GameRound::getCurrentActor() { return m_currentActor; }
+ActorEnum GameRound::getCurrentActorEnum() { return m_currentActor; }
 const DiceThrow& GameRound::getDiceThrow() { return m_diceThrow; }
 bool GameRound::isOver() { return m_isOver; }
 

@@ -87,7 +87,7 @@ void GameRoundDrawer::draw() {
 
 	if (m_round->isOver())
 	{
-		drawVictoryScreen(m_round->getCurrentActor());
+		drawVictoryScreen(m_round->getCurrentActorEnum());
 	}
 }
 
@@ -95,7 +95,7 @@ void GameRoundDrawer::setBars() {
 	for (unsigned int i = 0; i < m_bars.size(); i++) {
 		m_bars[i].barPlayer1.rect.setHeight(m_round->getBoard().getColumn(i).actor1Marker * m_barIncrement);
 		m_bars[i].barPlayer2.rect.setHeight(m_round->getBoard().getColumn(i).actor2Marker * m_barIncrement);
-		switch (m_round->getCurrentActor()) {
+		switch (m_round->getCurrentActorEnum()) {
 		case ActorEnum::ACTOR1:
 			m_bars[i].barTemp.rect
 				.setPos(m_bars[i].barPlayer1.rect.getPosX(), m_bars[i].barPlayer1.rect.getPosY() - m_bars[i].barPlayer1.rect.getHeight())
@@ -146,7 +146,7 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 			.setHeight(diceWidth);
 	}
 	
-	int8_t mirrorFactor = (m_round->getCurrentActor() == ActorEnum::ACTOR1) ? -1 : 1;
+	int8_t mirrorFactor = (m_round->getCurrentActorEnum() == ActorEnum::ACTOR1) ? -1 : 1;
 	
 	for (int i = 0; i < 4; i++) {
 		m_diceTextureDrawable[i].rect
@@ -158,7 +158,7 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 
 	for(int i = 0; i < 6; i++) {
 		m_btnCombinationSelectDrawable[i]->rect
-			.setPos(m_diceTextureDrawable[(m_round->getCurrentActor() == ActorEnum::ACTOR1) ? 3 : 0].rect.getPosX(), m_diceTextureDrawable[0].rect.getPosY() + 1.5 * m_diceTextureDrawable[0].rect.getHeight() + i * (btnCombinationHight + btnCombinationDistance))
+			.setPos(m_diceTextureDrawable[(m_round->getCurrentActorEnum() == ActorEnum::ACTOR1) ? 3 : 0].rect.getPosX(), m_diceTextureDrawable[0].rect.getPosY() + 1.5 * m_diceTextureDrawable[0].rect.getHeight() + i * (btnCombinationHight + btnCombinationDistance))
 			.setWidthKeepAspect(std::abs(m_diceTextureDrawable[0].rect.getPosX() - m_diceTextureDrawable[3].rect.getPosX()), m_btnCombinationSelectDrawable[i]->getTexture()->getAspect());
 		m_btnCombinationSelectText[i]->rect
 			.setPos(m_btnCombinationSelectDrawable[i]->rect.getPosX() + (m_btnCombinationSelectDrawable[i]->rect.getWidth()/2)
@@ -166,7 +166,7 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 			.setHeightKeepAspect(m_btnCombinationSelectDrawable[i]->rect.getHeight()/2, m_btnCombinationSelectText[i]->getTexture()->getAspect());
 	}
 
-	m_diceTextureDrawable[(m_round->getCurrentActor() == ActorEnum::ACTOR1) ? 3 : 0].rect.getPosX();
+	m_diceTextureDrawable[(m_round->getCurrentActorEnum() == ActorEnum::ACTOR1) ? 3 : 0].rect.getPosX();
 
 	m_victoryDrawable->rect
 		.setHeightKeepAspect(height, m_victoryDrawable->getTexture()->getAspect())
@@ -191,7 +191,7 @@ void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 	for (int i = 0; i < diceThrow.getCombinationCount(); i++) {
 		DEBUG_LOG_NO_NL("combination #" << i << ": " << (int)diceThrow.getCombination(i).a << " " << (int)diceThrow.getCombination(i).b << std::endl);
 	}
-	DEBUG_LOG_NO_NL("\ncurrent player: " << ((m_round->getCurrentActor() == ActorEnum::ACTOR1) ? "ACTOR 1" : "ACTOR 2"));
+	DEBUG_LOG_NO_NL("\ncurrent player: " << ((m_round->getCurrentActorEnum() == ActorEnum::ACTOR1) ? "ACTOR 1" : "ACTOR 2"));
 	DEBUG_LOG_NO_NL("\nnext step: " << ((m_round->getNextStep() == GameRound::NextStep::CHOOSE_DICE_COMBINATION) ? "CHOOSE_DICE_COMBINATION" : "CHOOSE_TO_CONTINUE_OR_STOP"));
 	DEBUG_LOG_NO_NL("\nactor1Marker:");
 	for (unsigned int i = 0; i < m_bars.size(); i++)
@@ -208,7 +208,7 @@ void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 void GameRoundDrawer::setDiceTextures()
 {
 	int offset = 0;
-	if (m_round->getCurrentActor() == ActorEnum::ACTOR2) offset = 6;
+	if (m_round->getCurrentActorEnum() == ActorEnum::ACTOR2) offset = 6;
 	
 	for (int i = 0; i < 4; i++) {
 		m_diceTextureDrawable[i].setTexture(m_diceTextures[m_round->getDiceThrow().getDie(i) -1 + offset]);
@@ -253,7 +253,7 @@ void GameRoundDrawer::updateCombinationButtons() {
 				: "");
 		m_btnCombinationSelectText[i]->update(m_window);
 		
-		switch (m_round->getCurrentActor()) {
+		switch (m_round->getCurrentActorEnum()) {
 		case ActorEnum::ACTOR1:
 			m_btnCombinationSelectDrawable[i]->setTexture(m_btnCombinationSelectTexture[0]);
 			break;

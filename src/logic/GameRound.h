@@ -14,7 +14,7 @@ public:
 	GameRound(const std::shared_ptr<Actor>& actor1, const std::shared_ptr<Actor>& actor2);
 
 	const Board& getBoard();
-	ActorEnum getCurrentActor();
+	ActorEnum getCurrentActorEnum();
 	const DiceThrow& getDiceThrow();
 	bool isOver();
 
