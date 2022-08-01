@@ -19,8 +19,8 @@ DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor) {
 
 	// calculate all possible valid combinations for player
 	uint8_t totalDiceSum = m_dice[0] + m_dice[1] + m_dice[2] + m_dice[3];
-	for (int j = 1; j < 4; ++j) {
-		int8_t a = m_dice[0] + m_dice[j];
+	for (int i = 1; i < 4; ++i) {
+		int8_t a = m_dice[0] + m_dice[i];
 		int8_t b = totalDiceSum - a;
 		const Board::Column& columnA = board.getColumn(a-2);
 		const Board::Column& columnB = board.getColumn(b-2);
@@ -47,8 +47,8 @@ DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor) {
 			}
 		}
 		else if (usedRunnerCount == 2 && a != usedRunners[0] && a != usedRunners[1] && b != usedRunners[0] && b != usedRunners[1]) {
-			if (a > 0) m_combinations[m_combinationCount++] = {a, -1};
-			if (b > 0) m_combinations[m_combinationCount++] = {b, -1};
+			if (a > 0) insertCombination(a, -1);
+			if (b > 0) insertCombination(b, -1);
 			continue;
 		}
 
@@ -58,8 +58,16 @@ DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor) {
 		}
 		if (a < 0) continue;
 
-		m_combinations[m_combinationCount++] = {a, b};
+		insertCombination(a, b);
 	}
+}
+
+void DiceThrow::insertCombination(int8_t a, int8_t b) {
+	for (uint8_t i = 0; i < m_combinationCount; i++) {
+		if (m_combinations[i].a == a && m_combinations[i].b == b) return;
+		if (m_combinations[i].a == b && m_combinations[i].b == a) return;
+	}
+	m_combinations[m_combinationCount++] = {a, b};
 }
 
 uint8_t DiceThrow::getDie(uint8_t dieID) const {
