@@ -13,12 +13,14 @@ public:
 
 	GameRound(const std::shared_ptr<Actor>& actor1, const std::shared_ptr<Actor>& actor2);
 
-	const Board& getBoard();
-	ActorEnum getCurrentActorEnum();
-	const DiceThrow& getDiceThrow();
-	bool isOver();
+	const Board& getBoard() const;
+	ActorEnum getCurrentActorEnum() const;
+	std::shared_ptr<Actor> getCurrentActor() const;
+	std::shared_ptr<Actor> getActor(ActorEnum actor) const;
+	const DiceThrow& getDiceThrow() const;
+	bool isOver() const;
+	NextStep getNextStep() const;
 
-	NextStep getNextStep();
 	void nextStep();
 
 private:

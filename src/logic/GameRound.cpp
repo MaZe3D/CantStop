@@ -10,12 +10,31 @@ GameRound::GameRound(const std::shared_ptr<Actor>& actor1, const std::shared_ptr
 		throw std::runtime_error("GameRound::GameRound() - actors may not be nullptr");
 }
 
-const Board& GameRound::getBoard() { return m_board; }
-ActorEnum GameRound::getCurrentActorEnum() { return m_currentActor; }
-const DiceThrow& GameRound::getDiceThrow() { return m_diceThrow; }
-bool GameRound::isOver() { return m_isOver; }
+const Board& GameRound::getBoard() const {
+	return m_board;
+}
 
-GameRound::NextStep GameRound::getNextStep() {
+ActorEnum GameRound::getCurrentActorEnum() const {
+	return m_currentActor;
+}
+
+std::shared_ptr<Actor> GameRound::getCurrentActor() const {
+	return getActor(m_currentActor);
+}
+
+std::shared_ptr<Actor> GameRound::getActor(ActorEnum actor) const {
+	return (actor == ActorEnum::ACTOR1) ? m_actor1 : m_actor2;
+}
+
+const DiceThrow& GameRound::getDiceThrow() const {
+	return m_diceThrow;
+}
+
+bool GameRound::isOver() const {
+	return m_isOver;
+}
+
+GameRound::NextStep GameRound::getNextStep() const {
 	return m_nextStep;
 }
 
