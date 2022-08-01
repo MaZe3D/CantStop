@@ -1,4 +1,6 @@
 #include "GameRoundDrawer.h"
+#include "logic/actors/Player.h"
+#include "logic/actors/Bot.h"
 #include "util/log.h"
 
 GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std::shared_ptr<const Font>& font)
@@ -8,8 +10,13 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 	, m_textureBarPlayer2(window->loadTexture("res/sprites/Game_Player2_Bar.png"))
 	, m_textureBarTemp(window->loadTexture("res/sprites/Game_Temp_Bar.png"))
 	, m_victoryText(font, "Click to continue", window)
+	, m_btnCombinationSelectFrame {
+		TextureDrawable("res/sprites/Game_Player1_SelectFrame.png", window),
+		TextureDrawable("res/sprites/Game_Player2_SelectFrame.png", window)
+	}
 {
 	WindowEvent::unsubscribe();
+	ClickEvent::unsubscribe();
 	m_background.rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 
 	for (int i = 0; i < 11; i++) {
@@ -38,6 +45,8 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 		m_btnCombinationSelectTexture[i] = (window->loadTexture("res/sprites/Game_Player" + std::to_string(i + 1) + "_Select.png"));
 	}
 
+	m_btnCombinationSelectFrame[0].rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
+	m_btnCombinationSelectFrame[1].rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 	for (int i = 0; i < 6; i++) {
 		m_btnCombinationSelectText[i] = std::make_shared<TextDrawable>(font, " ", window);
 		m_btnCombinationSelectText[i]->rect
@@ -67,9 +76,11 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 void GameRoundDrawer::setGameRound(const std::shared_ptr<GameRound>& round) {
 	m_round = round;
 	WindowEvent::subscribe();
+	ClickEvent::subscribe();
 	setBars();
 	setDiceTextures();
 	updateCombinationButtons();
+	onWindowResized(m_window->getWidth(), m_window->getHeight());
 }
 
 void GameRoundDrawer::draw() {
@@ -87,7 +98,7 @@ void GameRoundDrawer::draw() {
 
 	if (m_round->isOver())
 	{
-		drawVictoryScreen(m_round->getCurrentActor());
+		drawVictoryScreen(m_round->getCurrentActorEnum());
 	}
 }
 
@@ -95,7 +106,7 @@ void GameRoundDrawer::setBars() {
 	for (unsigned int i = 0; i < m_bars.size(); i++) {
 		m_bars[i].barPlayer1.rect.setHeight(m_round->getBoard().getColumn(i).actor1Marker * m_barIncrement);
 		m_bars[i].barPlayer2.rect.setHeight(m_round->getBoard().getColumn(i).actor2Marker * m_barIncrement);
-		switch (m_round->getCurrentActor()) {
+		switch (m_round->getCurrentActorEnum()) {
 		case ActorEnum::ACTOR1:
 			m_bars[i].barTemp.rect
 				.setPos(m_bars[i].barPlayer1.rect.getPosX(), m_bars[i].barPlayer1.rect.getPosY() - m_bars[i].barPlayer1.rect.getHeight())
@@ -146,7 +157,7 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 			.setHeight(diceWidth);
 	}
 	
-	int8_t mirrorFactor = (m_round->getCurrentActor() == ActorEnum::ACTOR1) ? -1 : 1;
+	int8_t mirrorFactor = (m_round->getCurrentActorEnum() == ActorEnum::ACTOR1) ? -1 : 1;
 	
 	for (int i = 0; i < 4; i++) {
 		m_diceTextureDrawable[i].rect
@@ -154,19 +165,29 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 	}
 
 	const double btnCombinationHight = (125./2160.) * height;
-	const double btnCombinationDistance = (1/10) * btnCombinationHight;
+	const double btnCombinationDistance = (1./10) * btnCombinationHight;
 
 	for(int i = 0; i < 6; i++) {
 		m_btnCombinationSelectDrawable[i]->rect
-			.setPos(m_diceTextureDrawable[(m_round->getCurrentActor() == ActorEnum::ACTOR1) ? 3 : 0].rect.getPosX(), m_diceTextureDrawable[0].rect.getPosY() + 1.5 * m_diceTextureDrawable[0].rect.getHeight() + i * (btnCombinationHight + btnCombinationDistance))
+			.setPos(m_diceTextureDrawable[(m_round->getCurrentActorEnum() == ActorEnum::ACTOR1) ? 3 : 0].rect.getPosX(), m_diceTextureDrawable[0].rect.getPosY() + 1.5 * m_diceTextureDrawable[0].rect.getHeight() + i * (btnCombinationHight + btnCombinationDistance))
 			.setWidthKeepAspect(std::abs(m_diceTextureDrawable[0].rect.getPosX() - m_diceTextureDrawable[3].rect.getPosX()), m_btnCombinationSelectDrawable[i]->getTexture()->getAspect());
 		m_btnCombinationSelectText[i]->rect
 			.setPos(m_btnCombinationSelectDrawable[i]->rect.getPosX() + (m_btnCombinationSelectDrawable[i]->rect.getWidth()/2)
 				, m_btnCombinationSelectDrawable[i]->rect.getPosY() + (m_btnCombinationSelectDrawable[i]->rect.getHeight()/2))
 			.setHeightKeepAspect(m_btnCombinationSelectDrawable[i]->rect.getHeight()/2, m_btnCombinationSelectText[i]->getTexture()->getAspect());
 	}
+	if (m_round->getNextStep() == GameRound::NextStep::CHOOSE_TO_CONTINUE_OR_STOP) {
+		const Rect& rect = m_btnCombinationSelectText[m_round->getChosenCombinationID()]->rect;
+		uint8_t actor = (m_round->getCurrentActorEnum() == ActorEnum::ACTOR1) ? 0 : 1;
+		m_btnCombinationSelectFrame[actor].rect.setPos(rect.getPosX(), rect.getPosY());
+		m_btnCombinationSelectFrame[actor].rect.setHeightKeepAspect(1.2*m_btnCombinationSelectDrawable[0]->rect.getHeight(), m_btnCombinationSelectFrame[actor].getTexture()->getAspect());
+		m_btnCombinationSelectFrame[(actor+1)&1].rect.setDimensions(0, 0);
+	} else {
+		m_btnCombinationSelectFrame[0].rect.setDimensions(0, 0);
+		m_btnCombinationSelectFrame[1].rect.setDimensions(0, 0);
+	}
 
-	m_diceTextureDrawable[(m_round->getCurrentActor() == ActorEnum::ACTOR1) ? 3 : 0].rect.getPosX();
+	m_diceTextureDrawable[(m_round->getCurrentActorEnum() == ActorEnum::ACTOR1) ? 3 : 0].rect.getPosX();
 
 	m_victoryDrawable->rect
 		.setHeightKeepAspect(height, m_victoryDrawable->getTexture()->getAspect())
@@ -178,7 +199,31 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 
 void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 	if (!m_round) return;
-	if (!m_round->isOver()) m_round->nextStep();
+	if (m_round->isOver()) return;
+
+	std::shared_ptr<Actor> actor = m_round->getCurrentActor();
+	std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(actor);
+
+	if (player) {
+		if (m_round->getNextStep() == GameRound::NextStep::CHOOSE_DICE_COMBINATION) {
+			bool combinationSelected = false;
+			for (uint8_t i = 0; i < m_round->getDiceThrow().getCombinationCount(); i++) {
+				if (m_btnCombinationSelectDrawable[i]->rect.containsPoint(x, y)) {
+					player->setReturnValueForChooseCombination(i);
+					combinationSelected = true;
+					break;
+				}
+			}
+			if (!combinationSelected) return;
+		}
+	}
+
+	if (!m_round->isOver()) {
+		m_round->nextStep();
+		if (m_round->getNextStep() == GameRound::NextStep::CHOOSE_DICE_COMBINATION && std::dynamic_pointer_cast<Bot>(m_round->getCurrentActor())) {
+			m_round->nextStep();
+		}
+	}
 	
 	setBars();
 	setDiceTextures();
@@ -191,7 +236,7 @@ void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 	for (int i = 0; i < diceThrow.getCombinationCount(); i++) {
 		DEBUG_LOG_NO_NL("combination #" << i << ": " << (int)diceThrow.getCombination(i).a << " " << (int)diceThrow.getCombination(i).b << std::endl);
 	}
-	DEBUG_LOG_NO_NL("\ncurrent player: " << ((m_round->getCurrentActor() == ActorEnum::ACTOR1) ? "ACTOR 1" : "ACTOR 2"));
+	DEBUG_LOG_NO_NL("\ncurrent player: " << ((m_round->getCurrentActorEnum() == ActorEnum::ACTOR1) ? "ACTOR 1" : "ACTOR 2"));
 	DEBUG_LOG_NO_NL("\nnext step: " << ((m_round->getNextStep() == GameRound::NextStep::CHOOSE_DICE_COMBINATION) ? "CHOOSE_DICE_COMBINATION" : "CHOOSE_TO_CONTINUE_OR_STOP"));
 	DEBUG_LOG_NO_NL("\nactor1Marker:");
 	for (unsigned int i = 0; i < m_bars.size(); i++)
@@ -208,7 +253,7 @@ void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 void GameRoundDrawer::setDiceTextures()
 {
 	int offset = 0;
-	if (m_round->getCurrentActor() == ActorEnum::ACTOR2) offset = 6;
+	if (m_round->getCurrentActorEnum() == ActorEnum::ACTOR2) offset = 6;
 	
 	for (int i = 0; i < 4; i++) {
 		m_diceTextureDrawable[i].setTexture(m_diceTextures[m_round->getDiceThrow().getDie(i) -1 + offset]);
@@ -247,13 +292,13 @@ void GameRoundDrawer::drawVictoryScreen(ActorEnum winner) {
 void GameRoundDrawer::updateCombinationButtons() {
 	for (int i = 0; i < m_round->getDiceThrow().getCombinationCount(); i++)
 	{
-		m_btnCombinationSelectText[i]->text = std::to_string(m_round->getDiceThrow().getCombination(i).a) 
-			+ ((m_round->getDiceThrow().getCombination(i).b > 0) ? 
-				" + " + std::to_string(m_round->getDiceThrow().getCombination(i).b) 
+		m_btnCombinationSelectText[i]->text = std::to_string(m_round->getDiceThrow().getCombination(i).a)
+			+ ((m_round->getDiceThrow().getCombination(i).b > 0) ?
+				" + " + std::to_string(m_round->getDiceThrow().getCombination(i).b)
 				: "");
 		m_btnCombinationSelectText[i]->update(m_window);
 		
-		switch (m_round->getCurrentActor()) {
+		switch (m_round->getCurrentActorEnum()) {
 		case ActorEnum::ACTOR1:
 			m_btnCombinationSelectDrawable[i]->setTexture(m_btnCombinationSelectTexture[0]);
 			break;
@@ -271,4 +316,6 @@ void GameRoundDrawer::drawCombinationButtons()
 		m_btnCombinationSelectDrawable[i]->draw();
 		m_btnCombinationSelectText[i]->draw();
 	}
+	m_btnCombinationSelectFrame[0].draw();
+	m_btnCombinationSelectFrame[1].draw();
 }

@@ -12,12 +12,35 @@ GameRound::GameRound(const std::shared_ptr<Actor>& actor1, const std::shared_ptr
 	m_actor2->setActorEnum(ActorEnum::ACTOR2);
 }
 
-const Board& GameRound::getBoard() { return m_board; }
-ActorEnum GameRound::getCurrentActor() { return m_currentActor; }
-const DiceThrow& GameRound::getDiceThrow() { return m_diceThrow; }
-bool GameRound::isOver() { return m_isOver; }
+const Board& GameRound::getBoard() const {
+	return m_board;
+}
 
-GameRound::NextStep GameRound::getNextStep() {
+ActorEnum GameRound::getCurrentActorEnum() const {
+	return m_currentActor;
+}
+
+std::shared_ptr<Actor> GameRound::getCurrentActor() const {
+	return getActor(m_currentActor);
+}
+
+std::shared_ptr<Actor> GameRound::getActor(ActorEnum actor) const {
+	return (actor == ActorEnum::ACTOR1) ? m_actor1 : m_actor2;
+}
+
+const DiceThrow& GameRound::getDiceThrow() const {
+	return m_diceThrow;
+}
+
+uint8_t GameRound::getChosenCombinationID() const {
+	return m_chosenCombinationID;
+}
+
+bool GameRound::isOver() const {
+	return m_isOver;
+}
+
+GameRound::NextStep GameRound::getNextStep() const {
 	return m_nextStep;
 }
 
@@ -33,7 +56,8 @@ void GameRound::nextStep() {
 			m_diceThrow = DiceThrow(m_board, m_currentActor);
 			break;
 		}
-		m_board.advanceRunnerMarkers(m_diceThrow.getCombination(currentActor->choseCombination(m_board, m_diceThrow)));
+		m_chosenCombinationID = currentActor->choseCombination(m_board, m_diceThrow);
+		m_board.advanceRunnerMarkers(m_diceThrow.getCombination(m_chosenCombinationID));
 		m_nextStep = NextStep::CHOOSE_TO_CONTINUE_OR_STOP;
 		break;
 	case (NextStep::CHOOSE_TO_CONTINUE_OR_STOP):
