@@ -55,7 +55,7 @@ void WindowClosedEvent::onWindowEvent(const SDL_Event& event) {
 
 // WindowResizedEvent
 void WindowResizedEvent::onWindowEvent(const SDL_Event& event) {
-	if (event.window.event == SDL_WINDOWEVENT_RESIZED)
+	if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
 		onWindowResized(event.window.data1, event.window.data2);
 }
 
