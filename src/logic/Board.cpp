@@ -1,6 +1,7 @@
 #include <cmath>
 #include <stdexcept>
 #include "Board.h"
+#include <doctest.h>
 
 Board::Board()
 	: m_columns{0}
@@ -39,4 +40,29 @@ void Board::advanceRunnerMarkers(const DiceThrow::Combination &combination) {
 const Board::Column& Board::getColumn(uint8_t column) const {
 	if (column >= 11) throw std::runtime_error("Board::getColumn() - column must be < 11 " + std::to_string(column));
 	return m_columns[column];
+}
+
+TEST_CASE("Board") {
+    Board b;
+    SUBCASE("Check height of columns") {
+        CHECK(b.getColumn(0).maxHeight == 3);
+        CHECK(b.getColumn(1).maxHeight == 5);
+        CHECK(b.getColumn(2).maxHeight == 7);
+        CHECK(b.getColumn(3).maxHeight == 9);
+        CHECK(b.getColumn(4).maxHeight == 11);
+        CHECK(b.getColumn(5).maxHeight == 13);
+        CHECK(b.getColumn(6).maxHeight == 11);
+        CHECK(b.getColumn(7).maxHeight == 9);
+        CHECK(b.getColumn(8).maxHeight == 7);
+        CHECK(b.getColumn(9).maxHeight == 5);
+        CHECK(b.getColumn(10).maxHeight == 3);
+    }
+
+    SUBCASE("Check for empty Columns") {
+        for (int i = 0; i < 11; ++i) {
+            CHECK(b.getColumn(i).runnerOffset == 0);
+            CHECK(b.getColumn(i).actor1Marker == 0);
+            CHECK(b.getColumn(i).actor2Marker == 0);
+        }
+    }
 }
