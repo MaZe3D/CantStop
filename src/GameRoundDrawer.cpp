@@ -1,5 +1,6 @@
 #include "GameRoundDrawer.h"
 #include "logic/actors/Player.h"
+#include "logic/actors/Bot.h"
 #include "util/log.h"
 
 GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std::shared_ptr<const Font>& font)
@@ -180,6 +181,7 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 		uint8_t actor = (m_round->getCurrentActorEnum() == ActorEnum::ACTOR1) ? 0 : 1;
 		m_btnCombinationSelectFrame[actor].rect.setPos(rect.getPosX(), rect.getPosY());
 		m_btnCombinationSelectFrame[actor].rect.setHeightKeepAspect(1.2*m_btnCombinationSelectDrawable[0]->rect.getHeight(), m_btnCombinationSelectFrame[actor].getTexture()->getAspect());
+		m_btnCombinationSelectFrame[(actor+1)&1].rect.setDimensions(0, 0);
 	} else {
 		m_btnCombinationSelectFrame[0].rect.setDimensions(0, 0);
 		m_btnCombinationSelectFrame[1].rect.setDimensions(0, 0);
@@ -216,7 +218,12 @@ void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 		}
 	}
 
-	if (!m_round->isOver()) m_round->nextStep();
+	if (!m_round->isOver()) {
+		m_round->nextStep();
+		if (m_round->getNextStep() == GameRound::NextStep::CHOOSE_DICE_COMBINATION && std::dynamic_pointer_cast<Bot>(m_round->getCurrentActor())) {
+			m_round->nextStep();
+		}
+	}
 	
 	setBars();
 	setDiceTextures();
