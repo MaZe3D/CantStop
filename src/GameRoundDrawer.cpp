@@ -1,4 +1,5 @@
 #include "GameRoundDrawer.h"
+#include "logic/actors/Player.h"
 #include "util/log.h"
 
 GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std::shared_ptr<const Font>& font)
@@ -10,6 +11,7 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 	, m_victoryText(font, "Click to continue", window)
 {
 	WindowEvent::unsubscribe();
+	ClickEvent::unsubscribe();
 	m_background.rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 
 	for (int i = 0; i < 11; i++) {
@@ -67,9 +69,11 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std
 void GameRoundDrawer::setGameRound(const std::shared_ptr<GameRound>& round) {
 	m_round = round;
 	WindowEvent::subscribe();
+	ClickEvent::subscribe();
 	setBars();
 	setDiceTextures();
 	updateCombinationButtons();
+	onWindowResized(m_window->getWidth(), m_window->getHeight());
 }
 
 void GameRoundDrawer::draw() {
@@ -178,6 +182,25 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 
 void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 	if (!m_round) return;
+	if (m_round->isOver()) return;
+
+	std::shared_ptr<Actor> actor = m_round->getCurrentActor();
+	std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(actor);
+
+	if (player) {
+		if (m_round->getNextStep() == GameRound::NextStep::CHOOSE_DICE_COMBINATION) {
+			bool combinationSelected = false;
+			for (uint8_t i = 0; i < m_round->getDiceThrow().getCombinationCount(); i++) {
+				if (m_btnCombinationSelectDrawable[i]->rect.containsPoint(x, y)) {
+					player->setReturnValueForChooseCombination(i);
+					combinationSelected = true;
+					break;
+				}
+			}
+			if (!combinationSelected) return;
+		}
+	}
+
 	if (!m_round->isOver()) m_round->nextStep();
 	
 	setBars();
@@ -247,9 +270,9 @@ void GameRoundDrawer::drawVictoryScreen(ActorEnum winner) {
 void GameRoundDrawer::updateCombinationButtons() {
 	for (int i = 0; i < m_round->getDiceThrow().getCombinationCount(); i++)
 	{
-		m_btnCombinationSelectText[i]->text = std::to_string(m_round->getDiceThrow().getCombination(i).a) 
-			+ ((m_round->getDiceThrow().getCombination(i).b > 0) ? 
-				" + " + std::to_string(m_round->getDiceThrow().getCombination(i).b) 
+		m_btnCombinationSelectText[i]->text = std::to_string(m_round->getDiceThrow().getCombination(i).a)
+			+ ((m_round->getDiceThrow().getCombination(i).b > 0) ?
+				" + " + std::to_string(m_round->getDiceThrow().getCombination(i).b)
 				: "");
 		m_btnCombinationSelectText[i]->update(m_window);
 		
