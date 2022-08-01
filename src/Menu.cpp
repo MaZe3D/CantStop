@@ -34,6 +34,11 @@ void Menu::draw() {
 	m_player2Text.draw();
 }
 
+void Menu::restart() {
+	LeftClickEvent::subscribe();
+	WindowResizedEvent::subscribe();
+}
+
 void Menu::adjustSizePlayer1(int width, int height) {
 	m_player1Text.rect.setHeightKeepAspect(height/10, m_player1Text.getTexture()->getAspect()).setPos(width/2-height/8, height/2);
 }

@@ -11,6 +11,7 @@ public:
 	Menu(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font);
 
 	void draw();
+	void restart();
 
 private:
 	const char* m_actorNames[4] { "HUMAN", "SMART BOT", "GREEDY BOT", "RANDOM BOT" };

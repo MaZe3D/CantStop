@@ -1,15 +1,17 @@
 #include "GameRoundDrawer.h"
 #include "logic/actors/Player.h"
 #include "logic/actors/Bot.h"
+#include "Game.h"
 #include "util/log.h"
 
-GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, const std::shared_ptr<const Font>& font)
+GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font)
 	: Event(window)
+	, m_game(game)
 	, m_background("res/sprites/Game_Background.png", window)
 	, m_textureBarPlayer1(window->loadTexture("res/sprites/Game_Player1_Bar.png"))
 	, m_textureBarPlayer2(window->loadTexture("res/sprites/Game_Player2_Bar.png"))
 	, m_textureBarTemp(window->loadTexture("res/sprites/Game_Temp_Bar.png"))
-	, m_victoryText(font, "Click to continue", window)
+	, m_victoryText(font, "click here to continue", window)
 	, m_btnCombinationSelectFrame {
 		TextureDrawable("res/sprites/Game_Player1_SelectFrame.png", window),
 		TextureDrawable("res/sprites/Game_Player2_SelectFrame.png", window)
@@ -110,7 +112,7 @@ void GameRoundDrawer::draw() {
 			m_stopText->draw();
 		}
 	}
-	else if (m_round->getDiceThrow().getCombinationCount() == 0) {
+	else if (m_round->getDiceThrow().getCombinationCount() == 0 || std::dynamic_pointer_cast<Bot>(m_round->getCurrentActor())) {
 		m_continueText->draw();
 	}
 
@@ -222,7 +224,15 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 
 void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 	if (!m_round) return;
-	if (m_round->isOver()) return;
+	if (m_round->isOver()) {
+		if (m_victoryText.rect.containsPoint(x, y)) {
+			WindowEvent::unsubscribe();
+			ClickEvent::unsubscribe();
+			m_round = nullptr;
+			m_game.roundFinished();
+		}
+		return;
+	}
 
 	std::shared_ptr<Actor> actor = m_round->getCurrentActor();
 	std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(actor);

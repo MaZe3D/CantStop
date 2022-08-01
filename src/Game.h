@@ -24,6 +24,7 @@ public:
 	void run();
 
 	void startNewRound(const std::shared_ptr<GameRound>& round);
+	void roundFinished();
 
 private:
 	const std::shared_ptr<Window> m_window;
