@@ -19,8 +19,14 @@ private:
 	std::shared_ptr<GameRound> m_round;
 
 	std::shared_ptr<const Texture> m_victoryTextures[2];
-
 	std::shared_ptr<TextureDrawable> m_victoryDrawable;
+
+	std::shared_ptr<const Texture> m_btnCombinationSelectTexture[2];
+	std::shared_ptr<TextDrawable> m_btnCombinationSelectText[6];
+	std::vector<std::shared_ptr<TextureDrawable>> m_btnCombinationSelectDrawable;
+
+	void updateCombinationButtons();
+	void drawCombinationButtons();
 	TextDrawable m_victoryText;
 
 	struct Bars
