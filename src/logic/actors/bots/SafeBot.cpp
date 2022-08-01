@@ -1,7 +1,7 @@
 #include "SafeBot.h"
 #include <list>
 
-bool SafeBot::finishedTurn(const Board &board) {
+bool SafeBot::finishedTurn(const Board &board, MersenneTwister& rand) {
 	uint8_t usedMarkers = 0;
 	for (int i = 0; i < 11; ++i) {
 		if (board.getColumn(i).runnerOffset != 0) {
@@ -11,7 +11,7 @@ bool SafeBot::finishedTurn(const Board &board) {
 	return (usedMarkers == 3);
 }
 
-uint8_t SafeBot::choseCombination(const Board &board, const DiceThrow &diceThrow) {
+uint8_t SafeBot::choseCombination(const Board &board, const DiceThrow &diceThrow, MersenneTwister& rand) {
 	uint8_t bestCombination = 0;
 	uint8_t rating = 0;
 	uint8_t i = 0;

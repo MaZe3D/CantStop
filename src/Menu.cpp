@@ -82,7 +82,7 @@ void Menu::onLeftClick(int32_t x, int32_t y) {
 			case 2: actor2 = std::make_shared<GreedyBot>(); break;
 			case 3: actor2 = std::make_shared<RandomBot>(); break;
 		}
-		m_game.startNewRound(std::make_shared<GameRound>(actor1, actor2));
+		m_game.startNewRound(std::make_shared<GameRound>(actor1, actor2, MersenneTwister()));
 		LeftClickEvent::unsubscribe();
 		WindowResizedEvent::unsubscribe();
 	}

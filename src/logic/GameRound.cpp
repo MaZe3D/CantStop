@@ -1,10 +1,11 @@
 #include "GameRound.h"
 #include <stdexcept>
 
-GameRound::GameRound(const std::shared_ptr<Actor>& actor1, const std::shared_ptr<Actor>& actor2)
+GameRound::GameRound(const std::shared_ptr<Actor>& actor1, const std::shared_ptr<Actor>& actor2, const MersenneTwister& rand)
 	: m_actor1{actor1}
 	, m_actor2{actor2}
-	, m_diceThrow(m_board, m_currentActor)
+	, m_rand{rand}
+	, m_diceThrow(m_board, m_currentActor, m_rand)
 {
 	if (!m_actor1 || !m_actor2)
 		throw std::runtime_error("GameRound::GameRound() - actors may not be nullptr");
@@ -53,20 +54,20 @@ void GameRound::nextStep() {
 		if (m_diceThrow.getCombinationCount() == 0) {
 			m_board.resetRunnerOffsets();
 			m_currentActor = (m_currentActor == ActorEnum::ACTOR1) ? ActorEnum::ACTOR2 : ActorEnum::ACTOR1;
-			m_diceThrow = DiceThrow(m_board, m_currentActor);
+			m_diceThrow = DiceThrow(m_board, m_currentActor, m_rand);
 			break;
 		}
-		m_chosenCombinationID = currentActor->choseCombination(m_board, m_diceThrow);
+		m_chosenCombinationID = currentActor->choseCombination(m_board, m_diceThrow, m_rand);
 		m_board.advanceRunnerMarkers(m_diceThrow.getCombination(m_chosenCombinationID));
 		m_nextStep = NextStep::CHOOSE_TO_CONTINUE_OR_STOP;
 		break;
 	case (NextStep::CHOOSE_TO_CONTINUE_OR_STOP):
-		if (currentActor->finishedTurn(m_board)) {
+		if (currentActor->finishedTurn(m_board, m_rand)) {
 			if ((m_isOver = m_board.applyRunnerOffsetsToActorMarkersAndCheckWin(m_currentActor))) return;
 			m_currentActor = (m_currentActor == ActorEnum::ACTOR1) ? ActorEnum::ACTOR2 : ActorEnum::ACTOR1;
 		}
 		m_nextStep = NextStep::CHOOSE_DICE_COMBINATION;
-		m_diceThrow = DiceThrow(m_board, m_currentActor);
+		m_diceThrow = DiceThrow(m_board, m_currentActor, m_rand);
 		break;
 	}
 }
