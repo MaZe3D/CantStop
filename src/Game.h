@@ -18,7 +18,7 @@ enum class GameState {
 	EXIT
 };
 
-class Game : WindowClosedEvent, LeftClickEvent, WindowResizedEvent {
+class Game : WindowClosedEvent, KeyPressedEvent {
 public:
 	Game(const std::shared_ptr<Window>& window);
 	void run();
@@ -36,6 +36,5 @@ private:
 
 	void render();
 	void onWindowClosed() override;
-	void onLeftClick(int32_t x, int32_t y) override;
-	void onWindowResized(int32_t width, int32_t height) override;
+	void onKeyPressed(const SDL_Keysym& key) override;
 };
