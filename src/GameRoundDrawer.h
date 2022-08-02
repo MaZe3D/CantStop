@@ -22,6 +22,7 @@ private:
 	std::shared_ptr<GameRound> m_round;
 
 	TextureDrawable m_background;
+	TextDrawable m_menuButtonText;
 	const std::shared_ptr<const Texture> m_textureBarPlayer1;
 	const std::shared_ptr<const Texture> m_textureBarPlayer2;
 	const std::shared_ptr<const Texture> m_textureBarTemp;

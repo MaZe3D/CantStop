@@ -8,6 +8,7 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, Game& gam
 	: Event(window)
 	, m_game(game)
 	, m_background("res/sprites/Game_Background.png", window)
+	, m_menuButtonText(font, " menu", window)
 	, m_textureBarPlayer1(window->loadTexture("res/sprites/Game_Player1_Bar.png"))
 	, m_textureBarPlayer2(window->loadTexture("res/sprites/Game_Player2_Bar.png"))
 	, m_textureBarTemp(window->loadTexture("res/sprites/Game_Temp_Bar.png"))
@@ -82,7 +83,7 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, Game& gam
 
 void GameRoundDrawer::setGameRound(const std::shared_ptr<GameRound>& round) {
 	m_round = round;
-	if (std::dynamic_pointer_cast<Bot>(m_round->getCurrentActor())) {
+	if (std::dynamic_pointer_cast<Bot>(m_round->getCurrentActor()) && m_round->getNextStep() == GameRound::NextStep::CHOOSE_DICE_COMBINATION) {
 		m_round->nextStep();
 	}
 	WindowEvent::subscribe();
@@ -95,6 +96,7 @@ void GameRoundDrawer::setGameRound(const std::shared_ptr<GameRound>& round) {
 
 void GameRoundDrawer::draw() {
 	m_background.draw();
+	m_menuButtonText.draw();
 
 	for(auto &bars : m_bars) {
 		bars.draw();
@@ -144,6 +146,8 @@ void GameRoundDrawer::setBars() {
 
 void GameRoundDrawer::onWindowResized(int width, int height) {
 	m_background.rect.setHeightKeepAspect(height, m_background.getTexture()->getAspect()).setPos(width/2, height/2);
+	m_menuButtonText.rect.setHeightKeepAspect(height/20, m_menuButtonText.getTexture()->getAspect());
+	m_menuButtonText.rect.setPosX(width/2-height*16/9/2);
 
 	const double firstBarPosX = (width/2) - (height * (786.5/2160));
 	const double firstBarPosY = height * (1657./2160.);
@@ -229,8 +233,15 @@ void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 			WindowEvent::unsubscribe();
 			ClickEvent::unsubscribe();
 			m_round = nullptr;
-			m_game.roundFinished();
+			m_game.showMenu();
 		}
+		return;
+	}
+	else if (m_menuButtonText.rect.containsPoint(x, y)) {
+		WindowEvent::unsubscribe();
+		ClickEvent::unsubscribe();
+		m_round = nullptr;
+		m_game.showMenu();
 		return;
 	}
 
