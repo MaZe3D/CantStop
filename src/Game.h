@@ -8,8 +8,8 @@
 #include "drawables/TextureDrawable.h"
 #include "drawables/TextDrawable.h"
 #include "mysdl/Events.h"
-#include "Menu.h"
-#include "GameRoundDrawer.h"
+#include "ux/Menu.h"
+#include "ux/GameRoundDrawer.h"
 #include "logic/GameRound.h"
 #include "util/MersenneTwister.h"
 
