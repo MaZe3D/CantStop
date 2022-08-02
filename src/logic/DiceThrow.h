@@ -3,7 +3,7 @@
 #include "ActorEnum.h"
 #include <inttypes.h>
 #include <list>
-#include <random>
+#include "util/MersenneTwister.h"
 
 class Board;
 
@@ -14,7 +14,7 @@ public:
 		int8_t b; // -1 means just one value
 	};
 
-	DiceThrow(const Board& board, const ActorEnum currentActor);
+	DiceThrow(const Board& board, const ActorEnum currentActor, MersenneTwister& rand);
 
 	uint8_t getDie(uint8_t dieID) const;
 	uint8_t getCombinationCount() const;
