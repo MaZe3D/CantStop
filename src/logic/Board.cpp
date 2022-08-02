@@ -77,7 +77,7 @@ TEST_CASE("strintToBoard") {
 	boardString =
 	"actor1Marker 0 1 4 6 1 12 10 1 0 3 2"
 	"actor2Marker 3 2 7 1 11 0 1 6 7 0 0"
-	"RunnerOffset 0 0 0 0 0 0 0 0 0 0 0";
+	"RunnerOffset 1 0 0 0 5 0 0 0 0 0 2";
 
 	board.stringToBoard(boardString);
 	SUBCASE("Check actormarkers") {
@@ -87,6 +87,33 @@ TEST_CASE("strintToBoard") {
 		CHECK(board.getColumn(0).actor2Marker == 3);
 		CHECK(board.getColumn(10).actor2Marker == 0);
 		CHECK(board.getColumn(4).actor2Marker == 11);
+	}
+	SUBCASE("Check runnerOffsets") {
+		CHECK(board.getColumn(0).runnerOffset == 1);
+		CHECK(board.getColumn(10).runnerOffset == 2);
+		CHECK(board.getColumn(4).runnerOffset == 5);
+		CHECK(board.getColumn(1).runnerOffset == 0);
+		CHECK(board.getColumn(9).runnerOffset == 0);
+		CHECK(board.getColumn(3).runnerOffset == 0);
+	}
+	SUBCASE("Check faulty boardString") {
+		std::string faultyBoardString ={
+			"actor1Marker 0 1 4 6 1 12 10 1 0 3 2"
+			"actor2Marker 3 2 7 1 11 0 1 6 7 0 0"
+		};
+		CHECK_THROWS(board.stringToBoard(faultyBoardString));
+		std::string faultyBoardString1 ={
+			"actor1Marker 0 1 4 6 1 12 10 1 0 3 2"
+			"actor2Marker 3 2 7 1 11 0 1 6 7 0 0"
+			"3 2 7 1 11 0 1 6 7 0 0 0 0 0 0 0 0"
+		};
+		CHECK_THROWS(board.stringToBoard(faultyBoardString1));
+		std::string faultyBoardString2 ={
+			"actor1Marker 0 1 4 6 1 12 10 1 0 3 2"
+			"actor2Marker 3 2 7 1 11 0 1 6 7 0 0"
+			"RunnerOffset 1 0 0 0 5 0 0 0 0 0 0 2 0"
+		};
+		CHECK_THROWS(board.stringToBoard(faultyBoardString2));
 	}
 }
 
