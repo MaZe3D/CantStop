@@ -35,7 +35,7 @@ bool SmartBot::finishedTurn(const Board& board, MersenneTwister& rand) {
 	}
 	return (usedMarkers == 3);
 }
-#ifndef DEBUG
+#ifndef DOCTEST_CONFIG_DISABLE
 #include <doctest.h>
 #include <memory>
 #include "RandomBot.h"
