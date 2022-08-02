@@ -242,14 +242,14 @@ void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 		if (m_victoryText.rect.containsPoint(x, y)) {
 			deactivate();
 			m_round = nullptr;
-			m_menu.restart();
+			m_menu.activate();
 		}
 		return;
 	}
 	else if (m_menuButtonText.rect.containsPoint(x, y)) {
 		deactivate();
 		m_round = nullptr;
-		m_menu.restart();
+		m_menu.activate();
 		return;
 	}
 

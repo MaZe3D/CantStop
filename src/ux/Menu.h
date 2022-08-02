@@ -14,13 +14,9 @@ public:
 	void activate();
 	void deactivate();
 
-	void restart();
-
 private:
-	const char* m_actorNames[4] { "HUMAN", "SMART BOT", "GREEDY BOT", "RANDOM BOT" };
-
-	uint8_t m_player1Selection = 0;
-	uint8_t m_player2Selection = 1;
+	uint8_t m_actor1SelectionID = 0;
+	uint8_t m_actor2SelectionID = 1;
 
 	GameRoundDrawer& m_gameDrawer;
 	std::shared_ptr<GameRound> m_round;
@@ -33,11 +29,10 @@ private:
 	TextDrawable m_player2Text;
 	TextDrawable m_continueButton;
 
-	void adjustSizePlayer1(int width, int height);
-	void adjustSizePlayer2(int width, int height);
-
 	void onDraw() override;
 	void onWindowResized(int width, int height) override;
 	void onLeftClick(int32_t x, int32_t y) override;
+
+	std::shared_ptr<Actor> createActorFromSelectionID(uint8_t id) const;
 
 };
