@@ -18,8 +18,8 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, Game& gam
 		TextureDrawable("res/sprites/Game_Player2_SelectFrame.png", window)
 	}
 {
-	WindowEvent::unsubscribe();
-	ClickEvent::unsubscribe();
+	WindowResizedEvent::unsubscribe();
+	LeftClickEvent::unsubscribe();
 	m_background.rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 
 	for (int i = 0; i < 11; i++) {
@@ -86,8 +86,8 @@ void GameRoundDrawer::setGameRound(const std::shared_ptr<GameRound>& round) {
 	if (std::dynamic_pointer_cast<Bot>(m_round->getCurrentActor()) && m_round->getNextStep() == GameRound::NextStep::CHOOSE_DICE_COMBINATION) {
 		m_round->nextStep();
 	}
-	WindowEvent::subscribe();
-	ClickEvent::subscribe();
+	WindowResizedEvent::subscribe();
+	LeftClickEvent::subscribe();
 	setBars();
 	setDiceTextures();
 	updateCombinationButtons();
@@ -230,16 +230,16 @@ void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 	if (!m_round) return;
 	if (m_round->isOver()) {
 		if (m_victoryText.rect.containsPoint(x, y)) {
-			WindowEvent::unsubscribe();
-			ClickEvent::unsubscribe();
+			WindowResizedEvent::unsubscribe();
+			LeftClickEvent::unsubscribe();
 			m_round = nullptr;
 			m_game.showMenu();
 		}
 		return;
 	}
 	else if (m_menuButtonText.rect.containsPoint(x, y)) {
-		WindowEvent::unsubscribe();
-		ClickEvent::unsubscribe();
+		WindowResizedEvent::unsubscribe();
+		LeftClickEvent::unsubscribe();
 		m_round = nullptr;
 		m_game.showMenu();
 		return;

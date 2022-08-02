@@ -7,9 +7,10 @@
 #include "Rect.h"
 
 class DrawEvent;
-class ClickEvent;
-class WindowEvent;
-class KeyboardEvent;
+class LeftClickEvent;
+class WindowClosedEvent;
+class WindowResizedEvent;
+class KeyPressedEvent;
 
 class Window : public std::enable_shared_from_this<Window> {
 public:
@@ -38,14 +39,17 @@ public:
 	void   subscribeDrawEvent(DrawEvent* event);
 	void unsubscribeDrawEvent(DrawEvent* event);
 
-	void   subscribeClickEvent(ClickEvent* event);
-	void unsubscribeClickEvent(ClickEvent* event);
+	void   subscribeLeftClickEvent(LeftClickEvent* event);
+	void unsubscribeLeftClickEvent(LeftClickEvent* event);
 
-	void   subscribeWindowEvent(WindowEvent* event);
-	void unsubscribeWindowEvent(WindowEvent* event);
+	void   subscribeWindowClosedEvent(WindowClosedEvent* event);
+	void unsubscribeWindowClosedEvent(WindowClosedEvent* event);
 
-	void   subscribeKeyboardEvent(KeyboardEvent* event);
-	void unsubscribeKeyboardEvent(KeyboardEvent* event);
+	void   subscribeWindowResizedEvent(WindowResizedEvent* event);
+	void unsubscribeWindowResizedEvent(WindowResizedEvent* event);
+
+	void   subscribeKeyPressedEvent(KeyPressedEvent* event);
+	void unsubscribeKeyPressedEvent(KeyPressedEvent* event);
 
 private:
 	Window(const std::string& title, int width, int height, bool fullscreen);
@@ -53,9 +57,10 @@ private:
 	bool m_fullscreen;
 
 	std::list<DrawEvent*> m_drawEvents;
-	std::list<ClickEvent*> m_clickEvents;
-	std::list<WindowEvent*> m_windowEvents;
-	std::list<KeyboardEvent*> m_keyboardEvents;
+	std::list<LeftClickEvent*> m_leftClickEvents;
+	std::list<WindowClosedEvent*> m_windowClosedEvents;
+	std::list<WindowResizedEvent*> m_windowResizedEvents;
+	std::list<KeyPressedEvent*> m_keyPressedEvents;
 	
 	std::shared_ptr<SDL_Window> m_sdlWindow;
 	std::shared_ptr<SDL_Renderer> m_sdlRenderer;
