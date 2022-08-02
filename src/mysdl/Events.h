@@ -18,7 +18,7 @@ protected:
 // ==================== DrawEvent ====================
 class DrawEvent : virtual public Event {
 protected:
-	DrawEvent(bool subscribeEvent = true);
+	DrawEvent(bool subscribeEvent = false);
 	virtual ~DrawEvent();
 
 	virtual void subscribe() final;
@@ -38,7 +38,7 @@ private:
 // ==================== LeftClickEvent ====================
 class LeftClickEvent : virtual public Event {
 protected:
-	LeftClickEvent(bool subscribeEvent = true);
+	LeftClickEvent(bool subscribeEvent = false);
 	virtual ~LeftClickEvent();
 
 	virtual void subscribe() final;
@@ -58,7 +58,7 @@ private:
 // ==================== WindowClosedEvent ====================
 class WindowClosedEvent : virtual public Event {
 protected:
-	WindowClosedEvent(bool subscribeEvent = true);
+	WindowClosedEvent(bool subscribeEvent = false);
 	virtual ~WindowClosedEvent();
 
 	virtual void subscribe() final;
@@ -78,7 +78,7 @@ private:
 // ==================== WindoResizedwEvent ====================
 class WindowResizedEvent : virtual public Event {
 protected:
-	WindowResizedEvent(bool subscribeEvent = true);
+	WindowResizedEvent(bool subscribeEvent = false);
 	virtual ~WindowResizedEvent();
 
 	virtual void subscribe() final;
@@ -98,7 +98,7 @@ private:
 // ==================== KeyPressedEvent ====================
 class KeyPressedEvent : virtual public Event {
 protected:
-	KeyPressedEvent(bool subscribeEvent = true);
+	KeyPressedEvent(bool subscribeEvent = false);
 	virtual ~KeyPressedEvent();
 
 	virtual void subscribe() final;

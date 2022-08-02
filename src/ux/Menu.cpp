@@ -7,6 +7,7 @@
 
 Menu::Menu(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2)
 	: Event(window)
+	, WindowResizedEvent(true)
 	, m_game(game)
 	, m_background("res/sprites/MainMenu_Background.png", window)
 	, m_title("res/sprites/MainMenu_Title.png", window)
