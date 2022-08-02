@@ -1,5 +1,6 @@
 #include "SafeBot.h"
 #include <list>
+#include <doctest.h>
 
 bool SafeBot::finishedTurn(const Board &board, MersenneTwister& rand) {
 	uint8_t usedMarkers = 0;
@@ -27,4 +28,42 @@ uint8_t SafeBot::choseCombination(const Board &board, const DiceThrow &diceThrow
 		i++;
 	}
 	return bestCombination;
+}
+
+TEST_CASE("SafeBot") {
+	MersenneTwister rand = MersenneTwister(0);
+	SafeBot bot;
+	SUBCASE("choseCombination") {
+		Board board;
+		auto diceThrow = DiceThrow(board, ActorEnum::ACTOR1, rand);
+		board.stringToBoard(
+			"actor1Marker 2 2 2 2 2 2 2 2 2 2 2"
+			"actor2Marker 2 2 2 2 2 2 2 2 2 2 2"
+			"RunnerOffset 0 0 0 0 0 1 0 0 0 0 0"
+		);
+		CHECK(bot.choseCombination(board, diceThrow, rand) == 0);
+		board.stringToBoard(
+			"actor1Marker 2 2 2 2 2 2 2 2 2 2 2"
+			"actor2Marker 2 2 2 2 2 2 2 2 2 2 2"
+			"RunnerOffset 0 0 0 0 0 0 2 0 0 0 0"
+		);
+		CHECK(bot.choseCombination(board, diceThrow, rand) == 1);
+	}
+	SUBCASE("finishedTurn") {
+		Board board;
+		board.stringToBoard(
+			"actor1Marker 2 2 2 2 2 2 2 2 2 2 2"
+			"actor2Marker 2 2 2 2 2 2 2 2 2 2 2"
+			"RunnerOffset 0 0 0 0 0 1 0 0 0 0 0"
+		);
+		CHECK(!bot.finishedTurn(board, rand));
+
+		board.stringToBoard(
+			"actor1Marker 2 2 2 2 2 2 2 2 2 2 2"
+			"actor2Marker 2 2 2 2 2 2 2 2 2 2 2"
+			"RunnerOffset 0 2 0 0 0 1 2 0 0 0 0"
+		);
+		CHECK(bot.finishedTurn(board, rand));
+	}
+
 }
