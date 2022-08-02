@@ -10,6 +10,23 @@ Event::Event(const std::shared_ptr<Window>& window)
 
 
 
+// ==================== DrawEvent ====================
+DrawEvent::DrawEvent(bool sub) {
+	if (sub) subscribe();
+}
+DrawEvent::~DrawEvent() {
+	unsubscribe();
+}
+
+void DrawEvent::  subscribe() { m_window->  subscribeDrawEvent(this); }
+void DrawEvent::unsubscribe() { m_window->unsubscribeDrawEvent(this); }
+
+
+
+
+
+
+
 // ==================== ClickEvent ====================
 ClickEvent::ClickEvent(bool sub) {
 	if (sub) subscribe();

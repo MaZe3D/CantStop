@@ -43,10 +43,6 @@ void Window::setWindowIcon(const std::string& path) const {
 	SDL_FreeSurface(sdlSurface);
 }
 
-void Window::presentFrame() const {
-	SDL_RenderPresent(m_sdlRenderer.get());
-}
-
 int Window::getWidth () const {
 	int width;
 	SDL_GetWindowSize(m_sdlWindow.get(), &width, NULL);
@@ -82,8 +78,13 @@ void Window::setDrawColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a) const {
 	SDL_CALL(SDL_SetRenderDrawColor(m_sdlRenderer.get(), r, g, b, a));
 }
 
-void Window::clear() const {
-	SDL_CALL(SDL_RenderClear(m_sdlRenderer.get()));
+void Window::subscribeDrawEvent(DrawEvent* event) {
+	if (std::find(m_drawEvents.begin(), m_drawEvents.end(), event) == m_drawEvents.end()) {
+		m_drawEvents.push_back(event);
+	}
+}
+void Window::unsubscribeDrawEvent(DrawEvent* event) {
+	m_drawEvents.remove(event);
 }
 
 void Window::subscribeClickEvent(ClickEvent* event) {
@@ -114,21 +115,33 @@ void Window::unsubscribeKeyboardEvent(KeyboardEvent* event) {
 }
 
 void Window::handleEvents() {
-
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
 		case SDL_MOUSEBUTTONUP:
-			for (auto e : std::list<ClickEvent*>(m_clickEvents)) e->onClickEvent(event);
+			for (auto e : std::list<ClickEvent*>(m_clickEvents))
+				e->onClickEvent(event);
 			break;
 		case SDL_WINDOWEVENT:
-			for (auto e : std::list<WindowEvent*>(m_windowEvents)) e->onWindowEvent(event);
+			for (auto e : std::list<WindowEvent*>(m_windowEvents))
+				e->onWindowEvent(event);
 			break;
 		case SDL_KEYDOWN:
 		case SDL_KEYUP:
-			for (auto e : std::list<KeyboardEvent*>(m_keyboardEvents)) e->onKeyboardEvent(event);
+			for (auto e : std::list<KeyboardEvent*>(m_keyboardEvents))
+				e->onKeyboardEvent(event);
 			break;
 		default: break;
 		}
 	}
+
+	SDL_CALL(SDL_RenderClear(m_sdlRenderer.get()));
+
+	// reverse order -> first subscriber can draw over everyone else
+	auto drawEventsReverse = m_drawEvents;
+	drawEventsReverse.reverse();
+	for (auto e : drawEventsReverse)
+		e->onDraw();
+
+	SDL_RenderPresent(m_sdlRenderer.get());
 }

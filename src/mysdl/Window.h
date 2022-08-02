@@ -6,6 +6,7 @@
 #include "Texture.h"
 #include "Rect.h"
 
+class DrawEvent;
 class ClickEvent;
 class WindowEvent;
 class KeyboardEvent;
@@ -23,8 +24,6 @@ public:
 	int getWidth() const;
 	int getHeight() const;
 
-	void presentFrame() const;
-
 	std::shared_ptr<const Texture> loadTexture(const std::string& path) const;
 
 	std::shared_ptr<const Texture> createTextureFromSurface(const std::shared_ptr<SDL_Surface>& surface) const;
@@ -34,20 +33,18 @@ public:
 	void setDrawColor(uint32_t rgba) const;
 	void setDrawColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255) const;
 
-	void clear() const;
-
-	void drawRect() const;
-	void fillRect() const;
-
 	void handleEvents();
 
-	void subscribeClickEvent(ClickEvent* event);
+	void   subscribeDrawEvent(DrawEvent* event);
+	void unsubscribeDrawEvent(DrawEvent* event);
+
+	void   subscribeClickEvent(ClickEvent* event);
 	void unsubscribeClickEvent(ClickEvent* event);
 
-	void subscribeWindowEvent(WindowEvent* event);
+	void   subscribeWindowEvent(WindowEvent* event);
 	void unsubscribeWindowEvent(WindowEvent* event);
 
-	void subscribeKeyboardEvent(KeyboardEvent* event);
+	void   subscribeKeyboardEvent(KeyboardEvent* event);
 	void unsubscribeKeyboardEvent(KeyboardEvent* event);
 
 private:
@@ -55,6 +52,7 @@ private:
 
 	bool m_fullscreen;
 
+	std::list<DrawEvent*> m_drawEvents;
 	std::list<ClickEvent*> m_clickEvents;
 	std::list<WindowEvent*> m_windowEvents;
 	std::list<KeyboardEvent*> m_keyboardEvents;

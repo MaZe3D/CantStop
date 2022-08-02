@@ -15,6 +15,26 @@ protected:
 
 
 
+// ==================== DrawEvent ====================
+class DrawEvent : virtual public Event {
+protected:
+	DrawEvent(bool subscribeEvent = true);
+	virtual ~DrawEvent();
+
+	virtual void subscribe() final;
+	virtual void unsubscribe() final;
+
+private:
+	friend Window;
+	virtual void onDraw() = 0;
+};
+
+
+
+
+
+
+
 // ==================== ClickEvent ====================
 class ClickEvent : virtual public Event {
 protected:

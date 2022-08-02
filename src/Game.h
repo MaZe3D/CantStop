@@ -19,7 +19,7 @@ enum class GameState {
 	EXIT
 };
 
-class Game : WindowClosedEvent, KeyPressedEvent {
+class Game : DrawEvent, WindowClosedEvent, KeyPressedEvent {
 public:
 	Game(const std::shared_ptr<Window>& window);
 	void run();
@@ -28,15 +28,13 @@ public:
 	void showMenu();
 
 private:
-	const std::shared_ptr<Window> m_window;
 	const std::shared_ptr<const Font> m_font1;
 	const std::shared_ptr<const Font> m_font2;
 	Menu m_menu;
 	GameRoundDrawer m_gameRoundDrawer;
-
 	GameState m_gameState = GameState::MENU;
 
-	void render();
+	void onDraw() override;
 	void onWindowClosed() override;
 	void onKeyPressed(const SDL_Keysym& key) override;
 };

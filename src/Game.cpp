@@ -3,7 +3,6 @@
 
 Game::Game(const std::shared_ptr<Window>& window)
 	: Event(window)
-	, m_window(window)
 	, m_font1(Font::create("res/fonts/upheavtt.ttf", 80))
 	, m_font2(Font::create("res/fonts/Mx437_Nix8810_M15.ttf", 80))
 	, m_menu(window, *this, m_font1, m_font2)
@@ -23,7 +22,6 @@ void Game::run() {
 		frameStart = SDL_GetTicks();
 
 		m_window->handleEvents();
-		render();
 
 		frameTime = SDL_GetTicks() - frameStart;
 		if (frameDelay > frameTime)
@@ -41,9 +39,7 @@ void Game::showMenu() {
 	m_menu.restart();
 }
 
-void Game::render() {
-	m_window->clear();
-
+void Game::onDraw() {
 	switch (m_gameState) {
 	case GameState::MENU:
 		m_menu.draw();
@@ -53,8 +49,6 @@ void Game::render() {
 	default:
 		break;
 	}
-
-	m_window->presentFrame();
 }
 
 void Game::onWindowClosed() {
