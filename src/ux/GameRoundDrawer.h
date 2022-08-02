@@ -5,6 +5,7 @@
 #include "drawables/TextureDrawable.h"
 #include "drawables/TextDrawable.h"
 #include "logic/GameRound.h"
+#include "ux/BoardDrawer.h"
 
 class Menu;
 
@@ -18,17 +19,13 @@ public:
 	void setGameRound(const std::shared_ptr<GameRound>& round);
 
 private:
-
+	std::shared_ptr<GameRound> m_round;
 	Menu& m_menu;
 
-	std::shared_ptr<GameRound> m_round;
-
 	TextureDrawable m_background;
-	TextDrawable m_menuButtonText;
-	const std::shared_ptr<const Texture> m_textureBarPlayer1;
-	const std::shared_ptr<const Texture> m_textureBarPlayer2;
-	const std::shared_ptr<const Texture> m_textureBarTemp;
+	BoardDrawer m_boardDrawer;
 
+	TextDrawable m_menuButtonText;
 
 	std::shared_ptr<const Texture> m_victoryTextures[2];
 	std::shared_ptr<TextureDrawable> m_victoryDrawable;
@@ -42,32 +39,14 @@ private:
 	std::shared_ptr<TextDrawable> m_stopText;
 	std::shared_ptr<TextDrawable> m_continueText;
 
+	std::vector<std::shared_ptr<const Texture>> m_diceTextures; // 0-5 Player 1, 6-11 Player 2
+	std::vector<TextureDrawable> m_diceTextureDrawable;
+
+
 	void updateCombinationButtons();
 	void drawCombinationButtons();
 
-	struct Bars
-	{
-		TextureDrawable barPlayer1;
-		TextureDrawable barPlayer2;
-		TextureDrawable barTemp;
-
-		Bars(TextureDrawable barPlayer1, TextureDrawable barPlayer2, TextureDrawable barTemp);
-
-		void draw();
-	};
-
-	std::vector<std::shared_ptr<const Texture>> m_diceTextures; // 0-5 Player 1, 6-11 Player 2
-
-	std::vector<TextureDrawable> m_diceTextureDrawable;
-
 	void setDiceTextures();
-
-
-	double m_barIncrement;
-	
-	std::vector<Bars> m_bars;
-
-	void setBars();
 
 	void onDraw() override;
 	void onWindowResized(int width, int height) override;

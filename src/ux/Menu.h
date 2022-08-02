@@ -7,7 +7,7 @@
 
 class GameRoundDrawer;
 
-class Menu : DrawEvent, WindowResizedEvent, LeftClickEvent {
+class Menu : WindowResizedEvent, LeftClickEvent, DrawEvent {
 public:
 	Menu(const std::shared_ptr<Window> window, GameRoundDrawer& gameDrawer, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2);
 
@@ -25,13 +25,13 @@ private:
 	TextureDrawable m_title;
 	TextureDrawable m_playButton;
 	TextureDrawable m_vs;
-	TextDrawable m_player1Text;
-	TextDrawable m_player2Text;
+	TextDrawable m_actor1Text;
+	TextDrawable m_actor2Text;
 	TextDrawable m_continueButton;
 
-	void onDraw() override;
 	void onWindowResized(int width, int height) override;
 	void onLeftClick(int32_t x, int32_t y) override;
+	void onDraw() override;
 
 	std::shared_ptr<Actor> createActorFromSelectionID(uint8_t id) const;
 
