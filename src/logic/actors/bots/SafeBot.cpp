@@ -20,7 +20,7 @@ uint8_t SafeBot::choseCombination(const Board &board, const DiceThrow &diceThrow
 		uint8_t tempRating = 0;
 		const DiceThrow::Combination& combination = diceThrow.getCombination(combinationID);
 		if (board.getColumn(combination.a - 2).runnerOffset != 0) tempRating++;
-		if (if combination.b > 0 && board.getColumn(combination.b - 2).runnerOffset != 0) tempRating++;
+		if (combination.b > 0 && board.getColumn(combination.b - 2).runnerOffset != 0) tempRating++;
 		if (tempRating > rating) {
 			bestCombination = i;
 			rating = tempRating;
