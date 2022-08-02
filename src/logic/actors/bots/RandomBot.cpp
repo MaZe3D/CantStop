@@ -35,7 +35,7 @@ TEST_CASE("RandomBot") {
 			"actor2Marker 2 2 2 2 2 2 2 2 2 2 2"
 			"RunnerOffset 0 0 0 0 0 0 0 0 0 0 0"
 		);
-		auto diceThrow = DiceThrow(board, actorEnum, rand);
+
 		auto finished = bot.finishedTurn(board, rand);
 		CHECK((finished == true || finished == false));
 	}

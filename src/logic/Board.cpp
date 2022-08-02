@@ -143,7 +143,7 @@ TEST_CASE("Board") {
     }
 
 	SUBCASE("Check for correct AdvanceRunnerMarkers") {
-		DiceThrow::Combination combination;
+
 		Board b;
 		b.stringToBoard(
 			"actor1Marker 0 1 4 6  1 12 10 1 0 3 2"
