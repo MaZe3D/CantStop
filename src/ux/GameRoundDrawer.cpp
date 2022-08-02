@@ -1,12 +1,13 @@
 #include "GameRoundDrawer.h"
+#include "ux/Menu.h"
 #include "logic/actors/Player.h"
 #include "logic/actors/Bot.h"
 #include "Game.h"
 #include "util/log.h"
 
-GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font)
+GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, Menu& menu, const std::shared_ptr<const Font>& font)
 	: Event(window)
-	, m_game(game)
+	, m_menu(menu)
 	, m_background("res/sprites/Game_Background.png", window)
 	, m_menuButtonText(font, " menu", window)
 	, m_textureBarPlayer1(window->loadTexture("res/sprites/Game_Player1_Bar.png"))
@@ -241,14 +242,14 @@ void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 		if (m_victoryText.rect.containsPoint(x, y)) {
 			deactivate();
 			m_round = nullptr;
-			m_game.showMenu();
+			m_menu.restart();
 		}
 		return;
 	}
 	else if (m_menuButtonText.rect.containsPoint(x, y)) {
 		deactivate();
 		m_round = nullptr;
-		m_game.showMenu();
+		m_menu.restart();
 		return;
 	}
 

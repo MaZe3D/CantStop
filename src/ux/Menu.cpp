@@ -1,13 +1,13 @@
 #include "Menu.h"
-#include "Game.h"
+#include "ux/GameRoundDrawer.h"
 #include "logic/actors/Player.h"
 #include "logic/actors/bots/SmartBot.h"
 #include "logic/actors/bots/GreedyBot.h"
 #include "logic/actors/bots/RandomBot.h"
 
-Menu::Menu(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2)
+Menu::Menu(const std::shared_ptr<Window> window, GameRoundDrawer& gameDrawer, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2)
 	: Event(window)
-	, m_game(game)
+	, m_gameDrawer(gameDrawer)
 	, m_background("res/sprites/MainMenu_Background.png", window)
 	, m_title("res/sprites/MainMenu_Title.png", window)
 	, m_playButton("res/sprites/MainMenu_StartGame_Button.png", window)
@@ -107,11 +107,11 @@ void Menu::onLeftClick(int32_t x, int32_t y) {
 		}
 		m_round = std::make_shared<GameRound>(actor1, actor2, MersenneTwister());
 		deactivate();
-		m_game.startNewRound(m_round);
+		m_gameDrawer.setGameRound(m_round);
 	}
 	else if (m_round && !m_round->isOver() && m_continueButton.rect.containsPoint(x, y)) {
 		deactivate();
-		m_game.startNewRound(m_round);
+		m_gameDrawer.setGameRound(m_round);
 	}
 
 }

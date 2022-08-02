@@ -5,11 +5,11 @@
 #include "drawables/TextDrawable.h"
 #include "logic/GameRound.h"
 
-class Game;
+class GameRoundDrawer;
 
 class Menu : DrawEvent, WindowResizedEvent, LeftClickEvent {
 public:
-	Menu(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2);
+	Menu(const std::shared_ptr<Window> window, GameRoundDrawer& gameDrawer, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2);
 
 	void activate();
 	void deactivate();
@@ -22,7 +22,7 @@ private:
 	uint8_t m_player1Selection = 0;
 	uint8_t m_player2Selection = 1;
 
-	Game& m_game;
+	GameRoundDrawer& m_gameDrawer;
 	std::shared_ptr<GameRound> m_round;
 
 	TextureDrawable m_background;

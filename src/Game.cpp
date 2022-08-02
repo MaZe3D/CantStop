@@ -1,5 +1,4 @@
 #include "Game.h"
-#include "util/log.h"
 
 Game::Game(const std::shared_ptr<Window>& window)
 	: Event(window)
@@ -7,11 +6,11 @@ Game::Game(const std::shared_ptr<Window>& window)
 	, KeyPressedEvent(true)
 	, m_font1(Font::create("res/fonts/upheavtt.ttf", 80))
 	, m_font2(Font::create("res/fonts/Mx437_Nix8810_M15.ttf", 80))
-	, m_menu(window, *this, m_font1, m_font2)
-	, m_gameRoundDrawer(window, *this, m_font1)
+	, m_menu(window, m_gameRoundDrawer, m_font1, m_font2)
+	, m_gameRoundDrawer(window, m_menu, m_font1)
 {
 	m_window->setWindowIcon("res/sprites/Dice_Player1_5.png");
-	m_window->setDrawColor(0x000000FF);
+	m_window->setDrawColor(0xFF);
 }
 
 void Game::run() {
@@ -22,7 +21,7 @@ void Game::run() {
 
 	Uint32 frameStart;
 	Uint32 frameTime;
-	while (m_gameState != GameState::EXIT) {
+	while (!m_shouldQuit) {
 		frameStart = SDL_GetTicks();
 
 		m_window->handleEvents();
@@ -33,20 +32,11 @@ void Game::run() {
 	}
 }
 
-void Game::startNewRound(const std::shared_ptr<GameRound>& round) {
-	m_gameState = GameState::PLAY;
-	m_gameRoundDrawer.setGameRound(round);
-}
-
-void Game::showMenu() {
-	m_gameState = GameState::MENU;
-	m_menu.restart();
-}
-
 void Game::onWindowClosed() {
-	m_gameState = GameState::EXIT;
+	m_shouldQuit = true;
 }
 
 void Game::onKeyPressed(const SDL_Keysym& key) {
-	if (key.sym == SDLK_F11) m_window->toggleFullscreen();
+	if (key.sym == SDLK_F11)
+		m_window->toggleFullscreen();
 }

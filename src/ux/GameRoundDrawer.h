@@ -6,11 +6,11 @@
 #include "drawables/TextDrawable.h"
 #include "logic/GameRound.h"
 
-class Game;
+class Menu;
 
 class GameRoundDrawer : DrawEvent, WindowResizedEvent, LeftClickEvent {
 public:
-	GameRoundDrawer(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font);
+	GameRoundDrawer(const std::shared_ptr<Window> window, Menu& menu, const std::shared_ptr<const Font>& font);
 
 	void activate();
 	void deactivate();
@@ -19,7 +19,7 @@ public:
 
 private:
 
-	Game& m_game;
+	Menu& m_menu;
 
 	std::shared_ptr<GameRound> m_round;
 
