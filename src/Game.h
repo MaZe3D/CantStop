@@ -11,6 +11,7 @@
 #include "Menu.h"
 #include "GameRoundDrawer.h"
 #include "logic/GameRound.h"
+#include "util/MersenneTwister.h"
 
 enum class GameState {
 	MENU,
@@ -24,6 +25,7 @@ public:
 	void run();
 
 	void startNewRound(const std::shared_ptr<GameRound>& round);
+	void showMenu();
 
 private:
 	const std::shared_ptr<Window> m_window;

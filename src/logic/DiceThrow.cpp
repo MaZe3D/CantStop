@@ -3,7 +3,7 @@
 #include "Board.h"
 #include <doctest.h>
 
-DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor) {
+DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor, MersenneTwister& rand) {
 
 	uint8_t usedRunnerCount = 0;
 	uint8_t usedRunners[3];
@@ -14,7 +14,7 @@ DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor) {
 
 	// throw dice
 	for (uint8_t i = 0; i < 4; i++)
-		m_dice[i] = rand() % 6 + 1;
+		m_dice[i] = rand.getRandomInt(1, 6);
 
 
 
@@ -61,6 +61,10 @@ DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor) {
 
 		insertCombination(a, b);
 	}
+	/*if (m_combinationCount > 0)
+	while(m_combinationCount < 6) {
+		m_combinations[m_combinationCount++] = m_combinations[0];
+	}*/
 }
 
 void DiceThrow::insertCombination(int8_t a, int8_t b) {

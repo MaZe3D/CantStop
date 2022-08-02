@@ -1,6 +1,6 @@
 #include "GreedyBot.h"
 
-bool GreedyBot::finishedTurn(const Board &board) {
+bool GreedyBot::finishedTurn(const Board &board, MersenneTwister& rand) {
 	for (uint8_t i = 0; i < 11; i++) {
 		const Board::Column& column = board.getColumn(i);
 		if (column.runnerOffset != 0) {
@@ -13,7 +13,7 @@ bool GreedyBot::finishedTurn(const Board &board) {
 	return false;
 }
 
-uint8_t GreedyBot::choseCombination(const Board &board, const DiceThrow &diceThrow) {
+uint8_t GreedyBot::choseCombination(const Board &board, const DiceThrow &diceThrow, MersenneTwister& rand) {
 	uint8_t bestCombination = 0;
 	uint8_t minDifference = 20;
 	for (int i = 0; i < diceThrow.getCombinationCount(); i++) {
