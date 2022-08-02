@@ -16,7 +16,7 @@ public:
 	TextureDrawable& setWidthKeepAspect(int width);
 	TextureDrawable& setHeightKeepAspect(int height);
 
-	void draw();
+	void draw() const;
 
 	Rect rect;
 

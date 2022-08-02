@@ -38,6 +38,6 @@ TextureDrawable& TextureDrawable::setHeightKeepAspect(int height) {
 	return *this;
 }
 
-void TextureDrawable::draw() {
+void TextureDrawable::draw() const {
 	m_texture->draw(rect);
 }
