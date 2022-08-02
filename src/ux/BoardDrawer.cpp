@@ -39,12 +39,22 @@ void BoardDrawer::deactivate() {
 
 void BoardDrawer::updatePillars() {
 	for (uint8_t i = 0; i < 11; i++) {
-		Column& c = m_columns[i];
-		c.actor1Pillar.rect.setHeight(m_round->getBoard().getColumn(i).actor1Marker * m_pillarIncrement);
-		c.actor2Pillar.rect.setHeight(m_round->getBoard().getColumn(i).actor2Marker * m_pillarIncrement);
-		Rect& currentActorPillarRect = (m_round->getCurrentActorEnum() == ActorEnum::ACTOR1) ? c.actor1Pillar.rect : c.actor2Pillar.rect;
-		c.runnerPillar.rect.setPos(currentActorPillarRect.getPosX(), currentActorPillarRect.getTop());
-		c.runnerPillar.rect.setHeight(m_round->getBoard().getColumn(i).runnerOffset * m_pillarIncrement);
+		Column& drawColumn = m_columns[i];
+		const Board::Column& boardColumn = m_round->getBoard().getColumn(i);
+		drawColumn.actor1Pillar.rect.setHeight(boardColumn.actor1Marker * m_pillarIncrement);
+		drawColumn.actor2Pillar.rect.setHeight(boardColumn.actor2Marker * m_pillarIncrement);
+		Rect& currentActorPillarRect = (m_round->getCurrentActorEnum() == ActorEnum::ACTOR1) ? drawColumn.actor1Pillar.rect : drawColumn.actor2Pillar.rect;
+		drawColumn.runnerPillar.rect.setPos(currentActorPillarRect.getPosX(), currentActorPillarRect.getTop());
+		drawColumn.runnerPillar.rect.setHeight(boardColumn.runnerOffset * m_pillarIncrement);
+
+		bool actor1Won = (boardColumn.maxHeight == boardColumn.actor1Marker);
+		bool actor2Won = (boardColumn.maxHeight == boardColumn.actor2Marker);
+		if (actor1Won || actor2Won) {
+			Rect& wonPillarRect   = actor1Won ? drawColumn.actor1Pillar.rect : drawColumn.actor2Pillar.rect;
+			Rect& otherPillarRect = actor1Won ? drawColumn.actor2Pillar.rect : drawColumn.actor1Pillar.rect;
+			wonPillarRect.setWidth(drawColumn.runnerPillar.rect.getWidth()*2);
+			otherPillarRect.setWidth(drawColumn.runnerPillar.rect.getWidth()/2);
+		}
 	}
 }
 
