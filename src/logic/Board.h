@@ -18,6 +18,7 @@ public:
 	void advanceRunnerMarkers(const DiceThrow::Combination& combination);
 	void resetRunnerOffsets();
 	bool applyRunnerOffsetsToActorMarkersAndCheckWin(const ActorEnum actor);
+	void stringToBoard(std::string boardString);
 
 private:
 	Column m_columns[11];

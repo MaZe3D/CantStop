@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include "DiceThrow.h"
 #include "Board.h"
+#include <doctest.h>
 
 DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor, MersenneTwister& rand) {
 
@@ -86,4 +87,60 @@ uint8_t DiceThrow::getCombinationCount() const {
 const DiceThrow::Combination& DiceThrow::getCombination(uint8_t combinationID) const {
 	if (combinationID >= m_combinationCount) throw std::runtime_error("DiceThrow::getCombination() - invalid combinationID");
 	return m_combinations[combinationID];
+}
+
+TEST_CASE("DiceThrow") {
+    Board b;
+	
+    SUBCASE("Check DiceThrow for numeric numbers") {
+		MersenneTwister rand = MersenneTwister();
+        for (int i = 0; i < 5; ++i) {
+            DiceThrow dT(b, ActorEnum::ACTOR1, rand);
+            CHECK(dT.getDie(0) > 0);
+			CHECK(dT.getDie(0) < 7);
+            CHECK(dT.getDie(1) > 0);
+			CHECK(dT.getDie(1) < 7);
+            CHECK(dT.getDie(2) > 0);
+			CHECK(dT.getDie(2) < 7);
+            CHECK(dT.getDie(3) > 0);
+			CHECK(dT.getDie(3) < 7);
+        }
+        for (int i = 0; i < 5; ++i) {
+            DiceThrow dT(b, ActorEnum::ACTOR2, rand);
+            CHECK(dT.getDie(0) > 0);
+			CHECK(dT.getDie(0) < 7);
+            CHECK(dT.getDie(1) > 0);
+			CHECK(dT.getDie(1) < 7);
+            CHECK(dT.getDie(2) > 0);
+			CHECK(dT.getDie(2) < 7);
+            CHECK(dT.getDie(3) > 0);
+			CHECK(dT.getDie(3) < 7);
+        }
+    }
+
+    SUBCASE("Check Combinations for correct numbers") {
+		MersenneTwister rand = MersenneTwister(0);
+        for (int i = 0; i < 5; ++i) {
+            DiceThrow dT(b, ActorEnum::ACTOR1, rand);
+            CHECK(dT.getCombinationCount() >= 0);
+			CHECK(dT.getCombinationCount() <= 6);
+            for (int j = 0; j < 6; j++) {
+                /* CHECK(dT.getCombination(j).a > 0);
+				CHECK(dT.getCombination(j).a < 7);
+                CHECK(dT.getCombination(j).b > 0);
+				CHECK(dT.getCombination(j).b < 7); */
+            }
+        }
+        for (int i = 0; i < 5; ++i) {
+            DiceThrow dT(b, ActorEnum::ACTOR2, rand);
+            CHECK(dT.getCombinationCount() >= 0);
+			CHECK(dT.getCombinationCount() <= 6);
+            for (int j = 0; j < 6; j++) {
+                /* CHECK(dT.getCombination(j).a > 0);
+				CHECK(dT.getCombination(j).a < 7);
+                CHECK(dT.getCombination(j).b > 0);
+				CHECK(dT.getCombination(j).b < 7); */
+            }
+        }
+    }
 }
