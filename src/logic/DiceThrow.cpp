@@ -90,35 +90,49 @@ TEST_CASE("DiceThrow") {
     SUBCASE("Check DiceThrow for numeric numbers") {
         for (int i = 0; i < 5; ++i) {
             DiceThrow dT(b, ActorEnum::ACTOR1);
-            CHECK(dT.getDie(0) > 0 && dT.getDie(0) < 7);
-            CHECK(dT.getDie(1) > 0 && dT.getDie(1) < 7);
-            CHECK(dT.getDie(2) > 0 && dT.getDie(2) < 7);
-            CHECK(dT.getDie(3) > 0 && dT.getDie(3) < 7);
+            CHECK(dT.getDie(0) > 0);
+			CHECK(dT.getDie(0) < 7);
+            CHECK(dT.getDie(1) > 0);
+			CHECK(dT.getDie(1) < 7);
+            CHECK(dT.getDie(2) > 0);
+			CHECK(dT.getDie(2) < 7);
+            CHECK(dT.getDie(3) > 0);
+			CHECK(dT.getDie(3) < 7);
         }
         for (int i = 0; i < 5; ++i) {
             DiceThrow dT(b, ActorEnum::ACTOR2);
-            CHECK(dT.getDie(0) > 0 && dT.getDie(0) < 7);
-            CHECK(dT.getDie(1) > 0 && dT.getDie(1) < 7);
-            CHECK(dT.getDie(2) > 0 && dT.getDie(2) < 7);
-            CHECK(dT.getDie(3) > 0 && dT.getDie(3) < 7);
+            CHECK(dT.getDie(0) > 0);
+			CHECK(dT.getDie(0) < 7);
+            CHECK(dT.getDie(1) > 0);
+			CHECK(dT.getDie(1) < 7);
+            CHECK(dT.getDie(2) > 0);
+			CHECK(dT.getDie(2) < 7);
+            CHECK(dT.getDie(3) > 0);
+			CHECK(dT.getDie(3) < 7);
         }
     }
 
     SUBCASE("Check Combinations for correct numbers") {
         for (int i = 0; i < 5; ++i) {
             DiceThrow dT(b, ActorEnum::ACTOR1);
-            CHECK(dT.getCombinationCount() > 0 && dT.getCombinationCount() < 6);
+            CHECK(dT.getCombinationCount() > 0);
+			CHECK(dT.getCombinationCount() < 6);
             for (int j = 0; j < 6; j++) {
-                CHECK(dT.getCombination(j).a > 0 && dT.getCombination(j).a < 7);
-                CHECK(dT.getCombination(j).b > 0 && dT.getCombination(j).b < 7);
+                CHECK(dT.getCombination(j).a > 0);
+				CHECK(dT.getCombination(j).a < 7);
+                CHECK(dT.getCombination(j).b > 0);
+				CHECK(dT.getCombination(j).b < 7);
             }
         }
         for (int i = 0; i < 5; ++i) {
             DiceThrow dT(b, ActorEnum::ACTOR2);
-            CHECK(dT.getCombinationCount() > 0 && dT.getCombinationCount() < 6);
+            CHECK(dT.getCombinationCount() > 0);
+			CHECK(dT.getCombinationCount() < 6);
             for (int j = 0; j < 6; j++) {
-                CHECK(dT.getCombination(j).a > 0 && dT.getCombination(j).a < 7);
-                CHECK(dT.getCombination(j).b > 0 && dT.getCombination(j).b < 7);
+                CHECK(dT.getCombination(j).a > 0);
+				CHECK(dT.getCombination(j).a < 7);
+                CHECK(dT.getCombination(j).b > 0);
+				CHECK(dT.getCombination(j).b < 7);
             }
         }
     }
