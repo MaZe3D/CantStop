@@ -1,6 +1,10 @@
 #include <cmath>
 #include <stdexcept>
 #include "Board.h"
+#include <regex>
+#include <iostream>
+#include <string>
+#include <iterator>
 #include <doctest.h>
 
 Board::Board()
@@ -41,6 +45,51 @@ const Board::Column& Board::getColumn(uint8_t column) const {
 	if (column >= 11) throw std::runtime_error("Board::getColumn() - column must be < 11 " + std::to_string(column));
 	return m_columns[column];
 }
+
+std::string boardString =
+"actor1Marker 2 3 4 5 6 7 8 9 10 11 12"
+"actor2Marker 2 3 4 5 6 7 8 9 10 11 12"
+"RunnerOffset 0 0 0 0 0 0 0 0 0 0 0";
+
+void Board::stringToBoard(std::string boardString) {
+	std::regex indices ("actor1Marker|actor2Marker|RunnerOffset");
+	std::string formattedString = std::regex_replace(boardString, indices, "");
+
+	std::regex columnRegex (R"(\d\d|\d)");
+	uint8_t iterations = 0;
+	auto formattedStringBegin = std::sregex_iterator(formattedString.begin(), formattedString.end(), columnRegex);
+	auto formattedStringEnd = std::sregex_iterator();
+	for (auto it = formattedStringBegin; it != formattedStringEnd; ++it) {
+		std::smatch match = *it;
+		uint8_t marker = std::stoi(match.str());
+		if(iterations <=10)
+			m_columns[iterations].actor1Marker = marker;
+		else if(iterations <=21)
+			m_columns[iterations - 11].actor2Marker = marker;
+		else if(iterations <=32)
+			m_columns[iterations - 22].runnerOffset = marker;
+		iterations++;
+	}
+	if (iterations != 33) throw std::runtime_error("Board::stringToBoard() - invalid board string");
+}
+TEST_CASE("strintToBoard") {
+	Board board;
+	boardString =
+	"actor1Marker 0 1 4 6 1 12 10 1 0 3 2"
+	"actor2Marker 3 2 7 1 11 0 1 6 7 0 0"
+	"RunnerOffset 0 0 0 0 0 0 0 0 0 0 0";
+
+	board.stringToBoard(boardString);
+	SUBCASE("Check actormarkers") {
+		CHECK(board.getColumn(0).actor1Marker == 0);
+		CHECK(board.getColumn(10).actor1Marker == 2);
+		CHECK(board.getColumn(5).actor1Marker == 12);
+		CHECK(board.getColumn(0).actor2Marker == 3);
+		CHECK(board.getColumn(10).actor2Marker == 0);
+		CHECK(board.getColumn(4).actor2Marker == 11);
+	}
+}
+
 
 TEST_CASE("Board") {
     Board b;
