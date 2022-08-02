@@ -15,25 +15,37 @@ protected:
 
 
 
-// ==================== ClickEvent ====================
-class ClickEvent : virtual public Event {
+// ==================== DrawEvent ====================
+class DrawEvent : virtual public Event {
 protected:
-	ClickEvent(bool subscribeEvent = true);
-	virtual ~ClickEvent();
+	DrawEvent(bool subscribeEvent = false);
+	virtual ~DrawEvent();
 
 	virtual void subscribe() final;
 	virtual void unsubscribe() final;
 
 private:
 	friend Window;
-	virtual void onClickEvent(const SDL_Event &event) = 0;
+	virtual void onDraw() = 0;
 };
 
 
-// LeftClickEvent
-class LeftClickEvent : virtual public ClickEvent {
+
+
+
+
+
+// ==================== LeftClickEvent ====================
+class LeftClickEvent : virtual public Event {
+protected:
+	LeftClickEvent(bool subscribeEvent = false);
+	virtual ~LeftClickEvent();
+
+	virtual void subscribe() final;
+	virtual void unsubscribe() final;
+
 private:
-	virtual void onClickEvent(const SDL_Event &event) override final;
+	friend Window; // onLeftClick may ONLY be called from Window
 	virtual void onLeftClick(int32_t x, int32_t y) = 0;
 };
 
@@ -43,33 +55,37 @@ private:
 
 
 
-// ==================== WindowEvent ====================
-class WindowEvent : virtual public Event {
+// ==================== WindowClosedEvent ====================
+class WindowClosedEvent : virtual public Event {
 protected:
-	WindowEvent(bool subscribeEvent = true);
-	virtual ~WindowEvent();
+	WindowClosedEvent(bool subscribeEvent = false);
+	virtual ~WindowClosedEvent();
 
 	virtual void subscribe() final;
 	virtual void unsubscribe() final;
 
 private:
-	friend Window; // onWindowEvent may ONLY be called from Window
-	virtual void onWindowEvent(const SDL_Event &event) = 0;
-};
-
-
-// WindowClosedEvent
-class WindowClosedEvent : public WindowEvent {
-private:
-	virtual void onWindowEvent(const SDL_Event &event) override;
+	friend Window; // onWindowClosed may ONLY be called from Window
 	virtual void onWindowClosed() = 0;
 };
 
 
-// WindowResizedEvent
-class WindowResizedEvent : public WindowEvent {
+
+
+
+
+
+// ==================== WindoResizedwEvent ====================
+class WindowResizedEvent : virtual public Event {
+protected:
+	WindowResizedEvent(bool subscribeEvent = false);
+	virtual ~WindowResizedEvent();
+
+	virtual void subscribe() final;
+	virtual void unsubscribe() final;
+
 private:
-	virtual void onWindowEvent(const SDL_Event &event) override;
+	friend Window; // onWindowResized may ONLY be called from Window
 	virtual void onWindowResized(int32_t width, int32_t height) = 0;
 };
 
@@ -79,24 +95,16 @@ private:
 
 
 
-// ==================== KeyboardEvent ====================
-class KeyboardEvent : virtual public Event {
+// ==================== KeyPressedEvent ====================
+class KeyPressedEvent : virtual public Event {
 protected:
-	KeyboardEvent(bool subscribeEvent = true);
-	virtual ~KeyboardEvent();
+	KeyPressedEvent(bool subscribeEvent = false);
+	virtual ~KeyPressedEvent();
 
 	virtual void subscribe() final;
 	virtual void unsubscribe() final;
 
 private:
-	friend Window; // onKeyboardEvent may ONLY be called from Window
-	virtual void onKeyboardEvent(const SDL_Event &event) = 0;
-};
-
-
-// KeyPressedEvent
-class KeyPressedEvent : public KeyboardEvent {
-private:
-	virtual void onKeyboardEvent(const SDL_Event &event) override;
+	friend Window; // onKeyPressed may ONLY be called from Window
 	virtual void onKeyPressed(const SDL_Keysym& key) = 0;
 };

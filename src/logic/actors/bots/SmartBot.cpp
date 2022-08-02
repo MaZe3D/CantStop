@@ -1,5 +1,6 @@
 #include "SmartBot.h"
 
+
 uint8_t SmartBot::choseCombination(const Board& board, const DiceThrow& diceThrow, MersenneTwister& rand) {
 	uint8_t bestCombination = 0;
 	float rating = 0;
@@ -85,3 +86,99 @@ bool SmartBot::finishedTurn(const Board& board, MersenneTwister& rand) {
 		return true;
 	}
 }
+#ifndef DOCTEST_CONFIG_DISABLE
+#include <doctest.h>
+#include <memory>
+#include "RandomBot.h"
+#include "GreedyBot.h"
+#include "SafeBot.h"
+#include "logic/GameRound.h"
+#include "util/MersenneTwister.h"
+
+TEST_CASE("SmartBot wins over 75\% of the time") {
+	const int maxGameRounds = 10000;
+	double winRatioThreashold = 0.75;
+	
+	auto actor1 = std::make_shared<SmartBot>();
+	
+	SUBCASE("SmartBot vs Greedy Bot") {
+		auto actor2 = std::make_shared<GreedyBot>();
+
+		int winsSmartBot = 0;
+		int winsGreedyBot = 0;
+
+		for (int gamesCount = 0; gamesCount < maxGameRounds; gamesCount++)
+		{
+			MersenneTwister rand = MersenneTwister(gamesCount);
+			GameRound gameRound(actor1, actor2, rand);
+			while (!gameRound.isOver()) {
+				gameRound.nextStep();
+			}
+
+			if (gameRound.getCurrentActorEnum() == actor1->getActorEnum()) {
+				winsSmartBot++;
+			} else {
+				winsGreedyBot++;
+			}
+		}
+
+		const double winRatio = (static_cast<double>(winsSmartBot)) / maxGameRounds;
+
+		CHECK(winRatio > winRatioThreashold);
+		INFO("The win ratio of SmartBot vs GreedyBot is:", winRatio);
+	}
+
+	SUBCASE("SmartBot vs RandomBot") {
+		auto actor2 = std::make_shared<RandomBot>();
+
+		int winsSmartBot = 0;
+		int winsRandomBot = 0;
+
+		for (int gamesCount = 0; gamesCount < maxGameRounds; gamesCount++)
+		{
+			MersenneTwister rand = MersenneTwister(gamesCount);
+			GameRound gameRound(actor1, actor2, rand);
+			while (!gameRound.isOver()) {
+				gameRound.nextStep();
+			}
+
+			if (gameRound.getCurrentActorEnum() == actor1->getActorEnum()) {
+				winsSmartBot++;
+			} else {
+				winsRandomBot++;
+			}
+		}
+
+		const double winRatio = (static_cast<double>(winsSmartBot)) / maxGameRounds;
+
+		CHECK(winRatio > winRatioThreashold);
+	}
+
+	SUBCASE("SmartBot vs SaveBot") {
+		auto actor2 = std::make_shared<SafeBot>();
+
+		int winsSmartBot = 0;
+		int winsRandomBot = 0;
+
+		for (int gamesCount = 0; gamesCount < maxGameRounds; gamesCount++)
+		{
+			MersenneTwister rand = MersenneTwister(gamesCount);
+			GameRound gameRound(actor1, actor2, rand);
+			while (!gameRound.isOver()) {
+				gameRound.nextStep();
+			}
+
+			if (gameRound.getCurrentActorEnum() == actor1->getActorEnum()) {
+				winsSmartBot++;
+			} else {
+				winsRandomBot++;
+			}
+		}
+
+		const double winRatio = (static_cast<double>(winsSmartBot)) / maxGameRounds;
+
+		CHECK(winRatio > winRatioThreashold);
+	}
+}
+
+#endif

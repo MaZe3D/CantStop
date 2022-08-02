@@ -43,10 +43,6 @@ void Window::setWindowIcon(const std::string& path) const {
 	SDL_FreeSurface(sdlSurface);
 }
 
-void Window::presentFrame() const {
-	SDL_RenderPresent(m_sdlRenderer.get());
-}
-
 int Window::getWidth () const {
 	int width;
 	SDL_GetWindowSize(m_sdlWindow.get(), &width, NULL);
@@ -82,53 +78,85 @@ void Window::setDrawColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a) const {
 	SDL_CALL(SDL_SetRenderDrawColor(m_sdlRenderer.get(), r, g, b, a));
 }
 
-void Window::clear() const {
-	SDL_CALL(SDL_RenderClear(m_sdlRenderer.get()));
-}
-
-void Window::subscribeClickEvent(ClickEvent* event) {
-	if (std::find(m_clickEvents.begin(), m_clickEvents.end(), event) == m_clickEvents.end()) {
-		m_clickEvents.push_back(event);
+void Window::subscribeDrawEvent(DrawEvent* event) {
+	if (std::find(m_drawEvents.begin(), m_drawEvents.end(), event) == m_drawEvents.end()) {
+		m_drawEvents.push_back(event);
 	}
 }
-void Window::unsubscribeClickEvent(ClickEvent* event) {
-	m_clickEvents.remove(event);
+void Window::unsubscribeDrawEvent(DrawEvent* event) {
+	m_drawEvents.remove(event);
 }
 
-void Window::subscribeWindowEvent(WindowEvent* event) {
-	if (std::find(m_windowEvents.begin(), m_windowEvents.end(), event) == m_windowEvents.end()) {
-		m_windowEvents.push_back(event);
+void Window::subscribeLeftClickEvent(LeftClickEvent* event) {
+	if (std::find(m_leftClickEvents.begin(), m_leftClickEvents.end(), event) == m_leftClickEvents.end()) {
+		m_leftClickEvents.push_back(event);
 	}
 }
-void Window::unsubscribeWindowEvent(WindowEvent* event) {
-	m_windowEvents.remove(event);
+void Window::unsubscribeLeftClickEvent(LeftClickEvent* event) {
+	m_leftClickEvents.remove(event);
 }
 
-void Window::subscribeKeyboardEvent(KeyboardEvent* event) {
-	if (std::find(m_keyboardEvents.begin(), m_keyboardEvents.end(), event) == m_keyboardEvents.end()) {
-		m_keyboardEvents.push_back(event);
+void Window::subscribeWindowClosedEvent(WindowClosedEvent* event) {
+	if (std::find(m_windowClosedEvents.begin(), m_windowClosedEvents.end(), event) == m_windowClosedEvents.end()) {
+		m_windowClosedEvents.push_back(event);
 	}
 }
-void Window::unsubscribeKeyboardEvent(KeyboardEvent* event) {
-	m_keyboardEvents.remove(event);
+void Window::unsubscribeWindowClosedEvent(WindowClosedEvent* event) {
+	m_windowClosedEvents.remove(event);
+}
+
+void Window::subscribeWindowResizedEvent(WindowResizedEvent* event) {
+	if (std::find(m_windowResizedEvents.begin(), m_windowResizedEvents.end(), event) == m_windowResizedEvents.end()) {
+		m_windowResizedEvents.push_back(event);
+	}
+}
+void Window::unsubscribeWindowResizedEvent(WindowResizedEvent* event) {
+	m_windowResizedEvents.remove(event);
+}
+
+void Window::subscribeKeyPressedEvent(KeyPressedEvent* event) {
+	if (std::find(m_keyPressedEvents.begin(), m_keyPressedEvents.end(), event) == m_keyPressedEvents.end()) {
+		m_keyPressedEvents.push_back(event);
+	}
+}
+void Window::unsubscribeKeyPressedEvent(KeyPressedEvent* event) {
+	m_keyPressedEvents.remove(event);
 }
 
 void Window::handleEvents() {
-
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
 		case SDL_MOUSEBUTTONUP:
-			for (auto e : std::list<ClickEvent*>(m_clickEvents)) e->onClickEvent(event);
+			if (event.button.button == SDL_BUTTON_LEFT) {
+				for (auto e : std::list<LeftClickEvent*>(m_leftClickEvents))
+					e->onLeftClick(event.button.x, event.button.y);
+			}
 			break;
 		case SDL_WINDOWEVENT:
-			for (auto e : std::list<WindowEvent*>(m_windowEvents)) e->onWindowEvent(event);
+			if (event.window.event == SDL_WINDOWEVENT_CLOSE) {
+				for (auto e : std::list<WindowClosedEvent*>(m_windowClosedEvents))
+					e->onWindowClosed();
+			} else if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+				for (auto e : std::list<WindowResizedEvent*>(m_windowResizedEvents))
+					e->onWindowResized(event.window.data1, event.window.data2);
+			}
 			break;
 		case SDL_KEYDOWN:
-		case SDL_KEYUP:
-			for (auto e : std::list<KeyboardEvent*>(m_keyboardEvents)) e->onKeyboardEvent(event);
+			for (auto e : std::list<KeyPressedEvent*>(m_keyPressedEvents))
+				e->onKeyPressed(event.key.keysym);
 			break;
 		default: break;
 		}
 	}
+
+	SDL_CALL(SDL_RenderClear(m_sdlRenderer.get()));
+
+	// reverse order -> first subscriber can draw over everyone else
+	auto drawEventsReverse = m_drawEvents;
+	drawEventsReverse.reverse();
+	for (auto e : drawEventsReverse)
+		e->onDraw();
+
+	SDL_RenderPresent(m_sdlRenderer.get());
 }
