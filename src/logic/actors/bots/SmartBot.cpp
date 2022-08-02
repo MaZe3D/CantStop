@@ -63,7 +63,7 @@ TEST_CASE("SmartBot wins over 75\% of the time") {
 				gameRound.nextStep();
 			}
 
-			if (gameRound.getCurrentActorEnum() == ActorEnum::ACTOR1) {
+			if (gameRound.getCurrentActorEnum() == actor1->getActorEnum()) {
 				winsSmartBot++;
 			} else {
 				winsGreedyBot++;
@@ -90,7 +90,7 @@ TEST_CASE("SmartBot wins over 75\% of the time") {
 				gameRound.nextStep();
 			}
 
-			if (gameRound.getCurrentActorEnum() == ActorEnum::ACTOR1) {
+			if (gameRound.getCurrentActorEnum() == actor1->getActorEnum()) {
 				winsSmartBot++;
 			} else {
 				winsRandomBot++;
@@ -99,8 +99,7 @@ TEST_CASE("SmartBot wins over 75\% of the time") {
 
 		const double winRatio = (static_cast<double>(winsSmartBot)) / maxGameRounds;
 
-		CHECK((winRatio > winRatioThreashold));
-		CHECK(winRatio == 0.);
+		CHECK(winRatio > winRatioThreashold);
 	}
 }
 
