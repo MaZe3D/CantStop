@@ -31,12 +31,10 @@ void BoardDrawer::setGameRound(const std::shared_ptr<GameRound>& round) {
 
 void BoardDrawer::activate() {
 	WindowResizedEvent::subscribe();
-	DrawEvent         ::subscribe();
 }
 
 void BoardDrawer::deactivate() {
 	WindowResizedEvent::unsubscribe();
-	DrawEvent         ::unsubscribe();
 }
 
 void BoardDrawer::updatePillars() {
@@ -47,6 +45,14 @@ void BoardDrawer::updatePillars() {
 		Rect& currentActorPillarRect = (m_round->getCurrentActorEnum() == ActorEnum::ACTOR1) ? c.actor1Pillar.rect : c.actor2Pillar.rect;
 		c.runnerPillar.rect.setPos(currentActorPillarRect.getPosX(), currentActorPillarRect.getTop());
 		c.runnerPillar.rect.setHeight(m_round->getBoard().getColumn(i).runnerOffset * m_pillarIncrement);
+	}
+}
+
+void BoardDrawer::draw() {
+	for(const Column& c : m_columns) {
+		c.actor1Pillar.draw();
+		c.actor2Pillar.draw();
+		c.runnerPillar.draw();
 	}
 }
 
@@ -70,12 +76,4 @@ void BoardDrawer::onWindowResized(int width, int height) {
 	}
 
 	updatePillars();
-}
-
-void BoardDrawer::onDraw() {
-	for(const Column& c : m_columns) {
-		c.actor1Pillar.draw();
-		c.actor2Pillar.draw();
-		c.runnerPillar.draw();
-	}
 }

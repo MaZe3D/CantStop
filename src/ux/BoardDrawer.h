@@ -3,7 +3,7 @@
 #include "logic/GameRound.h"
 #include "drawables/TextureDrawable.h"
 
-class BoardDrawer : WindowResizedEvent, DrawEvent {
+class BoardDrawer : WindowResizedEvent {
 public:
 	BoardDrawer(const std::shared_ptr<Window> window);
 
@@ -13,6 +13,8 @@ public:
 	void deactivate();
 
 	void updatePillars();
+
+	void draw();
 
 private:
 	struct Column {
@@ -32,5 +34,4 @@ private:
 	std::shared_ptr<GameRound> m_round;
 
 	void onWindowResized(int width, int height) override;
-	void onDraw() override;
 };

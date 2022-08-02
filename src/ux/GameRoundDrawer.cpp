@@ -99,7 +99,8 @@ void GameRoundDrawer::setGameRound(const std::shared_ptr<GameRound>& round) {
 }
 
 void GameRoundDrawer::onDraw() {
-	m_background.draw();
+	m_background    .draw();
+	m_boardDrawer   .draw();
 	m_menuButtonText.draw();
 
 	for (int i = 0; i < 4; i++) {
