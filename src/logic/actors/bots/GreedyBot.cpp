@@ -1,4 +1,5 @@
 #include "GreedyBot.h"
+#include <doctest.h>
 
 bool GreedyBot::finishedTurn(const Board &board, MersenneTwister& rand) {
 	for (uint8_t i = 0; i < 11; i++) {
@@ -41,4 +42,55 @@ uint8_t GreedyBot::choseCombination(const Board &board, const DiceThrow &diceThr
 		}
 	}
 	return bestCombination;
+}
+
+TEST_CASE("GreedyBot"){
+	
+	MersenneTwister rand = MersenneTwister(0);
+	ActorEnum actorEnum = ActorEnum::ACTOR1;
+	GreedyBot bot = GreedyBot();
+	SUBCASE("choseCombination"){
+		Board board;
+		board.stringToBoard(
+			"actor1Marker 2 2 2 2 2 2 2 2 2 2 2"
+			"actor2Marker 2 2 2 2 2 2 2 2 2 2 2"
+			"RunnerOffset 0 0 0 0 0 0 0 0 0 0 0"
+		);
+
+		auto diceThrow = DiceThrow(board, actorEnum, rand);
+		
+		CHECK(bot.choseCombination(board, diceThrow, rand) == 1);
+
+		board.stringToBoard(
+			"actor1Marker 0 0 0 0 0  0 0 0 0 0 0"
+			"actor2Marker 2 2 2 2 2  2 2 2 2 2 2"
+			"RunnerOffset 0 0 0 3 0 12 0 0 0 0 0"
+		);
+
+		CHECK(bot.choseCombination(board, diceThrow, rand) == 0);
+
+		board.stringToBoard(
+			"actor1Marker 0 0 0 0 0 0 0 0 0 0 0"
+			"actor2Marker 2 2 2 2 2 2 2 2 2 2 2"
+			"RunnerOffset 0 0 0 0 0 0 0 0 0 0 0"
+		);
+
+		CHECK(bot.choseCombination(board, diceThrow, rand) == 1);
+		
+	}
+	SUBCASE("finishedTurn"){
+		Board board;
+		board.stringToBoard(
+			"actor1Marker 2 2 2 2 2 2 2 2 2 2 2"
+			"actor2Marker 2 2 2 2 2 2 2 2 2 2 2"
+			"RunnerOffset 1 0 0 0 0 0 0 0 0 0 0"
+		);
+		CHECK(bot.finishedTurn(board, rand) == true);
+		board.stringToBoard(
+			"actor1Marker 2 2 2 2 2 2 2 2 2 2 2"
+			"actor2Marker 2 3 2 2 2 2 2 2 2 2 2"
+			"RunnerOffset 0 1 0 0 0 0 0 0 0 0 0"
+		);
+		CHECK(bot.finishedTurn(board, rand) == false);
+	}
 }
