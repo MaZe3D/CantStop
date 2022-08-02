@@ -13,7 +13,10 @@ public:
 	const std::shared_ptr<const Texture>& getTexture();
 	void setTexture(const std::shared_ptr<const Texture>& texture);
 
-	void draw();
+	TextureDrawable& setWidthKeepAspect(int width);
+	TextureDrawable& setHeightKeepAspect(int height);
+
+	void draw() const;
 
 	Rect rect;
 

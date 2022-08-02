@@ -6,9 +6,11 @@
 #include "Texture.h"
 #include "Rect.h"
 
-class ClickEvent;
-class WindowEvent;
-class KeyboardEvent;
+class DrawEvent;
+class LeftClickEvent;
+class WindowClosedEvent;
+class WindowResizedEvent;
+class KeyPressedEvent;
 
 class Window : public std::enable_shared_from_this<Window> {
 public:
@@ -23,8 +25,6 @@ public:
 	int getWidth() const;
 	int getHeight() const;
 
-	void presentFrame() const;
-
 	std::shared_ptr<const Texture> loadTexture(const std::string& path) const;
 
 	std::shared_ptr<const Texture> createTextureFromSurface(const std::shared_ptr<SDL_Surface>& surface) const;
@@ -34,30 +34,33 @@ public:
 	void setDrawColor(uint32_t rgba) const;
 	void setDrawColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255) const;
 
-	void clear() const;
-
-	void drawRect() const;
-	void fillRect() const;
-
 	void handleEvents();
 
-	void subscribeClickEvent(ClickEvent* event);
-	void unsubscribeClickEvent(ClickEvent* event);
+	void   subscribeDrawEvent(DrawEvent* event);
+	void unsubscribeDrawEvent(DrawEvent* event);
 
-	void subscribeWindowEvent(WindowEvent* event);
-	void unsubscribeWindowEvent(WindowEvent* event);
+	void   subscribeLeftClickEvent(LeftClickEvent* event);
+	void unsubscribeLeftClickEvent(LeftClickEvent* event);
 
-	void subscribeKeyboardEvent(KeyboardEvent* event);
-	void unsubscribeKeyboardEvent(KeyboardEvent* event);
+	void   subscribeWindowClosedEvent(WindowClosedEvent* event);
+	void unsubscribeWindowClosedEvent(WindowClosedEvent* event);
+
+	void   subscribeWindowResizedEvent(WindowResizedEvent* event);
+	void unsubscribeWindowResizedEvent(WindowResizedEvent* event);
+
+	void   subscribeKeyPressedEvent(KeyPressedEvent* event);
+	void unsubscribeKeyPressedEvent(KeyPressedEvent* event);
 
 private:
 	Window(const std::string& title, int width, int height, bool fullscreen);
 
 	bool m_fullscreen;
 
-	std::list<ClickEvent*> m_clickEvents;
-	std::list<WindowEvent*> m_windowEvents;
-	std::list<KeyboardEvent*> m_keyboardEvents;
+	std::list<DrawEvent*> m_drawEvents;
+	std::list<LeftClickEvent*> m_leftClickEvents;
+	std::list<WindowClosedEvent*> m_windowClosedEvents;
+	std::list<WindowResizedEvent*> m_windowResizedEvents;
+	std::list<KeyPressedEvent*> m_keyPressedEvents;
 	
 	std::shared_ptr<SDL_Window> m_sdlWindow;
 	std::shared_ptr<SDL_Renderer> m_sdlRenderer;

@@ -1,36 +1,23 @@
 #include "GameRoundDrawer.h"
+#include "ux/Menu.h"
 #include "logic/actors/Player.h"
 #include "logic/actors/Bot.h"
 #include "Game.h"
 #include "util/log.h"
 
-GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font)
+GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, Menu& menu, const std::shared_ptr<const Font>& font)
 	: Event(window)
-	, m_game(game)
+	, m_menu(menu)
 	, m_background("res/sprites/Game_Background.png", window)
+	, m_boardDrawer(window)
 	, m_menuButtonText(font, " menu", window)
-	, m_textureBarPlayer1(window->loadTexture("res/sprites/Game_Player1_Bar.png"))
-	, m_textureBarPlayer2(window->loadTexture("res/sprites/Game_Player2_Bar.png"))
-	, m_textureBarTemp(window->loadTexture("res/sprites/Game_Temp_Bar.png"))
 	, m_victoryText(font, "click here to continue", window)
 	, m_btnCombinationSelectFrame {
 		TextureDrawable("res/sprites/Game_Player1_SelectFrame.png", window),
 		TextureDrawable("res/sprites/Game_Player2_SelectFrame.png", window)
 	}
 {
-	WindowEvent::unsubscribe();
-	ClickEvent::unsubscribe();
 	m_background.rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
-
-	for (int i = 0; i < 11; i++) {
-		m_bars.push_back(Bars(TextureDrawable(m_textureBarPlayer1), TextureDrawable(m_textureBarPlayer2), TextureDrawable(m_textureBarTemp)));
-	}
-
-	for (auto& bars : m_bars) {
-		bars.barPlayer1.rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::BOTTOM);
-		bars.barPlayer2.rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::BOTTOM);
-		bars.barTemp   .rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::BOTTOM);
-	}
 
 	for (int i = 0; i < 6; i++) {
 		m_diceTextures.push_back(window->loadTexture("res/sprites/Dice_Player1_" + std::to_string(i + 1) + ".png"));
@@ -81,26 +68,40 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, Game& gam
 	//onWindowResized(window->getWidth(), window->getHeight());
 }
 
+void GameRoundDrawer::activate() {
+	m_boardDrawer.activate();
+
+	DrawEvent::subscribe();
+	WindowResizedEvent::subscribe();
+	LeftClickEvent::subscribe();
+}
+
+void GameRoundDrawer::deactivate() {
+	m_boardDrawer.deactivate();
+
+	DrawEvent::unsubscribe();
+	WindowResizedEvent::unsubscribe();
+	LeftClickEvent::unsubscribe();
+}
+
 void GameRoundDrawer::setGameRound(const std::shared_ptr<GameRound>& round) {
 	m_round = round;
 	if (std::dynamic_pointer_cast<Bot>(m_round->getCurrentActor()) && m_round->getNextStep() == GameRound::NextStep::CHOOSE_DICE_COMBINATION) {
 		m_round->nextStep();
 	}
-	WindowEvent::subscribe();
-	ClickEvent::subscribe();
-	setBars();
+
+	m_boardDrawer.setGameRound(round);
+	activate();
+
 	setDiceTextures();
 	updateCombinationButtons();
 	onWindowResized(m_window->getWidth(), m_window->getHeight());
 }
 
-void GameRoundDrawer::draw() {
-	m_background.draw();
+void GameRoundDrawer::onDraw() {
+	m_background    .draw();
+	m_boardDrawer   .draw();
 	m_menuButtonText.draw();
-
-	for(auto &bars : m_bars) {
-		bars.draw();
-	}
 
 	for (int i = 0; i < 4; i++) {
 		m_diceTextureDrawable[i].draw();
@@ -123,54 +124,11 @@ void GameRoundDrawer::draw() {
 	}
 }
 
-void GameRoundDrawer::setBars() {
-	for (unsigned int i = 0; i < m_bars.size(); i++) {
-		m_bars[i].barPlayer1.rect.setHeight(m_round->getBoard().getColumn(i).actor1Marker * m_barIncrement);
-		m_bars[i].barPlayer2.rect.setHeight(m_round->getBoard().getColumn(i).actor2Marker * m_barIncrement);
-		switch (m_round->getCurrentActorEnum()) {
-		case ActorEnum::ACTOR1:
-			m_bars[i].barTemp.rect
-				.setPos(m_bars[i].barPlayer1.rect.getPosX(), m_bars[i].barPlayer1.rect.getPosY() - m_bars[i].barPlayer1.rect.getHeight())
-				.setHeight(m_round->getBoard().getColumn(i).runnerOffset * m_barIncrement);
-			break;
-		case ActorEnum::ACTOR2:
-			m_bars[i].barTemp.rect
-				.setPos(m_bars[i].barPlayer2.rect.getPosX(), m_bars[i].barPlayer2.rect.getPosY() - m_bars[i].barPlayer2.rect.getHeight())
-				.setHeight(m_round->getBoard().getColumn(i).runnerOffset * m_barIncrement);
-			break;
-		default:
-			break;
-		}
-	}
-}
-
 void GameRoundDrawer::onWindowResized(int width, int height) {
 	m_background.rect.setHeightKeepAspect(height, m_background.getTexture()->getAspect()).setPos(width/2, height/2);
 	m_menuButtonText.rect.setHeightKeepAspect(height/20, m_menuButtonText.getTexture()->getAspect());
 	m_menuButtonText.rect.setPosX(width/2-height*16/9/2);
 
-	const double firstBarPosX = (width/2) - (height * (786.5/2160));
-	const double firstBarPosY = height * (1657./2160.);
-	const double barWidth = height * (1./20.);
-	const double barDistance = height * (152.6/2160.);
-	const double barPairDistance = height * (47./2160.);
-	m_barIncrement = height * (7./135.);
-
-	for (unsigned int i = 0; i < m_bars.size(); i++) {
-		m_bars[i].barPlayer1.rect
-			.setPos(firstBarPosX + (i * barDistance), firstBarPosY)
-			.setWidth(barWidth);
-		m_bars[i].barPlayer2.rect
-			.setPos(firstBarPosX + barPairDistance + (i * barDistance), firstBarPosY)
-			.setWidth(barWidth);
-		m_bars[i].barTemp.rect
-			.setPos(firstBarPosX + barPairDistance + (i * barDistance), firstBarPosY)
-			.setWidth(barWidth);
-	}
-
-	if (m_round) {
-		setBars();
-	}
 	const double diceWidth(height * (150./2160.));
 	const double diceSpaceWidth(diceWidth * (1./10.));
 
@@ -181,7 +139,9 @@ void GameRoundDrawer::onWindowResized(int width, int height) {
 	}
 	
 	int8_t mirrorFactor = (m_round->getCurrentActorEnum() == ActorEnum::ACTOR1) ? -1 : 1;
-	
+
+	const double firstBarPosY = height * (1657./2160.);
+	double m_barIncrement = height * (7./135.);
 	for (int i = 0; i < 4; i++) {
 		m_diceTextureDrawable[i].rect
 			.setPos((width/2.) + mirrorFactor * (1200./2160.) * height + i * mirrorFactor * (diceWidth + diceSpaceWidth), firstBarPosY - m_barIncrement*13);
@@ -230,18 +190,16 @@ void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 	if (!m_round) return;
 	if (m_round->isOver()) {
 		if (m_victoryText.rect.containsPoint(x, y)) {
-			WindowEvent::unsubscribe();
-			ClickEvent::unsubscribe();
+			deactivate();
 			m_round = nullptr;
-			m_game.showMenu();
+			m_menu.activate();
 		}
 		return;
 	}
 	else if (m_menuButtonText.rect.containsPoint(x, y)) {
-		WindowEvent::unsubscribe();
-		ClickEvent::unsubscribe();
+		deactivate();
 		m_round = nullptr;
-		m_game.showMenu();
+		m_menu.activate();
 		return;
 	}
 
@@ -282,7 +240,7 @@ void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 		}
 	}
 	
-	setBars();
+	m_boardDrawer.updatePillars();
 	setDiceTextures();
 	updateCombinationButtons();
 
@@ -296,13 +254,13 @@ void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 	DEBUG_LOG_NO_NL("\ncurrent player: " << ((m_round->getCurrentActorEnum() == ActorEnum::ACTOR1) ? "ACTOR 1" : "ACTOR 2"));
 	DEBUG_LOG_NO_NL("\nnext step: " << ((m_round->getNextStep() == GameRound::NextStep::CHOOSE_DICE_COMBINATION) ? "CHOOSE_DICE_COMBINATION" : "CHOOSE_TO_CONTINUE_OR_STOP"));
 	DEBUG_LOG_NO_NL("\nactor1Marker:");
-	for (unsigned int i = 0; i < m_bars.size(); i++)
+	for (unsigned int i = 0; i < 11; i++)
 		DEBUG_LOG_NO_NL(" " << (int)m_round->getBoard().getColumn(i).actor1Marker);
 	DEBUG_LOG_NO_NL("\nactor2Marker:");
-	for (unsigned int i = 0; i < m_bars.size(); i++)
+	for (unsigned int i = 0; i < 11; i++)
 		DEBUG_LOG_NO_NL(" " << (int)m_round->getBoard().getColumn(i).actor2Marker);
 	DEBUG_LOG_NO_NL("\nrunnerOffset:");
-	for (unsigned int i = 0; i < m_bars.size(); i++)
+	for (unsigned int i = 0; i < 11; i++)
 		DEBUG_LOG_NO_NL(" " << (int)m_round->getBoard().getColumn(i).runnerOffset);
 	DEBUG_LOG_NO_NL("\n-----------------------------------------------------------------------------------------\n");
 }
@@ -315,18 +273,6 @@ void GameRoundDrawer::setDiceTextures()
 	for (int i = 0; i < 4; i++) {
 		m_diceTextureDrawable[i].setTexture(m_diceTextures[m_round->getDiceThrow().getDie(i) -1 + offset]);
 	}
-}
-
-GameRoundDrawer::Bars::Bars(TextureDrawable barPlayer1, TextureDrawable barPlayer2, TextureDrawable barTemp)
-	: barPlayer1(barPlayer1)
-	, barPlayer2(barPlayer2)
-	, barTemp(barTemp) {
-}
-
-void GameRoundDrawer::Bars::draw() {
-	barPlayer1.draw();
-	barPlayer2.draw();
-	barTemp.draw();
 }
 
 void GameRoundDrawer::drawVictoryScreen(ActorEnum winner) {

@@ -2,9 +2,9 @@
 #include <stdexcept>
 
 GameRound::GameRound(const std::shared_ptr<Actor>& actor1, const std::shared_ptr<Actor>& actor2, const MersenneTwister& rand)
-	: m_actor1{actor1}
+	: m_rand{rand}
+	, m_actor1{actor1}
 	, m_actor2{actor2}
-	, m_rand{rand}
 	, m_diceThrow(m_board, m_currentActor, m_rand)
 {
 	if (!m_actor1 || !m_actor2)

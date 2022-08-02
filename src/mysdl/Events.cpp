@@ -10,23 +10,16 @@ Event::Event(const std::shared_ptr<Window>& window)
 
 
 
-// ==================== ClickEvent ====================
-ClickEvent::ClickEvent(bool sub) {
+// ==================== DrawEvent ====================
+DrawEvent::DrawEvent(bool sub) {
 	if (sub) subscribe();
 }
-ClickEvent::~ClickEvent() {
+DrawEvent::~DrawEvent() {
 	unsubscribe();
 }
 
-void ClickEvent::  subscribe() { m_window->  subscribeClickEvent(this); }
-void ClickEvent::unsubscribe() { m_window->unsubscribeClickEvent(this); }
-
-
-// LeftClickEvent
-void LeftClickEvent::onClickEvent(const SDL_Event &event) {
-	if (event.button.button != SDL_BUTTON_LEFT) return;
-	onLeftClick(event.button.x, event.button.y);
-}
+void DrawEvent::  subscribe() { m_window->  subscribeDrawEvent(this); }
+void DrawEvent::unsubscribe() { m_window->unsubscribeDrawEvent(this); }
 
 
 
@@ -34,50 +27,63 @@ void LeftClickEvent::onClickEvent(const SDL_Event &event) {
 
 
 
-// ==================== WindowEvent ====================
-WindowEvent::WindowEvent(bool sub) {
+// ==================== LeftClickEvent ====================
+LeftClickEvent::LeftClickEvent(bool sub) {
 	if (sub) subscribe();
 }
-WindowEvent::~WindowEvent() {
+LeftClickEvent::~LeftClickEvent() {
 	unsubscribe();
 }
 
-void WindowEvent::  subscribe() { m_window->  subscribeWindowEvent(this); }
-void WindowEvent::unsubscribe() { m_window->unsubscribeWindowEvent(this); }
-
-
-// WindowClosedEvent
-void WindowClosedEvent::onWindowEvent(const SDL_Event& event) {
-	if (event.window.event == SDL_WINDOWEVENT_CLOSE)
-		onWindowClosed();
-}
-
-
-// WindowResizedEvent
-void WindowResizedEvent::onWindowEvent(const SDL_Event& event) {
-	if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
-		onWindowResized(event.window.data1, event.window.data2);
-}
+void LeftClickEvent::  subscribe() { m_window->  subscribeLeftClickEvent(this); }
+void LeftClickEvent::unsubscribe() { m_window->unsubscribeLeftClickEvent(this); }
 
 
 
 
 
 
-// ==================== KeyboardEvent ====================
-KeyboardEvent::KeyboardEvent(bool sub) {
+
+// ==================== WindowClosedEvent ====================
+WindowClosedEvent::WindowClosedEvent(bool sub) {
 	if (sub) subscribe();
 }
-KeyboardEvent::~KeyboardEvent() {
+WindowClosedEvent::~WindowClosedEvent() {
 	unsubscribe();
 }
 
-void KeyboardEvent::  subscribe() { m_window->  subscribeKeyboardEvent(this); }
-void KeyboardEvent::unsubscribe() { m_window->unsubscribeKeyboardEvent(this); }
+void WindowClosedEvent::  subscribe() { m_window->  subscribeWindowClosedEvent(this); }
+void WindowClosedEvent::unsubscribe() { m_window->unsubscribeWindowClosedEvent(this); }
 
 
-// KeyPressedEvent
-void KeyPressedEvent::onKeyboardEvent(const SDL_Event& event) {
-	if (event.key.state == SDL_PRESSED)
-		onKeyPressed(event.key.keysym);
+
+
+
+
+
+// ==================== WindowResizedEvent ====================
+WindowResizedEvent::WindowResizedEvent(bool sub) {
+	if (sub) subscribe();
 }
+WindowResizedEvent::~WindowResizedEvent() {
+	unsubscribe();
+}
+
+void WindowResizedEvent::  subscribe() { m_window->  subscribeWindowResizedEvent(this); }
+void WindowResizedEvent::unsubscribe() { m_window->unsubscribeWindowResizedEvent(this); }
+
+
+
+
+
+
+// ==================== KeyPressedEvent ====================
+KeyPressedEvent::KeyPressedEvent(bool sub) {
+	if (sub) subscribe();
+}
+KeyPressedEvent::~KeyPressedEvent() {
+	unsubscribe();
+}
+
+void KeyPressedEvent::  subscribe() { m_window->  subscribeKeyPressedEvent(this); }
+void KeyPressedEvent::unsubscribe() { m_window->unsubscribeKeyPressedEvent(this); }
