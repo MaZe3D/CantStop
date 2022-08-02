@@ -36,6 +36,8 @@ The Build-configuration and Plattform can be combined like in the following exam
 
 To remove existing binaries you can run `make clean`. All binaries will be cleared and can now be recompiled.
 
+With the `-j` suffix you can compile all files in parallel. For example `make run_debug_windows -j` will compile all files in parallel, and run the program. This cannot be combined with the `clean` command. But you can combine them in bash for example `make clean && make run_debug_windows -j`. This will first execute the clean command to remove all binaries and then compile all files in parallel.
+
 WSL2 supports the starting of windows executables right from the linux-bash so you can compile and run windows-binaries right from the WSL. Linux-GUI applications are only supported on Windows 11. On Windows 10 you can compile the Linux binaries, but you can only run the tests (as they do not need a GUI).
 
 ### Binaries
@@ -69,12 +71,13 @@ public: // start with explicit "public:" (except if there is nothing public), in
 // empty line before access specifier (except first one)
 protected: // "protected:" after "public:" (if there is something protected)
 → uint8_t m_protectedInteger; // leading "m_" for protected AND private member variables
+
 private: // "private:" after "protected:" (if there is something private)
 → int32_t m_privateSigned32BitInteger;
 };
 
 enum  class  CoolEnum {
-VALUE_1, // enum values are constants (capital snake_case)!
+→ VALUE_1, // enum values are constants (capital snake_case)!
 → VALUE_2,
 → VALUE_3
 };
