@@ -44,11 +44,11 @@ uint8_t GreedyBot::choseCombination(const Board &board, const DiceThrow &diceThr
 	return bestCombination;
 }
 
-TEST_CASE("GreedyBot"){
-	
+TEST_CASE("GreedyBot") {
 	MersenneTwister rand = MersenneTwister(0);
 	ActorEnum actorEnum = ActorEnum::ACTOR1;
 	GreedyBot bot = GreedyBot();
+	
 	SUBCASE("choseCombination"){
 		Board board;
 		board.stringToBoard(
