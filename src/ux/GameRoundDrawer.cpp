@@ -239,7 +239,7 @@ void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 		}
 	}
 	
-	m_boardDrawer.update();
+	m_boardDrawer.updatePillars();
 	setDiceTextures();
 	updateCombinationButtons();
 
