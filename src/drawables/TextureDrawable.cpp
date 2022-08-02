@@ -28,6 +28,16 @@ void TextureDrawable::setTexture(const std::shared_ptr<const Texture>& texture) 
 	m_texture = texture;
 }
 
-void TextureDrawable::draw() {
+TextureDrawable& TextureDrawable::setWidthKeepAspect(int width) {
+	rect.setWidthKeepAspect(width, m_texture->getAspect());
+	return *this;
+}
+
+TextureDrawable& TextureDrawable::setHeightKeepAspect(int height) {
+	rect.setHeightKeepAspect(height, m_texture->getAspect());
+	return *this;
+}
+
+void TextureDrawable::draw() const {
 	m_texture->draw(rect);
 }
