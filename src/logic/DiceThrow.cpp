@@ -60,6 +60,10 @@ DiceThrow::DiceThrow(const Board& board, const ActorEnum currentActor, MersenneT
 
 		insertCombination(a, b);
 	}
+	/*if (m_combinationCount > 0)
+	while(m_combinationCount < 6) {
+		m_combinations[m_combinationCount++] = m_combinations[0];
+	}*/
 }
 
 void DiceThrow::insertCombination(int8_t a, int8_t b) {
