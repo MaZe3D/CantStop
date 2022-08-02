@@ -46,11 +46,11 @@ const Board::Column& Board::getColumn(uint8_t column) const {
 	return m_columns[column];
 }
 
-std::string boardString =
+/* The string needs to be like following:
 "actor1Marker 2 3 4 5 6 7 8 9 10 11 12"
 "actor2Marker 2 3 4 5 6 7 8 9 10 11 12"
 "RunnerOffset 0 0 0 0 0 0 0 0 0 0 0";
-
+ */
 void Board::stringToBoard(std::string boardString) {
 	std::regex indices ("actor1Marker|actor2Marker|RunnerOffset");
 	std::string formattedString = std::regex_replace(boardString, indices, "");
@@ -74,7 +74,7 @@ void Board::stringToBoard(std::string boardString) {
 }
 TEST_CASE("strintToBoard") {
 	Board board;
-	boardString =
+	std::string boardString = 
 	"actor1Marker 0 1 4 6 1 12 10 1 0 3 2"
 	"actor2Marker 3 2 7 1 11 0 1 6 7 0 0"
 	"RunnerOffset 1 0 0 0 5 0 0 0 0 0 2";
@@ -145,19 +145,62 @@ TEST_CASE("Board") {
 	SUBCASE("Check for correct AdvanceRunnerMarkers") {
 		DiceThrow::Combination combination;
 		Board b;
-		for (int i = 0; i < 4; ++i) {
-			combination.a = 2 + i;
-			combination.b = 12 - i;
-			for (int j = 0; j < b.getColumn(i).maxHeight; j++) {
-				b.advanceRunnerMarkers(combination);
-				CHECK(b.getColumn(i).runnerOffset == j);
-				CHECK(b.getColumn(11 - i).runnerOffset == j);
-			}
-		}
-		combination.a = 7;
-		for (int i = 0; i < b.getColumn(5).maxHeight; i++) {
+		b.stringToBoard(
+			"actor1Marker 0 1 4 6  1 12 10 1 0 3 2"
+			"actor2Marker 3 2 7 1 11  0  1 6 7 0 0"
+			"RunnerOffset 1 0 0 0  5  0  0 1 0 0 0"
+		);
+		b.advanceRunnerMarkers(DiceThrow::Combination{3, 6});
+		CHECK(b.getColumn(0).runnerOffset == 1);
+		CHECK(b.getColumn(1).runnerOffset == 1);
+		CHECK(b.getColumn(2).runnerOffset == 0);
+		CHECK(b.getColumn(3).runnerOffset == 0);
+		CHECK(b.getColumn(4).runnerOffset == 6);
+		CHECK(b.getColumn(10).runnerOffset == 0);
+		/* for (int i = 0; i < b.getColumn(5).maxHeight; i++) {
 			b.advanceRunnerMarkers(combination);
 			CHECK(b.getColumn(5).runnerOffset == i);
-		}
+		
+		} */
+	}
+	SUBCASE("Check for correct actorMarkers application") {
+		Board b;
+		b.stringToBoard(
+			"actor1Marker 0 1 4 6  1 12 10 1 0 3 2"
+			"actor2Marker 3 2 7 1  3  0  1 6 0 0 0"
+			"RunnerOffset 1 0 0 0  5  0  0 0 0 0 1"
+		);
+		CHECK(b.applyRunnerOffsetsToActorMarkersAndCheckWin(ActorEnum::ACTOR1) == false);
+		b.stringToBoard(
+			"actor1Marker 0 1 4 6  1 12 10 1 0 3 2"
+			"actor2Marker 3 2 7 1 10  0  1 6 0 0 0"
+			"RunnerOffset 1 0 0 0  5  0  0 0 0 0 1"
+		);
+		CHECK(b.applyRunnerOffsetsToActorMarkersAndCheckWin(ActorEnum::ACTOR2) == true);
+		
+		CHECK( (b.getColumn(0).actor1Marker == 0 
+			&& b.getColumn(1).actor1Marker == 1
+			&& b.getColumn(2).actor1Marker == 4
+			&& b.getColumn(3).actor1Marker == 6
+			&& b.getColumn(4).actor1Marker == 1
+			&& b.getColumn(5).actor1Marker == 12
+			&& b.getColumn(6).actor1Marker == 10
+			&& b.getColumn(7).actor1Marker == 1
+			&& b.getColumn(8).actor1Marker == 0
+			&& b.getColumn(9).actor1Marker == 3
+			&& b.getColumn(10).actor1Marker == 2)
+		);
+		CHECK( (b.getColumn(0).actor2Marker == 3
+			&& b.getColumn(1).actor2Marker == 2
+			&& b.getColumn(2).actor2Marker == 7
+			&& b.getColumn(3).actor2Marker == 1
+			&& b.getColumn(4).actor2Marker == 11
+			&& b.getColumn(5).actor2Marker == 0
+			&& b.getColumn(6).actor2Marker == 1
+			&& b.getColumn(7).actor2Marker == 6
+			&& b.getColumn(8).actor2Marker == 0
+			&& b.getColumn(9).actor2Marker == 0
+			&& b.getColumn(10).actor2Marker == 1 )
+		);
 	}
 }
