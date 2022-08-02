@@ -1,5 +1,12 @@
 # CantStop
+## Usage
+The Program starts with a main menu where you can select Human-Players and Bots by clicking on both sides. By clicking on `START GAME` you will start the Game session with the selected players.
 
+Within the Game you can see a `MENU` Button on the top left that will pause the session, that you can continue by pressing `CONTINUE`. You can also start a new game from scratch by pressing the `START GAME` button again.
+
+The Game lets Human players select their Dice-Combination by clicking on them, then you have the choise to continue by rolling the dice again or continue with the next player. If a player is a Bot cou can see their interaction highlighted and you can press continue to go to the next player.
+
+`F11` will toggle the fullscreen mode.
 ## Build process
 The build process is done via the MinGW-64 Compiler within a Linux environment. To build on Windows you need a running version of WSL to cross-compile the code.
 The following example is done with an Ubuntu 22.04 LTS Instance in WSL2. WSL1 and Ubuntu 20.04 are also supported.
