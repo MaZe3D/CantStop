@@ -65,4 +65,23 @@ TEST_CASE("Board") {
             CHECK(b.getColumn(i).actor2Marker == 0);
         }
     }
+
+	SUBCASE("Check for correct AdvanceRunnerMarkers") {
+		DiceThrow::Combination combination;
+		Board b;
+		for (int i = 0; i < 4; ++i) {
+			combination.a = 2 + i;
+			combination.b = 12 - i;
+			for (int j = 0; j < b.getColumn(i).maxHeight; j++) {
+				b.advanceRunnerMarkers(combination);
+				CHECK(b.getColumn(i).runnerOffset == j);
+				CHECK(b.getColumn(11 - i).runnerOffset == j);
+			}
+		}
+		combination.a = 7;
+		for (int i = 0; i < b.getColumn(5).maxHeight; i++) {
+			b.advanceRunnerMarkers(combination);
+			CHECK(b.getColumn(5).runnerOffset == i);
+		}
+	}
 }
