@@ -7,11 +7,13 @@
 
 class Game;
 
-class Menu : WindowResizedEvent, LeftClickEvent {
+class Menu : DrawEvent, WindowResizedEvent, LeftClickEvent {
 public:
 	Menu(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2);
 
-	void draw();
+	void activate();
+	void deactivate();
+
 	void restart();
 
 private:
@@ -34,6 +36,7 @@ private:
 	void adjustSizePlayer1(int width, int height);
 	void adjustSizePlayer2(int width, int height);
 
+	void onDraw() override;
 	void onWindowResized(int width, int height) override;
 	void onLeftClick(int32_t x, int32_t y) override;
 

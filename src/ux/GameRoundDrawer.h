@@ -8,12 +8,14 @@
 
 class Game;
 
-class GameRoundDrawer : WindowResizedEvent, LeftClickEvent {
+class GameRoundDrawer : DrawEvent, WindowResizedEvent, LeftClickEvent {
 public:
 	GameRoundDrawer(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font);
 
+	void activate();
+	void deactivate();
+
 	void setGameRound(const std::shared_ptr<GameRound>& round);
-	void draw();
 
 private:
 
@@ -67,6 +69,7 @@ private:
 
 	void setBars();
 
+	void onDraw() override;
 	void onWindowResized(int width, int height) override;
 	void onLeftClick(int32_t x, int32_t y) override;
 

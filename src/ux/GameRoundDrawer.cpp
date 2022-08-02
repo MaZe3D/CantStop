@@ -18,8 +18,6 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, Game& gam
 		TextureDrawable("res/sprites/Game_Player2_SelectFrame.png", window)
 	}
 {
-	WindowResizedEvent::unsubscribe();
-	LeftClickEvent::unsubscribe();
 	m_background.rect.setAnchorModeX(Rect::AnchorMode::CENTER).setAnchorModeY(Rect::AnchorMode::CENTER);
 
 	for (int i = 0; i < 11; i++) {
@@ -81,20 +79,31 @@ GameRoundDrawer::GameRoundDrawer(const std::shared_ptr<Window> window, Game& gam
 	//onWindowResized(window->getWidth(), window->getHeight());
 }
 
+void GameRoundDrawer::activate() {
+	DrawEvent::subscribe();
+	WindowResizedEvent::subscribe();
+	LeftClickEvent::subscribe();
+}
+
+void GameRoundDrawer::deactivate() {
+	DrawEvent::unsubscribe();
+	WindowResizedEvent::unsubscribe();
+	LeftClickEvent::unsubscribe();
+}
+
 void GameRoundDrawer::setGameRound(const std::shared_ptr<GameRound>& round) {
 	m_round = round;
 	if (std::dynamic_pointer_cast<Bot>(m_round->getCurrentActor()) && m_round->getNextStep() == GameRound::NextStep::CHOOSE_DICE_COMBINATION) {
 		m_round->nextStep();
 	}
-	WindowResizedEvent::subscribe();
-	LeftClickEvent::subscribe();
+	activate();
 	setBars();
 	setDiceTextures();
 	updateCombinationButtons();
 	onWindowResized(m_window->getWidth(), m_window->getHeight());
 }
 
-void GameRoundDrawer::draw() {
+void GameRoundDrawer::onDraw() {
 	m_background.draw();
 	m_menuButtonText.draw();
 
@@ -230,16 +239,14 @@ void GameRoundDrawer::onLeftClick(int32_t x, int32_t y) {
 	if (!m_round) return;
 	if (m_round->isOver()) {
 		if (m_victoryText.rect.containsPoint(x, y)) {
-			WindowResizedEvent::unsubscribe();
-			LeftClickEvent::unsubscribe();
+			deactivate();
 			m_round = nullptr;
 			m_game.showMenu();
 		}
 		return;
 	}
 	else if (m_menuButtonText.rect.containsPoint(x, y)) {
-		WindowResizedEvent::unsubscribe();
-		LeftClickEvent::unsubscribe();
+		deactivate();
 		m_round = nullptr;
 		m_game.showMenu();
 		return;

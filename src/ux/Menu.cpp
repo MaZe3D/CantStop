@@ -7,7 +7,6 @@
 
 Menu::Menu(const std::shared_ptr<Window> window, Game& game, const std::shared_ptr<const Font>& font1, const std::shared_ptr<const Font>& font2)
 	: Event(window)
-	, WindowResizedEvent(true)
 	, m_game(game)
 	, m_background("res/sprites/MainMenu_Background.png", window)
 	, m_title("res/sprites/MainMenu_Title.png", window)
@@ -27,7 +26,19 @@ Menu::Menu(const std::shared_ptr<Window> window, Game& game, const std::shared_p
 	onWindowResized(window->getWidth(), window->getHeight());
 }
 
-void Menu::draw() {
+void Menu::activate() {
+	DrawEvent::subscribe();
+	WindowResizedEvent::subscribe();
+	LeftClickEvent::subscribe();
+}
+
+void Menu::deactivate() {
+	DrawEvent::unsubscribe();
+	WindowResizedEvent::unsubscribe();
+	LeftClickEvent::unsubscribe();
+}
+
+void Menu::onDraw() {
 	m_background.draw();
 	m_title.draw();
 	m_playButton.draw();
@@ -39,8 +50,7 @@ void Menu::draw() {
 }
 
 void Menu::restart() {
-	LeftClickEvent::subscribe();
-	WindowResizedEvent::subscribe();
+	activate();
 	onWindowResized(m_window->getWidth(), m_window->getHeight());
 }
 
@@ -96,13 +106,11 @@ void Menu::onLeftClick(int32_t x, int32_t y) {
 			case 3: actor2 = std::make_shared<RandomBot>(); break;
 		}
 		m_round = std::make_shared<GameRound>(actor1, actor2, MersenneTwister());
-		LeftClickEvent::unsubscribe();
-		WindowResizedEvent::unsubscribe();
+		deactivate();
 		m_game.startNewRound(m_round);
 	}
 	else if (m_round && !m_round->isOver() && m_continueButton.rect.containsPoint(x, y)) {
-		LeftClickEvent::unsubscribe();
-		WindowResizedEvent::unsubscribe();
+		deactivate();
 		m_game.startNewRound(m_round);
 	}
 

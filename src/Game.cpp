@@ -18,6 +18,8 @@ void Game::run() {
 	const int FPS = 60;
 	const int frameDelay = 1000 / FPS;
 
+	m_menu.activate();
+
 	Uint32 frameStart;
 	Uint32 frameTime;
 	while (m_gameState != GameState::EXIT) {
@@ -39,18 +41,6 @@ void Game::startNewRound(const std::shared_ptr<GameRound>& round) {
 void Game::showMenu() {
 	m_gameState = GameState::MENU;
 	m_menu.restart();
-}
-
-void Game::onDraw() {
-	switch (m_gameState) {
-	case GameState::MENU:
-		m_menu.draw();
-		break;
-	case GameState::PLAY:
-		m_gameRoundDrawer.draw();
-	default:
-		break;
-	}
 }
 
 void Game::onWindowClosed() {
