@@ -1,5 +1,6 @@
 #include "SmartBot.h"
 
+
 uint8_t SmartBot::choseCombination(const Board& board, const DiceThrow& diceThrow, MersenneTwister& rand) {
 	uint8_t choice = 0;
 	uint8_t distance = -1;
@@ -34,3 +35,73 @@ bool SmartBot::finishedTurn(const Board& board, MersenneTwister& rand) {
 	}
 	return (usedMarkers == 3);
 }
+#ifndef DEBUG
+#include <doctest.h>
+#include <memory>
+#include "RandomBot.h"
+#include "GreedyBot.h"
+#include "logic/GameRound.h"
+#include "util/MersenneTwister.h"
+
+TEST_CASE("SmartBot wins over 75\% of the time") {
+	const int maxGameRounds = 10000;
+	double winRatioThreashold = 0.75;
+	
+	auto actor1 = std::make_shared<SmartBot>();
+	
+	SUBCASE("SmartBot vs Greedy Bot") {
+		auto actor2 = std::make_shared<GreedyBot>();
+
+		int winsSmartBot = 0;
+		int winsGreedyBot = 0;
+
+		for (int gamesCount = 0; gamesCount < maxGameRounds; gamesCount++)
+		{
+			MersenneTwister rand = MersenneTwister(gamesCount);
+			GameRound gameRound(actor1, actor2, rand);
+			while (!gameRound.isOver()) {
+				gameRound.nextStep();
+			}
+
+			if (gameRound.getCurrentActorEnum() == ActorEnum::ACTOR1) {
+				winsSmartBot++;
+			} else {
+				winsGreedyBot++;
+			}
+		}
+
+		const double winRatio = (static_cast<double>(winsSmartBot)) / maxGameRounds;
+
+		CHECK(winRatio > winRatioThreashold);
+		INFO("The win ratio of SmartBot vs GreedyBot is:", winRatio);
+	}
+
+	SUBCASE("SmartBot vs RandomBot") {
+		auto actor2 = std::make_shared<RandomBot>();
+
+		int winsSmartBot = 0;
+		int winsRandomBot = 0;
+
+		for (int gamesCount = 0; gamesCount < maxGameRounds; gamesCount++)
+		{
+			MersenneTwister rand = MersenneTwister(gamesCount);
+			GameRound gameRound(actor1, actor2, rand);
+			while (!gameRound.isOver()) {
+				gameRound.nextStep();
+			}
+
+			if (gameRound.getCurrentActorEnum() == ActorEnum::ACTOR1) {
+				winsSmartBot++;
+			} else {
+				winsRandomBot++;
+			}
+		}
+
+		const double winRatio = (static_cast<double>(winsSmartBot)) / maxGameRounds;
+
+		CHECK((winRatio > winRatioThreashold));
+		CHECK(winRatio == 0.);
+	}
+}
+
+#endif
