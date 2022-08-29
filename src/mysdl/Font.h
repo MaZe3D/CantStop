@@ -2,7 +2,7 @@
 #include <string>
 #include <memory>
 #include <SDL2/SDL_ttf.h>
-#include "texture.h"
+#include "Texture.h"
 #include "Window.h"
 
 class Font {
