@@ -94,6 +94,8 @@ library_object_files_$1_$2_$3 := $$(patsubst $$(SRC_DIRECTORY)/%$$(SOURCE_FILE_E
 $$(OBJ_DIRECTORY)/$2/$1/$3.a: $$(library_object_files_$1_$2_$3)
 	@mkdir -p $$(@D)
 	ar rcs $$@ $$^
+
+-include $$(library_object_files_$1_$2_$3:.o=.d)
 endef
 
 
@@ -143,7 +145,9 @@ $$(foreach lib,$$(LIBRARIES), \
 
 $$(OBJ_DIRECTORY)/$2/$1/%.o: $$(SRC_DIRECTORY)/%$$(SOURCE_FILE_EXTENSION)
 	@mkdir -p $$(@D)
-	$$(COMPILER_AND_LINKER_$2) $$(strip $$(FINAL_COMPILER_FLAGS_$1_$2) -c $$< -o $$@)
+	$$(COMPILER_AND_LINKER_$2) $$(strip $$(FINAL_COMPILER_FLAGS_$1_$2) -MMD -MP -c $$< -o $$@)
+
+-include $$(object_files_$1_$2:.o=.d)
 
 run_$1_$2: $1_$2
 	$(BIN_DIRECTORY)/$2/$1$$(BINARY_FILE_EXTENSION_$2)
