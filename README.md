@@ -1,4 +1,6 @@
-# CantStop
+<img src="res/sprites/MainMenu_Title.png"
+     alt="Markdown Monster icon"
+     style="float: left; margin-right: 10px;" />
 ## Usage
 The Program starts with a main menu where you can select Human-Players and Bots by clicking on both sides. By clicking on `START GAME` you will start the Game session with the selected players.
 
